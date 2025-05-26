@@ -77,6 +77,7 @@ Coordinating schedules between different individuals at SMU is challenging due t
 - ✅ Admin permissions:
   - Add/remove users
   - Delete group
+  - Create Events
 - ✅ Group limits:
   - Max 50 members
   - Must have at least 1 Admin (creator)
@@ -93,36 +94,7 @@ Coordinating schedules between different individuals at SMU is challenging due t
   - (Optional) Telegram alerts via bot API
 - ✅ Personal events are stored in 1-person groups
 
----
-
-## 📊 Data Models (ER Overview)
-
-### User
-- UID (PK)
-- Email
-- Password (hashed)
-- IsVerified
-- GroupIDs (array)
-
-### Group
-- GroupID (PK)
-- GroupName
-- AdminUIDs (array)
-- MemberUIDs (array)
-
-### Event
-- EventID (PK)
-- GroupID (FK)
-- Title, Description, StartDatetime, EndDatetime
-- Priority (High/Low)
-- Recurring (pattern)
-- CreatorUID
-- IsPrivate (Boolean)
-
-### Clash
-- ClashID (PK)
-- EventIDs (array)
-- AffectedUserIDs (array)
+--- 
 
 ## 🛠 Local Setup
 
