@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "install-all": "cd frontend && npm install",
+        "start-fe": "cd frontend && npm run dev"
+    }
+}
