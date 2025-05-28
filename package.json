@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "start-fe": "cd frontend && npm run dev"
+    }
+}
