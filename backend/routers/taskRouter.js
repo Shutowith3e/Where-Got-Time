@@ -1,10 +1,8 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-// const {
-// inser routes here
-//} = require("../controllers/taskController");
+//import {task1,task2,etc} from "../controllers/taskController";
 
 //router.get
 //router.post etc etc for each of the routes
 
-//module.exports = router;
+//export default router;
