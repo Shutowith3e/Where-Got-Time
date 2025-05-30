@@ -1,4 +1,8 @@
-import express from "express";
+require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+require("./models/connection");
+import { datetime, RRule, RRuleSet, rrulestr } from 'rrule';
 
 const app = express();
 
