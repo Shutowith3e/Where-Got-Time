@@ -19,7 +19,7 @@ export default function LandingPage() {
           >
             <img
               src="/meettext.png"
-              className="relative top-15 left-25 w-100 opacity-25"
+              className="relative top-15 left-25 w-100 opacity-30"
             ></img>
             <img
               src="/update.png"
@@ -36,7 +36,7 @@ export default function LandingPage() {
                 stay synced with your groups — whether for lessons, CCAs, or
                 project meetings.
               </h2>
-              <div className="flex flex-row space-x-10 ">
+              <div className="flex flex-row space-x-10 z-10">
                 <Link
                   to="/signup"
                   className="text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 hover:underline font-semibold"
@@ -53,6 +53,9 @@ export default function LandingPage() {
               </div>
             </div>
           </BackgroundGradientAnimation>
+          <h2 className="mt-6 font-stretch-75% text-2xl text-slate-800 font-semibold text-center">
+            Why Where Got Time?
+          </h2>
         </main>
       </div>
     </>
