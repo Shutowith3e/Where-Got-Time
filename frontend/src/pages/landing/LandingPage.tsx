@@ -18,10 +18,16 @@ export default function LandingPage() {
             interactive={false}
           >
             <img
-              src="/busytext.png"
-              className="relative top-30 left-150 w-130 opacity-25"
+              src="/meettext.png"
+              className="relative top-20 left-25 w-100 opacity-25"
             ></img>
-            <div className="flex flex-col space-y-12 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
+            <img
+              src="/update.png"
+              className="relative top-100 left-235 w-60 opacity-40"
+            ></img>
+
+
+            <div className="-mt-12 flex flex-col space-y-12 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
               <h1 className="text-4xl font-extrabold mt-6 text-orange-100">
                 Effortless Group Scheduling For Everyone
               </h1>
