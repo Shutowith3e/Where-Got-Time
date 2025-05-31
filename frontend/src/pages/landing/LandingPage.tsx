@@ -4,11 +4,13 @@ import { BackgroundGradientAnimation } from "../../components/ui/background-grad
 import ReasonCard from "./ReasonCard";
 import { AnimatedTestimonials } from "../../components/ui/animated-testimonials";
 
+
 export default function LandingPage() {
   return (
     <>
       <div className="min-h-screen flex flex-col">
         <NavBar />
+
         <main className="flex-grow overflow-x-hidden">
           <BackgroundGradientAnimation
             gradientBackgroundStart={"rgb(0,0,0)"}
@@ -104,6 +106,7 @@ export default function LandingPage() {
                 },
               ]}
             ></AnimatedTestimonials>
+
           </div>
         </main>
       </div>
