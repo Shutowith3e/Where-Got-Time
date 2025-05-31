@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import { BackgroundGradientAnimation } from "../../components/ui/background-gradient-animation";
 import ReasonCard from "./ReasonCard";
+import { AnimatedTestimonials } from "../../components/ui/animated-testimonials";
 
 export default function LandingPage() {
   return (
@@ -54,11 +55,10 @@ export default function LandingPage() {
               </div>
             </div>
           </BackgroundGradientAnimation>
-          
-            <h2 className="mt-12 font-stretch-75% text-3xl text-slate-800 font-semibold text-center">
-              Why Where Got Time?
-            </h2>
-            <div className="mt-12 mb-12 grid grid-cols-3 space-x-8 ">
+          <h2 className="mt-12 font-stretch-75% text-3xl text-slate-800 font-semibold text-center">
+            Why Where Got Time?
+          </h2>
+          <div className="mt-12 mb-12 grid grid-cols-3 space-x-8 ">
             <ReasonCard
               title={"Smart Scheduling"}
               reason={
@@ -77,6 +77,33 @@ export default function LandingPage() {
                 "Get real-time updates for events so everyone stays on the same page, with zero missed changes or confusion"
               }
             ></ReasonCard>
+          </div>
+          <div className="bg-gradient-to-b from-rose-900/60 to-orange-800/50">
+            <AnimatedTestimonials
+              testimonials={[
+                {
+                  quote:
+                    "Where Got Time brings together every group’s schedules into one seamless board. View, compare, and coordinate everyone’s availability at a glance—no more endless chats or double-bookings",
+                  name: "All-In-One Group Scheduler",
+                  designation: "User Friendly",
+                  src: "./calender.png",
+                },
+                {
+                  quote:
+                    "Where Got Time supports groups of up to 50 members, making it perfect for everything from class projects to entire CCAs or teams. No need to split into multiple chats—organize your entire crew in one place!",
+                  name: "Large Groups, No Problem",
+                  designation: "Supports Large Groups",
+                  src: "./groups.png",
+                },
+                {
+                  quote:
+                    "Where Got Time sends automatic email notifications to all affected members the moment a clash is detected. Get alerted instantly—so you can resolve conflicts early and keep your plans running smoothly",
+                  name: "Instant Clash And Schedule Alerts",
+                  designation: "Never miss a scheduling conflict again!",
+                  src: "./email.png",
+                },
+              ]}
+            ></AnimatedTestimonials>
           </div>
         </main>
       </div>
