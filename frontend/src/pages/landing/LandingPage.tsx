@@ -58,7 +58,7 @@ export default function LandingPage() {
           <h2 className="mt-12 font-stretch-75% text-3xl text-slate-800 font-semibold text-center">
             Why Where Got Time?
           </h2>
-          <div className="mt-12 mb-12 grid grid-cols-3 space-x-8 ">
+          <div className="mt-12 mb-20 ml-8 mr-8 grid grid-cols-3 space-x-8 ">
             <ReasonCard
               title={"Smart Scheduling"}
               reason={
