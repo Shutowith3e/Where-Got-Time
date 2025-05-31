@@ -19,15 +19,14 @@ export default function LandingPage() {
           >
             <img
               src="/meettext.png"
-              className="relative top-20 left-25 w-100 opacity-25"
+              className="relative top-15 left-25 w-100 opacity-25"
             ></img>
             <img
               src="/update.png"
-              className="relative top-100 left-235 w-60 opacity-40"
+              className="relative top-110 left-235 w-60 opacity-40"
             ></img>
 
-
-            <div className="-mt-12 flex flex-col space-y-12 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
+            <div className="-mt-15 flex flex-col space-y-12 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
               <h1 className="text-4xl font-extrabold mt-6 text-orange-100">
                 Effortless Group Scheduling For Everyone
               </h1>
@@ -38,16 +37,18 @@ export default function LandingPage() {
                 project meetings.
               </h2>
               <div className="flex flex-row space-x-10 ">
-                <Link to="/signup" className="text-indigo-800">
-                  <button className="bg-indigo-100 rounded-3xl px-4 py-2 hover:underline font-semibold">
-                    Get Started!
-                  </button>
+                <Link
+                  to="/signup"
+                  className="text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 hover:underline font-semibold"
+                >
+                  Get Started!
                 </Link>
 
-                <Link to="/contribute" className="text-indigo-100">
-                  <button className="bg-indigo-800 rounded-3xl px-4 py-2 hover:underline font-semibold">
-                    Contribute
-                  </button>
+                <Link
+                  to="/contribute"
+                  className="text-indigo-100 bg-indigo-800 rounded-3xl px-4 py-2 hover:underline font-semibold"
+                >
+                  Contribute
                 </Link>
               </div>
             </div>
