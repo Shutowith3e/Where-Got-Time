@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import { BackgroundGradientAnimation } from "../../components/ui/background-gradient-animation";
+import ReasonCard from "./ReasonCard";
 
 export default function LandingPage() {
   return (
@@ -53,9 +54,30 @@ export default function LandingPage() {
               </div>
             </div>
           </BackgroundGradientAnimation>
-          <h2 className="mt-6 font-stretch-75% text-2xl text-slate-800 font-semibold text-center">
-            Why Where Got Time?
-          </h2>
+          
+            <h2 className="mt-12 font-stretch-75% text-3xl text-slate-800 font-semibold text-center">
+              Why Where Got Time?
+            </h2>
+            <div className="mt-12 mb-12 grid grid-cols-3 space-x-8 ">
+            <ReasonCard
+              title={"Smart Scheduling"}
+              reason={
+                "Automatically detect group clashes and suggest optimal meeting times — no more endless back-and-forths"
+              }
+            ></ReasonCard>
+            <ReasonCard
+              title={"Priority Events"}
+              reason={
+                "Highlights and detects clashes only for what matters most, so high-priority meetings always get scheduled first"
+              }
+            ></ReasonCard>
+            <ReasonCard
+              title={"Always in Sync"}
+              reason={
+                "Get real-time updates for events so everyone stays on the same page, with zero missed changes or confusion"
+              }
+            ></ReasonCard>
+          </div>
         </main>
       </div>
     </>
