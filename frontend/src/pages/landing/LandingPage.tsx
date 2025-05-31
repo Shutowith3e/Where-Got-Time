@@ -17,7 +17,11 @@ export default function LandingPage() {
             fifthColor={"255, 255, 255"}
             interactive={false}
           >
-            <div className="flex flex-col space-y-10 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
+            <img
+              src="/busytext.png"
+              className="relative top-30 left-150 w-130 opacity-25"
+            ></img>
+            <div className="flex flex-col space-y-12 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
               <h1 className="text-4xl font-extrabold mt-6 text-orange-100">
                 Effortless Group Scheduling For Everyone
               </h1>
