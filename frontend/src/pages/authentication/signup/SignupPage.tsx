@@ -17,7 +17,7 @@ export function SignupPage() {
 
   return (
     <>
-      <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col">
+      <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-violet-900/60">
         <div className="flex flex-col gap-2">
           <MagicCard gradientColor="262626" className="mx-auto rounded-2xl p-8">
             <div className="flex flex-col gap-4">
