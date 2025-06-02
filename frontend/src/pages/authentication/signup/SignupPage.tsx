@@ -1,13 +1,17 @@
 import { MagicCard } from "@/components/magicui/magic-card";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utlis";
 
 export function SignupPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    watch,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+  });
   const onSubmit = (data: any) => console.log(data);
   console.log(errors);
 
@@ -23,7 +27,7 @@ export function SignupPage() {
               </h2>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-5"
+                className="flex flex-col gap-4"
               >
                 <div className="grid grid-rows-2">
                   <label>Email </label>{" "}
@@ -40,9 +44,9 @@ export function SignupPage() {
                 <div className="grid grid-rows-2">
                   <label>Password </label>
                   <input
-                    className="border-1 rounded-lg "
+                    className="border-1 rounded-lg text-sm px-3"
                     type="password"
-                    placeholder=""
+                    placeholder="Minimum 6 Characters"
                     {...register("Password", {
                       required: true,
                       minLength: 6,
@@ -50,18 +54,38 @@ export function SignupPage() {
                     })}
                   />
                 </div>
+                <div className="grid grid-rows-2 px-2">
+                  <label>Re-Enter Password </label>
+                  <input
+                    className="border-1 rounded-lg "
+                    type="password"
+                    placeholder=""
+                    {...register("PasswordCheck", {
+                      required: true,
+                      minLength: 6,
+                      maxLength: 20,
+                      validate: (val: string) => {
+                        if (watch("Password") != val) {
+                          return "Your passwords do no match";
+                        }
+                      },
+                    })}
+                  />
+                </div>
                 <input
+                  disabled={!isValid}
                   type="submit"
                   value="Sign Up"
-                  className="text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 hover:underline font-semibold"
+                  className={cn(
+                    "text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 font-semibold",
+                    !isValid && "bg-gray-200"
+                  )}
                 />
               </form>
             </div>
           </MagicCard>
           <div className="flex flex-row justify-between">
-            <Link to="/">
-              Back
-            </Link>
+            <Link to="/">Back</Link>
             <Link to="/login" className="text-indigo-800 hover:underline">
               Have An Account?
             </Link>
