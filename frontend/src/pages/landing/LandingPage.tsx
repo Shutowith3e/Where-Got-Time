@@ -23,11 +23,11 @@ export default function LandingPage() {
           >
             <img
               src="/meettext.png"
-              className="relative top-15 left-25 w-100 opacity-30"
+              className="relative top-15 left-25 w-100 opacity-70"
             ></img>
             <img
               src="/update.png"
-              className="relative top-110 left-235 w-60 opacity-40"
+              className="relative top-110 left-235 w-60 opacity-60"
             ></img>
 
             <div className="-mt-15 flex flex-col space-y-12 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
