@@ -57,7 +57,7 @@ export function SignupPage() {
                 <div className="grid grid-rows-2 px-2">
                   <label>Re-Enter Password </label>
                   <input
-                    className="border-1 rounded-lg "
+                    className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder=""
                     {...register("PasswordCheck", {
