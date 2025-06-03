@@ -8,16 +8,19 @@ export function SignupPage() {
     register,
     handleSubmit,
     watch,
+    getFieldState,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
   });
+
+  const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("Password");
   const onSubmit = (data: any) => console.log(data);
   console.log(errors);
 
   return (
     <>
-      <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col">
+      <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-violet-900/60">
         <div className="flex flex-col gap-2">
           <MagicCard gradientColor="262626" className="mx-auto rounded-2xl p-8">
             <div className="flex flex-col gap-4">
@@ -46,18 +49,25 @@ export function SignupPage() {
                   <input
                     className="border-1 rounded-lg text-sm px-3"
                     type="password"
-                    placeholder="Minimum 6 Characters"
+                    placeholder=""
                     {...register("Password", {
                       required: true,
+                      pattern:
+                        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*., ?])/gm,
                       minLength: 6,
                       maxLength: 20,
                     })}
                   />
+                  {(pwInvalid || !pwDirty) && (
+                    <p className="text-[10px] text-red-500">
+                      Min 6 Characters, 1 Upper, 1 Lower, 1 Number
+                    </p>
+                  )}
                 </div>
-                <div className="grid grid-rows-2 px-2">
+                <div className="grid grid-rows-2">
                   <label>Re-Enter Password </label>
                   <input
-                    className="border-1 rounded-lg "
+                    className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder=""
                     {...register("PasswordCheck", {
