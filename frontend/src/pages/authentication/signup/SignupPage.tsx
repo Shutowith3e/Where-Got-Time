@@ -2,6 +2,7 @@ import { MagicCard } from "@/components/magicui/magic-card";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utlis";
+import supabase from "@/helper/supabaseClient";
 
 export default function SignupPage() {
   const {
