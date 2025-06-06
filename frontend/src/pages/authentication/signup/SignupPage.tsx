@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utlis";
 
-export function SignupPage() {
+export default function SignupPage() {
   const {
     register,
     handleSubmit,
