@@ -2,8 +2,11 @@ import { MagicCard } from "@/components/magicui/magic-card";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utlis";
+import supabase from "@/helper/supabaseClient";
+import { useState } from "react";
 
-export function SignupPage() {
+export default function SignupPage() {
+  /* Object destructuring -> uses react hook form*/
   const {
     register,
     handleSubmit,
@@ -14,9 +17,28 @@ export function SignupPage() {
     mode: "onChange",
   });
 
-  const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("Password");
-  const onSubmit = (data: any) => console.log(data);
-  console.log(errors);
+  const [message, setMessage] = useState("");
+
+  const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("password");
+
+  /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
+  const onSubmit = async (data: any) => {
+    const { email, password } = data;
+    const { error } = await supabase.auth.signUp({ email, password });
+    console.log(data);
+    console.log(errors);
+    await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+    setMessage("");
+    if (error) {
+      setMessage(`${error.message}`);
+      return;
+    } else {
+      setMessage("Sign up Successful! Please Check Your Email!");
+    }
+  };
 
   return (
     <>
@@ -38,7 +60,7 @@ export function SignupPage() {
                     className="border-1 rounded-lg px-3 text-sm"
                     type="text"
                     placeholder="name@example.com"
-                    {...register("Email", {
+                    {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
                     })}
@@ -50,7 +72,7 @@ export function SignupPage() {
                     className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder=""
-                    {...register("Password", {
+                    {...register("password", {
                       required: true,
                       pattern:
                         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*., ?])/gm,
@@ -70,12 +92,12 @@ export function SignupPage() {
                     className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder=""
-                    {...register("PasswordCheck", {
+                    {...register("passwordCheck", {
                       required: true,
                       minLength: 6,
                       maxLength: 20,
                       validate: (val: string) => {
-                        if (watch("Password") != val) {
+                        if (watch("password") != val) {
                           return "Your passwords do no match";
                         }
                       },
@@ -91,6 +113,11 @@ export function SignupPage() {
                     !isValid && "bg-gray-200"
                   )}
                 />
+                {message && (
+                  <span className="text-center text-sm mt-2 text-red-600 font-semibold">
+                    {message}
+                  </span>
+                )}
               </form>
             </div>
           </MagicCard>
