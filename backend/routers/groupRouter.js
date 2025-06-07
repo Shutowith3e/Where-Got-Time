@@ -5,4 +5,11 @@ const router = express.Router();
 //router.get
 //router.post etc etc for each of the routes
 
-//export default router;
+//route creation
+import { checkAdmin } from '../controllers/groupController.js';
+
+// route definition
+router.post("/checkIfAdmin", checkAdmin);
+
+// export router
+export default router;

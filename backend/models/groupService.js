@@ -27,6 +27,14 @@ const getGroupEvents = async (gid) => {
 
 //below is testing script before routes
 
-const testgid = '5c6cb264-5134-41a6-8549-46d3df1029d3'
-console.log(await getGroupName(testgid));
-//export {func1,func2, etc}
+//const testgid = '5c6cb264-5134-41a6-8549-46d3df1029d3'
+//console.log(await getAdmins(testgid));
+
+//export model funcs
+export {
+	getGroupName,
+	getGroupMembers,
+	createGroup,
+	getAdmins,
+	getGroupEvents
+};
