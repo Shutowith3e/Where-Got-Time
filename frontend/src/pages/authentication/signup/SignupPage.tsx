@@ -5,7 +5,6 @@ import { cn } from "@/lib/utlis";
 import supabase from "@/helper/supabaseClient";
 import { useState } from "react";
 
-
 export default function SignupPage() {
   /* Object destructuring -> uses react hook form*/
   const {
@@ -37,7 +36,7 @@ export default function SignupPage() {
       setMessage(`${error.message}`);
       return;
     } else {
-      setMessage("Please Check Your Email!");
+      setMessage("Sign up Successful! Please Check Your Email!");
     }
   };
 
