@@ -5,6 +5,7 @@ import { cn } from "@/lib/utlis";
 import supabase from "@/helper/supabaseClient";
 import { useState } from "react";
 
+
 export default function SignupPage() {
   /* Object destructuring -> uses react hook form*/
   const {
@@ -24,7 +25,7 @@ export default function SignupPage() {
   /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
   const onSubmit = async (data: any) => {
     const { email, password } = data;
-    const {error} = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({ email, password });
     console.log(data);
     console.log(errors);
     await supabase.auth.signUp({
@@ -54,9 +55,6 @@ export default function SignupPage() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-4"
               >
-                {message && (
-                  <span className="text-center text-sm mt-2">{message}</span>
-                )}
                 <div className="grid grid-rows-2">
                   <label>Email </label>{" "}
                   <input
@@ -116,6 +114,11 @@ export default function SignupPage() {
                     !isValid && "bg-gray-200"
                   )}
                 />
+                {message && (
+                  <span className="text-center text-sm mt-2 text-red-600 font-semibold">
+                    {message}
+                  </span>
+                )}
               </form>
             </div>
           </MagicCard>
