@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utlis";
 import supabase from "@/helper/supabaseClient";
+import { useState } from "react";
 
 export default function SignupPage() {
+  /* Object destructuring -> uses react hook form*/
   const {
     register,
     handleSubmit,
@@ -15,9 +17,27 @@ export default function SignupPage() {
     mode: "onChange",
   });
 
-  const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("Password");
-  const onSubmit = (data: any) => console.log(data);
-  console.log(errors);
+  const [message, setMessage] = useState("");
+
+  const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("password");
+
+  /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
+  const onSubmit = async (data: any, error: any) => {
+    const { email, password } = data;
+    console.log(data);
+    console.log(errors);
+    await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+    setMessage("");
+    if (error) {
+      setMessage(`${error.message}`);
+      return;
+    } else {
+      setMessage("Please Check Your Email!");
+    }
+  };
 
   return (
     <>
@@ -33,13 +53,16 @@ export default function SignupPage() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-4"
               >
+                {message && (
+                  <span className="text-center text-sm mt-2">{message}</span>
+                )}
                 <div className="grid grid-rows-2">
                   <label>Email </label>{" "}
                   <input
                     className="border-1 rounded-lg px-3 text-sm"
                     type="text"
                     placeholder="name@example.com"
-                    {...register("Email", {
+                    {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
                     })}
@@ -51,7 +74,7 @@ export default function SignupPage() {
                     className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder=""
-                    {...register("Password", {
+                    {...register("password", {
                       required: true,
                       pattern:
                         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*., ?])/gm,
@@ -71,12 +94,12 @@ export default function SignupPage() {
                     className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder=""
-                    {...register("PasswordCheck", {
+                    {...register("passwordCheck", {
                       required: true,
                       minLength: 6,
                       maxLength: 20,
                       validate: (val: string) => {
-                        if (watch("Password") != val) {
+                        if (watch("password") != val) {
                           return "Your passwords do no match";
                         }
                       },
