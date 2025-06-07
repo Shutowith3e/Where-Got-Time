@@ -12,7 +12,7 @@ export default function SignupPage() {
     handleSubmit,
     watch,
     getFieldState,
-    formState: { errors, isValid },
+    formState: {isValid },
   } = useForm({
     mode: "onChange",
   });
