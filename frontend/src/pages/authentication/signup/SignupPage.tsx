@@ -22,8 +22,9 @@ export default function SignupPage() {
   const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("password");
 
   /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
-  const onSubmit = async (data: any, error: any) => {
+  const onSubmit = async (data: any) => {
     const { email, password } = data;
+    const {error} = await supabase.auth.signUp({ email, password });
     console.log(data);
     console.log(errors);
     await supabase.auth.signUp({
