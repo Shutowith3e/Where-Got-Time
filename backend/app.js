@@ -7,12 +7,20 @@ app.use(express.json());
 // for parsing URL-encoded form data
 app.use(express.urlencoded({ extended: true })); 
 
+// import middleware for auth
+import authJWT from './middleware/auth.js';
+app.use(authJWT); // all routes after this needs a jwt in the auth header to work
+
 // import and use exported routes from groupRouter 
 import groupRoutes from './routers/groupRouter.js';
 import eventRoutes from './routers/eventRouter.js';
 
 app.use('/groups', groupRoutes);
 app.use('/events', eventRoutes);
+
+//auth test route, delete later
+import authrouter from './authtest.js';
+app.use('/test',authrouter);
 
 // check if server is running
 app.listen(3000, () => console.log('Server running on port 3000'));

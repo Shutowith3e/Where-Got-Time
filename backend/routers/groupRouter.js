@@ -21,7 +21,7 @@ from '../controllers/groupController.js';
 //router.get
 //router.post etc etc for each of the routes
 // route definition
-router.post("/checkIfAdmin", checkAdmin);
+router.post("/checkAdmin", checkAdmin);//changed to checkAdmin
 router.post("/createGroup", createGroup);
 router.post("/deleteGroup", deleteGroup);
 router.post("/addMember", addMember);
