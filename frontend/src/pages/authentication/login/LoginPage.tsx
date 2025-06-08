@@ -8,7 +8,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {},
   } = useForm();
 
   // login to supabase and display error
@@ -18,8 +18,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
-    console.log(errors);
-    console.log(data);
+    //console.log(errors);
+    //console.log(data);
     const { email, password } = data;
     const { error } = await supabase.auth.signInWithPassword({
       email,
