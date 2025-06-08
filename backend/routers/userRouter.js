@@ -13,4 +13,3 @@ router.post('/getGroups',getGroups);
 router.post('/getEmail',getEmail);
 router.post('/getUserEvents',getUserEvents);
 export default router;
-//export default router;
