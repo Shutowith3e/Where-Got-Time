@@ -1,6 +1,8 @@
 import { MagicCard } from "@/components/magicui/magic-card";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import supabase from "@/helper/supabaseClient";
+import { useState } from "react";
 
 export default function LoginPage() {
   const {
@@ -8,8 +10,25 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: any) => console.log(data);
-  console.log(errors);
+
+  // login to supabase and display error
+  const [message, setMessage] = useState("");
+
+  const onSubmit = async (data: any) => {
+    const { email, password } = data;
+    const { error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    setMessage("");
+    if (error) {
+      setMessage(`${error.message}`);
+      return;
+    } else {
+      setMessage("Sign up Successful! Please Check Your Email!");
+    }
+  };
   return (
     <>
       <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-rose-900/60 ">
@@ -49,8 +68,13 @@ export default function LoginPage() {
                 <input
                   type="submit"
                   value="Log In"
-                  className="text-rose-800 bg-rose-400/15 rounded-3xl px-4 py-2 font-semibold"
+                  className="text-rose-800 bg-rose-400/15 rounded-3xl px-4 py-2 font-semibold hover:underline"
                 />
+                {message && (
+                  <span className="text-center text-sm mt-2 text-red-600 font-semibold">
+                    {message}
+                  </span>
+                )}
               </form>
             </div>
           </MagicCard>
