@@ -37,13 +37,8 @@ const getGroupEvents = async (gid) => {
 
 
 
-/////////// WIP ////////////
-const getHighPriorityEvent = async(uid) => {
-	return await supabase.from('event').select('eid').match({'uid':uid, high_priority:true});
-} 
-/////////////////////////////
 
-//TODO figure out how to limit certain fns to admins, fe, be or db
+
 
 //below is testing script before routes
 

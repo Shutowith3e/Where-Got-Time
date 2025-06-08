@@ -23,10 +23,10 @@ const authJWT = async (req,res,next) =>{
 	catch(err){
 		// mf is using some fake jwt or altered smth inside
 		if (err.name === 'JsonWebTokenError') {
-            return res.status(401).json({ message: 'Token is not valid' });
+            return res.status(401).json({ message: 'Token is not valid', code:"INVALID_TOKEN" });
         }
         if (err.name === 'TokenExpiredError') {
-            return res.status(401).json({ message: 'Token has expired' });
+            return res.status(401).json({ message: 'Token has expired',code:"TOKEN_EXPIRED" });
         }
         // For any other unexpected errors
         console.error('Authentication error:', err);

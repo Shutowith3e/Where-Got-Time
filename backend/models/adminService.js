@@ -28,6 +28,12 @@ const deleteEvent = async (eid) => {
 	return await supabase.from('event').delete().match({'eid':eid});
 } //tested, works 
 
+/////////// WIP ////////////
+const getHighPriorityEvents = async(uid) => {
+	return await supabase.from('event').select('eid').match({'uid':uid, high_priority:true});
+} 
+/////////////////////////////
+
 export {
 	addGroupMember,
 	deleteGroup,
@@ -35,5 +41,6 @@ export {
 	makeAdmin,
 	removeAdmin,
 	createEvent,
-	deleteEvent
+	deleteEvent,
+	getHighPriorityEvents
 }
