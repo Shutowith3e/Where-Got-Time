@@ -101,10 +101,49 @@ const deleteGroup = async (req, res) => {
 	
 
 } //tested, works 
+const createEvent = async (req, res) => {
+
+        // get details frm fe
+        const {gid, event_name, start_datetime, end_datetime, rrule, high_priority} = req.body; 
+        
+        // check if everyth is entered correctly 
+        if (!gid || !event_name || !start_datetime || !end_datetime || !high_priority) {
+            return res.status(400).json({ error: "Missing details" });
+        }
+
+        const { data, error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority);
+        if (error){
+			return res.status(500).json({message: "Error creating event"});
+		}
+
+        return res.status(201).json({message: "Event successfully created!"});
+    }
+// tested, works 
+
+const deleteEvent = async (req, res) => {
+
+        const {eid} = req.body; // either get frm fe or call anth func in be to get 
+
+        // check if everyth is entered correctly 
+        if (!eid) {
+            return res.status(400).json({ error: "Missing eid" });
+        }
+
+        const { error} = await service.deleteEvent(eid); 
+        if (error){
+			return res.status(500).json({message: "Error deleting event"});
+		}
+
+        return res.status(200).json({message: "Event deleted successfully!"});
+    }
+ //tested, works
 
 export {
 	addGroupMember,
 	deleteGroup,
 	deleteGroupMember,
 	makeAdmin,
-	removeAdmin}
+	removeAdmin,
+	deleteEvent,
+	createEvent
+}

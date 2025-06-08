@@ -20,9 +20,20 @@ const removeAdmin = async (uid, gid) =>{
 	return await supabase.from('group_members').update({is_admin:false}).match({'uid':uid, 'gid':gid});
 } //tested, works
 
+const createEvent = async (gid, event_name, start_datetime, end_datetime, rrule, high_priority) => {
+	return await supabase.from('event').insert({'gid': gid, 'event_name':event_name, 'start_datetime':start_datetime, 'end_datetime':end_datetime, 'rrule':rrule, high_priority:high_priority}).select();
+} //tested, works 
+
+const deleteEvent = async (eid) => {
+	return await supabase.from('event').delete().match({'eid':eid});
+} //tested, works 
+
 export {
 	addGroupMember,
 	deleteGroup,
 	deleteGroupMember,
 	makeAdmin,
-	removeAdmin}
+	removeAdmin,
+	createEvent,
+	deleteEvent
+}

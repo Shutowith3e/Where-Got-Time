@@ -6,8 +6,11 @@ import {
     deleteGroupMember,
     makeAdmin,
     removeAdmin,
+	createEvent,
+    deleteEvent,
 } from '../controllers/adminController.js'
-
+router.post("/createEvent", createEvent);
+router.delete("/deleteEvent", deleteEvent);
 router.post("/addGroupMember", addGroupMember);
 router.delete("/deleteGroupMember", deleteGroupMember);
 router.put("/removeAdmin", removeAdmin);
