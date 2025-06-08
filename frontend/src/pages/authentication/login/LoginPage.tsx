@@ -15,10 +15,12 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
 
   const onSubmit = async (data: any) => {
+    console.log(errors);
+    console.log(data);
     const { email, password } = data;
-    const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
     setMessage("");
@@ -26,7 +28,7 @@ export default function LoginPage() {
       setMessage(`${error.message}`);
       return;
     } else {
-      setMessage("Sign up Successful! Please Check Your Email!");
+      setMessage("Login Successful!");
     }
   };
   return (
@@ -47,7 +49,7 @@ export default function LoginPage() {
                     className="border-1 rounded-lg px-3 text-sm"
                     type="text"
                     placeholder="name@example.com"
-                    {...register("Email", {
+                    {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
                     })}
@@ -59,7 +61,7 @@ export default function LoginPage() {
                     className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder="Enter Your Password"
-                    {...register("Password", {
+                    {...register("password", {
                       required: true,
                     })}
                   />
