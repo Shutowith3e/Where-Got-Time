@@ -5,7 +5,10 @@ import LoginPage from "../pages/authentication/login/LoginPage.tsx";
 import SignupPage from "../pages/authentication/signup/SignupPage.tsx";
 import LandingPage from "../pages/landing/LandingPage.tsx";
 import ContributePage from "../pages/landing/ContributePage.tsx";
-import MainUserPage from "@/pages/MainUserPage.tsx";
+
+//protected pages
+import Wrapper from "@/pages/protected/Wrapper.tsx";
+import MainUserPage from "@/pages/protected/MainUserPage.tsx";
 
 export default function AppRouter() {
   return (
@@ -16,7 +19,14 @@ export default function AppRouter() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         {/*Protected Routes */}
-        <Route path="/mainUser" element={<MainUserPage />} />
+        <Route
+          path="/mainUser"
+          element={
+            <Wrapper>
+              <MainUserPage />
+            </Wrapper>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

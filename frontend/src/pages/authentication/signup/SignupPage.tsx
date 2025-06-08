@@ -12,7 +12,7 @@ export default function SignupPage() {
     handleSubmit,
     watch,
     getFieldState,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = useForm({
     mode: "onChange",
   });
@@ -24,12 +24,9 @@ export default function SignupPage() {
   /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
   const onSubmit = async (data: any) => {
     const { email, password } = data;
-    const { error } = await supabase.auth.signUp({ email, password });
-    console.log(data);
-    console.log(errors);
-    await supabase.auth.signUp({
-      email: email,
-      password: password,
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
     });
     setMessage("");
     if (error) {
@@ -109,7 +106,7 @@ export default function SignupPage() {
                   type="submit"
                   value="Sign Up"
                   className={cn(
-                    "text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 font-semibold",
+                    "text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 font-semibold hover:underline",
                     !isValid && "bg-gray-200"
                   )}
                 />

@@ -1,15 +1,40 @@
 import { MagicCard } from "@/components/magicui/magic-card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import supabase from "@/helper/supabaseClient";
+import { useState } from "react";
 
 export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {},
   } = useForm();
-  const onSubmit = (data: any) => console.log(data);
-  console.log(errors);
+
+  // login to supabase and display error
+  const [message, setMessage] = useState("");
+
+  // navigate when logged in
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: any) => {
+    //console.log(errors);
+    //console.log(data);
+    const { email, password } = data;
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setMessage("");
+    if (error) {
+      setMessage(`${error.message}`);
+      return;
+    } else {
+      navigate("/mainUser");
+      return null;
+    }
+  };
   return (
     <>
       <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-rose-900/60 ">
@@ -28,7 +53,7 @@ export default function LoginPage() {
                     className="border-1 rounded-lg px-3 text-sm"
                     type="text"
                     placeholder="name@example.com"
-                    {...register("Email", {
+                    {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
                     })}
@@ -40,7 +65,7 @@ export default function LoginPage() {
                     className="border-1 rounded-lg text-sm px-3"
                     type="password"
                     placeholder="Enter Your Password"
-                    {...register("Password", {
+                    {...register("password", {
                       required: true,
                     })}
                   />
@@ -49,8 +74,13 @@ export default function LoginPage() {
                 <input
                   type="submit"
                   value="Log In"
-                  className="text-rose-800 bg-rose-400/15 rounded-3xl px-4 py-2 font-semibold"
+                  className="text-rose-800 bg-rose-400/15 rounded-3xl px-4 py-2 font-semibold hover:underline"
                 />
+                {message && (
+                  <span className="text-center text-sm mt-2 text-red-600 font-semibold">
+                    {message}
+                  </span>
+                )}
               </form>
             </div>
           </MagicCard>
