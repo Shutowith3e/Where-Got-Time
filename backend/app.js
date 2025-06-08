@@ -14,6 +14,7 @@ app.use(authJWT); // all routes after this needs a jwt in the auth header to wor
 // import and use exported routes from groupRouter 
 import groupRoutes from './routers/groupRouter.js';
 import eventRoutes from './routers/eventRouter.js';
+import adminRoutes from './routers/adminRouter.js';
 
 app.use('/groups', groupRoutes);
 app.use('/events', eventRoutes);
@@ -22,6 +23,10 @@ app.use('/events', eventRoutes);
 import authrouter from './authtest.js';
 app.use('/test',authrouter);
 
+//import middleware for admin verification
+import mCheckAdmin from './middleware/checkAdminMiddleware.js';
+
+app.use('/admins',mCheckAdmin,adminRoutes)
 // check if server is running
 app.listen(3000, () => console.log('Server running on port 3000'));
 
