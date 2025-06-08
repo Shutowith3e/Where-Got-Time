@@ -8,7 +8,8 @@ import {
     removeAdmin,
 	createEvent,
     deleteEvent,
-} from '../controllers/adminController.js'
+} from '../controllers/adminController.js';
+
 router.post("/createEvent", createEvent);
 router.delete("/deleteEvent", deleteEvent);
 router.post("/addGroupMember", addGroupMember);

@@ -14,10 +14,12 @@ app.use(authJWT); // all routes after this needs a jwt in the auth header to wor
 // import and use exported routes from groupRouter 
 import groupRoutes from './routers/groupRouter.js';
 import eventRoutes from './routers/eventRouter.js';
+import userRoutes from './routers/userRouter.js';
 import adminRoutes from './routers/adminRouter.js';
 
 app.use('/groups', groupRoutes);
 app.use('/events', eventRoutes);
+app.use('/users',userRoutes);
 
 //auth test route, delete later
 import authrouter from './authtest.js';
