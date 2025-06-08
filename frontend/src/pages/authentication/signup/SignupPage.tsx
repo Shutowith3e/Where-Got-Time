@@ -25,8 +25,8 @@ export default function SignupPage() {
   const onSubmit = async (data: any) => {
     const { email, password } = data;
     const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email,
+      password,
     });
     setMessage("");
     if (error) {
