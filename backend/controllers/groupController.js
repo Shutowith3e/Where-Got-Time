@@ -28,7 +28,7 @@ const createGroup = async (req, res) => {
     // get grp name and added members from fe
     const { group_name, members } = req.body;
     // check if all data is received 
-    if (!group_name || !members || !Array.isArray(members)) {
+    if (!group_name || !members || !Array.isArray(members) || members.length===0) {
         return res.status(400).json({ message: "Missing group_name or members array." });
     }
 
@@ -46,12 +46,7 @@ const createGroup = async (req, res) => {
         // first member of array is alw creator, admin by default 
         let is_admin; 
 
-        if(i===0){
-            is_admin = true; 
-        }
-        else{
-            is_admin = false;
-        }
+        is_admin = i===0;
 
         // call model func to add member 
         const { error: memberError } = await service.addGroupMember(members[i], gid, is_admin);
