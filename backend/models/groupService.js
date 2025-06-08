@@ -47,14 +47,14 @@ const getHighPriorityEvent = async(uid) => {
 
 //below is testing script before routes
 
-const testgid = '5c6cb264-5134-41a6-8549-46d3df1029d3 ';
+const testgid = '5c6cb264-5134-41a6-8549-46d3df1029d3';
 
 const testuid = '244b4c5a-6578-4af9-9a87-6f4aada352ea';
 //console.log(await createGroup("another random group name"));
 //console.log(await removeAdmin("244b4c5a-6578-4af9-9a87-6f4aada352ea", "a359ca71-0d84-4692-abac-bd4596ac0739"));
 // const {isAdmin,error} = await checkAdmin(testuid,testgid);
 // console.log(isAdmin,error);
-console.log(await checkAdmin(testuid,testgid));
+console.log(await getGroupMembers(testgid));
 
 //export model funcs
 export {
