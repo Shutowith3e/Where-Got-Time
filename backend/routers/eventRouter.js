@@ -10,9 +10,9 @@ import{
 //router.get
 //router.post etc etc for each of the routes
 router.post("/createEvent", createEvent);
-router.post("/deleteEvent", deleteEvent);
+router.delete("/deleteEvent", deleteEvent);
 
-router.get("/getEventParticipants", getEventParticipants);
+router.post("/getEventParticipants", getEventParticipants);
 
 
 export default router;
