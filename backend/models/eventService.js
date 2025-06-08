@@ -17,6 +17,5 @@ const testeid = '0e1c9b0f-e008-4c2c-baa1-3c8145c76eb5';
 //export {func1,func2, etc}
 export{
 	getEventParticipants,
-	createEvent,
-	deleteEvent
+
 }

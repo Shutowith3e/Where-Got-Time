@@ -5,7 +5,7 @@ import {
 	getGroups,
 	getEmail,
 	getUserEvents
-}from '../controllers/userController';
+}from '../controllers/userController.js';
 
 //router.get
 //router.post etc etc for each of the routes
