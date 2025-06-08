@@ -1,5 +1,5 @@
 import { MagicCard } from "@/components/magicui/magic-card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import supabase from "@/helper/supabaseClient";
 import { useState } from "react";
@@ -13,6 +13,9 @@ export default function LoginPage() {
 
   // login to supabase and display error
   const [message, setMessage] = useState("");
+
+  // navigate when logged in
+  const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
     console.log(errors);
@@ -28,7 +31,8 @@ export default function LoginPage() {
       setMessage(`${error.message}`);
       return;
     } else {
-      setMessage("Login Successful!");
+      navigate("/mainUser");
+      return null;
     }
   };
   return (
