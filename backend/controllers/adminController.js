@@ -138,6 +138,17 @@ const deleteEvent = async (req, res) => {
     }
  //tested, works
 
+////////////// WIP /////////////////////
+const getHighPriorityEvent = async (req, res) => {
+    // how to get just one first ?
+    // create an empty lst 
+    // get all EIDs which are high priority using UID from event_part. (call model func gethpevents)
+        // shove the EIDs in lst
+
+
+    // input: uid. call getUserevents. 
+} // this func is only written for ONE member. it shld be called repeatedly if u nid multiple members' info
+////////////////////////////////////////
 export {
 	addGroupMember,
 	deleteGroup,
@@ -145,5 +156,6 @@ export {
 	makeAdmin,
 	removeAdmin,
 	deleteEvent,
-	createEvent
+	createEvent,
+	getHighPriorityEvent
 }

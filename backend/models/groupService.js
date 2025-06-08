@@ -22,6 +22,8 @@ const getGroupMembers = async (gid) => {
 }//tested,works
 
 const createGroup = async (group_name) => {
+	//TODO
+	//im thinking we import and call addGroupMember directly to add the 
 	return await supabase.from('group').insert({group_name:group_name}).select();// let supabase generate the uuid
 }//tested, works
 

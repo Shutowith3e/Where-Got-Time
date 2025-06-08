@@ -8,6 +8,7 @@ import {
     removeAdmin,
 	createEvent,
     deleteEvent,
+	getHighPriorityEvent
 } from '../controllers/adminController.js';
 
 router.post("/createEvent", createEvent);
