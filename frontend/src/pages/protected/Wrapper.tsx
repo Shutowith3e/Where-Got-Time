@@ -12,16 +12,15 @@ export default function Wrapper({ children }: PropsWithChildren) {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+
       const jwt = session?.access_token;
       if (jwt) {
-        // the backend_endpoint go find from clarice or ljl code
-        const response = await fetch("backend_endpoint", {
+        const response = await fetch("http://localhost:8000/groups/groupName", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${jwt}`,
           },
-          body: JSON.stringify({ message: "Hello backend, the jwt token is in Authorization. With much love, your frontend" }),
         });
 
         const result = await response.json();
@@ -34,6 +33,7 @@ export default function Wrapper({ children }: PropsWithChildren) {
     };
     getSession();
   }, []);
+
   if (loading) {
     return <div>loading...</div>;
   } else {
