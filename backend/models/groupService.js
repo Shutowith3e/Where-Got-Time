@@ -15,11 +15,31 @@ const checkAdmin = async(uid,gid) =>{
 } //tested, works
 
 const getGroupName = async (gid) => {
-	return await supabase.from('group').select('group_name').eq('gid',gid);
+	const {data, error} = await supabase.from('group').select('group_name').eq('gid',gid);
+	if (error){
+		return {error};
+	}
+	// parse data and return group name accordingly 
+    const group_name = data[0].group_name;
+    return {data: group_name}; 
 }// tested, works
 
 const getGroupMembers = async (gid) => {
-	return await supabase.from('group_members').select('uid').eq('gid',gid);
+	const {data, error} = await supabase.from('group_members').select('uid').eq('gid',gid);
+	
+	if(error){
+		return {error}; 
+	}
+
+	// parse data and return list of uids accordingly 
+    let group_members = []; 
+    data.forEach(loader); 
+
+    function loader(value){ 
+        group_members.push(value.uid); 
+    }
+	
+	return {data: group_members}; 
 }//tested,works
 
 const createGroup = async (group_name, uid) => { 
@@ -51,7 +71,23 @@ const createGroup = async (group_name, uid) => {
 } //tested, works 
 
 const getAdmins = async (gid) => {
-	return await supabase.from('group_members').select('uid').match({gid:gid, is_admin:true});
+	const {data, error} = await supabase.from('group_members').select('uid').match({gid:gid, is_admin:true});
+
+	if (error){
+		return {error};
+	}
+
+	// create loader function to format data into one array
+	function loader(value){ 
+		admins.push(value.uid); 
+	}
+
+	 // parse data and return list of uids accordingly 
+	let admins = []; 
+	data.forEach(loader); 
+
+	return {data: admins};
+	
 }//tested, works
 
 const getGroupEvents = async (gid) => {
@@ -71,14 +107,14 @@ const testgid = '5c6cb264-5134-41a6-8549-46d3df1029d3';
 
 const testuid = '244b4c5a-6578-4af9-9a87-6f4aada352ea';
 //console.log(await createGroup("another random group name"));
-//console.log(await removeAdmin("244b4c5a-6578-4af9-9a87-6f4aada352ea", "a359ca71-0d84-4692-abac-bd4596ac0739"));
+//console.log(await getGroupName("53cbbfc8-cf4a-4f93-a5f5-8ae265be91d7"));
 // const {isAdmin,error} = await checkAdmin(testuid,testgid);
 // console.log(isAdmin,error);
 
 //console.log(await supabase.from('group').insert({group_name:"testtestest"}).select());// let supabase generate the uuid)
 //console.log(await getGroupMembers(testgid));
 
-//console.log(await createGroup("tes", "244b4c5a-6578-4af9-9a87-6f4aada352ea"));
+//console.log(await getGroupName("31e408d7-e4ab-4d77-bdd5-3c84646d0a92"));
 //export model funcs
 export {
 	checkAdmin,

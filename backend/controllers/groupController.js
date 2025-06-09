@@ -48,8 +48,6 @@ const createGroup = async (req, res) => {
     return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid});
 } //tested, works
 
-
-
 const getGroupName = async (req, res) => {
     // get gid from FE
     const {gid} = req.body; 
@@ -59,11 +57,11 @@ const getGroupName = async (req, res) => {
     }
 
     const {data, error: getNameError} = await service.getGroupName(gid);
-    if (getNameError) throw getNameError;
+    if (getNameError){
+        return res.status(500).json({message: "Error getting group name"});
+    }
 
-    // parse data and return group name accordingly 
-    const group_name = data[0].group_name;
-    return res.status(200).json({group_name: group_name}); 
+    return res.status(200).json({data}); 
 } //tested, works
 
 const getGroupMembers = async (req, res) => {
@@ -75,17 +73,12 @@ const getGroupMembers = async (req, res) => {
     }
 
     const {data, error: getMembersError} = await service.getGroupMembers(gid);
-    if (getMembersError) throw getMembersError;
 
-    // parse data and return list of uids accordingly 
-    let grp_members = []; 
-    data.forEach(loader); 
-
-    function loader(value){ 
-        grp_members.push(value.uid); 
+    if (getMembersError){
+        return res.status(500).json({message: "Could not retrieve group members"});
     }
     
-    return res.status(200).json({grp_members}); 
+    return res.status(200).json({data}); 
 } //tested, works
 
 const getGroupEvents = async (req, res) => {
@@ -97,7 +90,9 @@ const getGroupEvents = async (req, res) => {
     }
 
     const {data, error: getEventsError} = await service.getGroupEvents(gid);
-    if (getEventsError) throw getEventsError;
+    if (getEventsError){
+        return res.status(500).json({error: "Unable to get group's events"});
+    }
 
     // parse data and return list of uids accordingly 
     return res.status(200).json({data}); 
@@ -119,16 +114,8 @@ const getAdmins = async (req, res) => {
     if (error){
 		res.status(500).json({message:'Error retrieving admins'})
 	}
-
-    // parse data and return list of uids accordingly 
-    let admins = []; 
-    data.forEach(loader); 
-
-    function loader(value){ 
-        admins.push(value.uid); 
-    }
     
-    return res.status(200).json({admins}); 
+    return res.status(200).json({data}); 
 
 }
 

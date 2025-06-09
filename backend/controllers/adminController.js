@@ -1,9 +1,10 @@
 import * as service from '../models/adminService.js';
 
 const addGroupMember = async (req, res) => {
-		const uid = req.uid
-        // getting gid and uid from fe 
-        const {gid} = req.body; 
+		// get uid and gid from req.body, admin uid from req.uid (from auth middleware)
+        const admin_uid = req.uid
+        const {uid, gid} = req.body; 
+
         // if gid or uid is missing 
         if (!gid || !uid) {
             return res.status(400).json({ message: "Missing gid or uid in request body" });
@@ -16,36 +17,32 @@ const addGroupMember = async (req, res) => {
         return res.status(200).json({ message: "Member added successfully!" });
 } //tested, works. assuming gid and uid is sent in by FE req body (tbc). 
 // UPDATE: uid shld be sent in via jwt token (not reflected in func above yet)
+// UPDATE UPDATE: reflected
 
 
 const deleteGroupMember = async (req, res) => {
+    // get gid and uid rom req.body, admin's uid from req.uid (from auth middleware)
+    const admin_uid = req.uid;
+    const {gid, uid} = req.body; 
     
-        // getting gid and uid from fe 
-		const uid = req.uid;
-        const {gid} = req.body; 
-        
-        // if gid or uid is missing 
-        if (!gid || !uid) {
-            return res.status(400).json({ message: "Missing gid or uid in request body" });
-        }
+    // if gid or uid is missing 
+    if (!gid || !uid) {
+        return res.status(400).json({ message: "Missing gid or member's uid" });
+    }
 
-        // call model func to add member 
-        const { error} = await service.deleteGroupMember(uid, gid); 
-        if (error) {
-			return res.status(500).json({message: "Error deleting member"});
-		}
+    // call model func to delete member 
+    const { error } = await service.deleteGroupMember(uid, gid); 
+    if (error) {
+        return res.status(500).json({message: "Error deleting member"});
+    }
 
-        return res.status(200).json({ message: "Member deleted successfully!" });
-    
-
-} //tested, works. assuming gid and uid is sent in by FE req body (tbc). 
-// UPDATE: uid shld be sent in via jwt token (not reflected in func above yet)
+    return res.status(200).json({ message: "Member deleted successfully!" });
+} //tested, works
 
 const makeAdmin = async (req, res) => {
-    
         // getting gid and uid from fe 
-		const uid = req.uid;
-        const {gid} = req.body; 
+		const admin_uid = req.uid;
+        const {gid, uid} = req.body; 
         
         // if gid or uid is missing 
         if (!gid || !uid) {
@@ -61,14 +58,12 @@ const makeAdmin = async (req, res) => {
         return res.status(200).json({ message: "Permissions for user has been changed" });
     }
 
- //tested, works. assuming gid and uid is sent in by FE req body (tbc). 
-// UPDATE: uid shld be sent in via jwt token (not reflected in func above yet)
+ //tested, works.
 
 const removeAdmin = async (req, res) => {
-    
         // getting gid and uid from fe 
-		const uid = req.uid;
-        const {gid} = req.body; 
+		const admin_uid = req.uid;
+        const {uid, gid} = req.body; 
         
         // if gid or uid is missing 
         if (!gid || !uid) {
@@ -84,8 +79,8 @@ const removeAdmin = async (req, res) => {
         return res.status(200).json({ message: "Permissions for user has been removed" });
     }
 
-//tested, works. assuming gid and uid is sent in by FE req body (tbc). 
-// UPDATE: uid shld be sent in via jwt token (not reflected in func above yet)
+//tested, works. 
+
 const deleteGroup = async (req, res) => {
 	const {gid} = req.body;
 	// check if gid is received 
@@ -98,25 +93,23 @@ const deleteGroup = async (req, res) => {
 	} 
 	
 	return res.status(200).json({ message: "Group deleted successfully!" });
-	
-
 } //tested, works 
+
 const createEvent = async (req, res) => {
+    // get details frm fe
+    const {gid, event_name, start_datetime, end_datetime, rrule, high_priority} = req.body; 
+    
+    // check if everyth is entered correctly 
+    if (!gid || !event_name || !start_datetime || !end_datetime || !high_priority) {
+        return res.status(400).json({ error: "Missing details" });
+    }
 
-        // get details frm fe
-        const {gid, event_name, start_datetime, end_datetime, rrule, high_priority} = req.body; 
-        
-        // check if everyth is entered correctly 
-        if (!gid || !event_name || !start_datetime || !end_datetime || !high_priority) {
-            return res.status(400).json({ error: "Missing details" });
-        }
+    const { data, error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority);
+    if (error){
+        return res.status(500).json({message: "Error creating event"});
+    }
 
-        const { data, error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority);
-        if (error){
-			return res.status(500).json({message: "Error creating event"});
-		}
-
-        return res.status(201).json({message: "Event successfully created!"});
+    return res.status(201).json({message: "Event successfully created!"});
     }
 // tested, works 
 
