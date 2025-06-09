@@ -24,37 +24,29 @@ const checkAdmin = async (req, res) => {
 // UPDATE UPDATE uid is now via jwt token
 
 const createGroup = async (req, res) => {
-    // get grp name and added members from fe
-    const { group_name, members } = req.body;
+    // get gid from req.body, uid from req.uid (from auth middleware)
+    const uid = req.uid; 
+    const { group_name } = req.body;
+
     // check if all data is received 
-    if (!group_name || !members || !Array.isArray(members) || members.length===0) {
-        return res.status(400).json({ message: "Missing group_name or members array." });
+    if (!group_name || !uid) {
+        return res.status(400).json({ message: "Missing group name or uid." });
     }
-
-    // create empty grp first 
-    const { data, error: groupError } = await service.createGroup(group_name);
-    if (groupError) throw groupError;
-    //get auto generated gid from supabase
-    const gid = data[0].gid; 
-
-    // add members into said grp one by one 
-    for(let i=0; i < members.length; i++){
-        // initialise uid 
-        const uid = members[i];
-        
-        // first member of array is alw creator, admin by default 
-        let is_admin; 
-
-        is_admin = i===0;
-
-        // call model func to add member 
-        const { error: memberError } = await service.addGroupMember(members[i], gid, is_admin);
-        if (memberError) throw memberError;
-    }   
+    
+    // create the grp 
+    const { data, error: groupCreationError } = await service.createGroup(group_name, uid); // gid and grp name returned if successful
+    
+    if (groupCreationError){
+        return res.status(500).json({ message: "Unable to create group."}); 
+    }
+    
+    // extract grp name from data 
+    const created_grpname = data[0].group_name; 
+    const created_gid = data[0].gid; 
 
     //send response back to client. not sure if inclusion of GID is necessary
-    return res.status(201).json({ message: "Group created successfully!", gid: gid});
-} //tested, works 
+    return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid});
+} //tested, works
 
 
 
