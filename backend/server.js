@@ -11,13 +11,18 @@ const { datetime, RRule, RRuleSet, rrulestr } = pkg;
 env.config();
 
 const app = express();
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
+
 
 app.get("/", (_, response) =>
   response.json({ info: "Express app with Supabase" })
 );
 
-app.listen(3000, () =>
+app.listen(8000, () =>
   console.log(
-    new Date().toLocaleTimeString() + `: Server is running on port ${3000}...`
+    new Date().toLocaleTimeString() + `: Server is running on port ${8000}...`
   )
 );
