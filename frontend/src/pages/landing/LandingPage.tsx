@@ -8,7 +8,7 @@ import { AnimatedTestimonials } from "../../components/ui/animated-testimonials"
 export default function LandingPage() {
   return (
     <>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col relative">
         <NavBar />
 
         <main className="flex-grow overflow-x-hidden">
