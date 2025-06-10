@@ -114,5 +114,6 @@ cd wheregottime
 ### 2. Starting FE
 
 ```bash
+npm run install-all
 npm run start-fe
 ```
