@@ -2,7 +2,7 @@ import * as service from '../models/adminService.js';
 
 const addGroupMember = async (req, res) => {
 		// get uid and gid from req.body, admin uid from req.uid (from auth middleware)
-        const admin_uid = req.uid
+
         const {uid, gid} = req.body; 
 
         // if gid or uid is missing 
@@ -22,7 +22,7 @@ const addGroupMember = async (req, res) => {
 
 const deleteGroupMember = async (req, res) => {
     // get gid and uid rom req.body, admin's uid from req.uid (from auth middleware)
-    const admin_uid = req.uid;
+
     const {gid, uid} = req.body; 
     
     // if gid or uid is missing 
@@ -41,7 +41,7 @@ const deleteGroupMember = async (req, res) => {
 
 const makeAdmin = async (req, res) => {
         // getting gid and uid from fe 
-		const admin_uid = req.uid;
+
         const {gid, uid} = req.body; 
         
         // if gid or uid is missing 
@@ -50,10 +50,13 @@ const makeAdmin = async (req, res) => {
         }
 
         // call model func to make a user admin 
-        const { error} = await service.makeAdmin(uid, gid); 
+        const { data,error} = await service.makeAdmin(uid, gid); 
         if (error){
 			return res.status(500).json({message: "Error making admin"});
 		}
+        if(data.length == 0){
+            return res.status(404).json({message: "User does not exist or is already admin"});
+        }
 
         return res.status(200).json({ message: "Permissions for user has been changed" });
     }
@@ -62,7 +65,7 @@ const makeAdmin = async (req, res) => {
 
 const removeAdmin = async (req, res) => {
         // getting gid and uid from fe 
-		const admin_uid = req.uid;
+
         const {uid, gid} = req.body; 
         
         // if gid or uid is missing 
@@ -71,12 +74,18 @@ const removeAdmin = async (req, res) => {
         }
 
         // call model func to make a user admin 
-        const { error} = await service.removeAdmin(uid, gid); 
+        const {data, error} = await service.removeAdmin(uid, gid); 
+        //case 1 invalid uid i.e completely wrong format not uuid
         if (error){
 			return res.status(500).json({message: "Error removing admin"});
 		}
+        // case 2 the person doesnt even exist or is not an admin
+        if(data.length == 0){
+            return res.status(404).json({message: "Admin does not exist"})
+        }
+        
 
-        return res.status(200).json({ message: "Permissions for user has been removed" });
+        return res.status(200).json({ message: "Permissions for user has been removed"});
     }
 
 //tested, works. 

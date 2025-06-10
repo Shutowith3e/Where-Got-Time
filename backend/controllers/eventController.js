@@ -1,5 +1,5 @@
 import * as service from "../models/eventService.js";
-import { checkAdmin } from "./groupController.js";
+
 //TODO implement functionalities for routes here
 
 const getEventParticipants = async (req, res) => {
