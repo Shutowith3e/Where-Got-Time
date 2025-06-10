@@ -2,7 +2,6 @@ import * as service from "../models/eventService.js";
 import { checkAdmin } from "./groupController.js";
 //TODO implement functionalities for routes here
 
-
 const getEventParticipants = async (req, res) => {
     const {eid} = req.body; // either get frm fe or call anth func in be to get 
 
@@ -12,17 +11,12 @@ const getEventParticipants = async (req, res) => {
     }
 
     const { data, error: getParticipantError } = await service.getEventParticipants(eid); 
-    if (getParticipantError) throw getParticipantError;
-
-    // parse data and return list of uids accordingly 
-    let participants = []; 
-    data.forEach(loader); 
-
-    function loader(value){ 
-        participants.push(value.uid); 
+    
+    if (getParticipantError){
+        return res.status(500).json({message: "Could not retrieve participants for this event"})
     }
 
-    return res.status(200).json({participants});
+    return res.status(200).json({data});
 
 } //tested, works
 

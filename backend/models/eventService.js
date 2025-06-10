@@ -3,7 +3,23 @@ import supabase from "./connection.js";
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
 const getEventParticipants = async (eid) => {
-	return await supabase.from('event_participants').select('uid').eq('eid',eid);
+	const { data, error } = await supabase.from('event_participants').select('uid').eq('eid',eid);
+	
+	if(error){
+		return {error};
+	}
+
+	//loader function for formatting data into an array 
+	function loader(value){ 
+		participants.push(value.uid); 
+	}
+
+	// parse data and return list of uids accordingly 
+	let participants = []; 
+	data.forEach(loader); 
+
+	return {data: participants};
+
 }//tested, works
 
 
@@ -12,10 +28,8 @@ const getEventParticipants = async (eid) => {
 
 //testing script below before implementing routing&controllers
 const testeid = '0e1c9b0f-e008-4c2c-baa1-3c8145c76eb5';
-//console.log(await createEvent("5c6cb264-5134-41a6-8549-46d3df1029d3", "hohoho event", '2023-01-01T00:00:00Z', '2023-01-01T00:00:00Z', null, true));
-
+//console.log(await getEventParticipants(testeid));
 //export {func1,func2, etc}
 export{
 	getEventParticipants,
-
 }

@@ -10,7 +10,7 @@ const getEmail = async (req,res) => {
 }
 const getGroups = async (req,res) => {
 	const uid = req.uid;
-	const {data,error} = await service.getEmail(uid);
+	const {data,error} = await service.getGroups(uid);
 	if(error){
 		return res.status(500).json({message:"Error retrieving groups"})
 	}
@@ -18,7 +18,7 @@ const getGroups = async (req,res) => {
 }
 const getUserEvents = async (req,res) => {
 	const uid = req.uid;
-	const {data,error} = await service.getEmail(uid);
+	const {data,error} = await service.getUserEvents(uid);
 	if(error){
 		return res.status(500).json({message:"Error retrieving user events"})
 	}
