@@ -1,3 +1,4 @@
+import { AuthContextProvider } from "./context/AuthContext";
 import AppRouter from "./routes/router";
 function Footer() {
   return (
@@ -27,8 +28,10 @@ function Footer() {
 export default function App() {
   return (
     <>
-      <AppRouter />
-      <Footer />
+      <AuthContextProvider>
+        <AppRouter />
+        <Footer />
+      </AuthContextProvider>
     </>
   );
 }
