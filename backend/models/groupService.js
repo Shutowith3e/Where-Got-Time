@@ -8,7 +8,7 @@ const checkAdmin = async(uid,gid) =>{
 	// will only error if invalid gid
 	const {data, error} = await getAdmins(gid);
 	if(!error){
-		const isAdmin = data.some(admin => admin.uid === uid);
+		const isAdmin = data.includes(uid);
 		return {isAdmin,error}
 	}
 	return {isAdmin:null,error};// returns null isAdmin if error js to make working with it easier
