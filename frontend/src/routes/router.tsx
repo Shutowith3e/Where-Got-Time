@@ -9,6 +9,10 @@ import ContributePage from "../pages/landing/ContributePage.tsx";
 //protected pages
 import Wrapper from "@/pages/protected/Wrapper.tsx";
 import MainUserPage from "@/pages/protected/MainUserPage.tsx";
+import MainGroupPage from "@/pages/protected/MainGroupPage.tsx";
+import IndividualGroupPage from "@/pages/protected/IndividualGroupPage.tsx";
+import CreateGroupPage from "@/pages/protected/CreateGroupPage.tsx";
+import HelpPage from "@/pages/protected/HelpPage.tsx";
 
 export default function AppRouter() {
   return (
@@ -24,6 +28,38 @@ export default function AppRouter() {
           element={
             <Wrapper>
               <MainUserPage />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/mainGroup"
+          element={
+            <Wrapper>
+              <MainGroupPage />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/indivGroup"
+          element={
+            <Wrapper>
+              <IndividualGroupPage />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/createGroup"
+          element={
+            <Wrapper>
+              <CreateGroupPage />
+            </Wrapper>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <Wrapper>
+              <HelpPage />
             </Wrapper>
           }
         />

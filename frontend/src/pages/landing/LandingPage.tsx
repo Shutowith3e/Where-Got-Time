@@ -3,12 +3,14 @@ import NavBar from "../../components/NavBar";
 import { BackgroundGradientAnimation } from "../../components/ui/background-gradient-animation";
 import ReasonCard from "./ReasonCard";
 import { AnimatedTestimonials } from "../../components/ui/animated-testimonials";
-
+import useAuth from "@/context/AuthContext";
 
 export default function LandingPage() {
+  const { authenticated } = useAuth();
+
   return (
     <>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col relative">
         <NavBar />
 
         <main className="flex-grow overflow-x-hidden">
@@ -42,7 +44,7 @@ export default function LandingPage() {
               </h2>
               <div className="flex flex-row space-x-10 z-10">
                 <Link
-                  to="/signup"
+                  to={authenticated ? "/mainUser" : "/signup"}
                   className="text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 hover:underline font-semibold"
                 >
                   Get Started!
@@ -106,7 +108,6 @@ export default function LandingPage() {
                 },
               ]}
             ></AnimatedTestimonials>
-
           </div>
         </main>
       </div>

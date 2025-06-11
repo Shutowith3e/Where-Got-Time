@@ -1,8 +1,7 @@
 import { MagicCard } from "@/components/magicui/magic-card";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import supabase from "@/helper/supabaseClient";
-import { useState } from "react";
+import useAuth from "@/context/AuthContext";
 
 export default function LoginPage() {
   const {
@@ -10,9 +9,7 @@ export default function LoginPage() {
     handleSubmit,
     formState: {},
   } = useForm();
-
-  // login to supabase and display error
-  const [message, setMessage] = useState("");
+  const { login, loginError } = useAuth();
 
   // navigate when logged in
   const navigate = useNavigate();
@@ -21,20 +18,13 @@ export default function LoginPage() {
     //console.log(errors);
     //console.log(data);
     const { email, password } = data;
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const isSuccess = await login(email, password);
 
-    setMessage("");
-    if (error) {
-      setMessage(`${error.message}`);
-      return;
-    } else {
+    if (isSuccess) {
       navigate("/mainUser");
-      return null;
     }
   };
+
   return (
     <>
       <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-rose-900/60 ">
@@ -76,9 +66,9 @@ export default function LoginPage() {
                   value="Log In"
                   className="text-rose-800 bg-rose-400/15 rounded-3xl px-4 py-2 font-semibold hover:underline"
                 />
-                {message && (
+                {loginError && (
                   <span className="text-center text-sm mt-2 text-red-600 font-semibold">
-                    {message}
+                    {loginError.message}
                   </span>
                 )}
               </form>
