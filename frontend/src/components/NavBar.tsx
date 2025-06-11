@@ -1,15 +1,15 @@
 import useAuth from "@/context/AuthContext";
-import supabase from "@/helper/supabaseClient";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
   const { authenticated } = useAuth();
   const navigate = useNavigate();
 
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    navigate("/login");
+  const { signOutError, signOut } = useAuth();
+
+  const onSignOut = async () => {
+    navigate("/");
+    await signOut();
   };
 
   return (
@@ -35,12 +35,17 @@ export default function NavBar() {
             <Link to="/help" className="text-indigo-800 hover:underline">
               Help
             </Link>
-            <button
-              onClick={signOut}
-              className="text-indigo-800 bg-indigo-300 rounded-3xl px-4 py-2 hover:underline font-semibold"
-            >
-              Log Out
-            </button>
+            <div className="flex flex-col">
+              <button
+                onClick={onSignOut}
+                className="text-indigo-800 bg-indigo-300 rounded-3xl px-4 py-2 hover:underline font-semibold"
+              >
+                Log Out
+              </button>
+              {signOutError && (
+                <p className="text-sm text-red-500">{signOutError.message}</p>
+              )}
+            </div>
           </>
         ) : (
           <>

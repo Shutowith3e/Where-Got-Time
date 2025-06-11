@@ -1,4 +1,5 @@
 import supabase from "@/helper/supabaseClient";
+import { AuthError } from "@supabase/supabase-js";
 import {
   createContext,
   useContext,
@@ -10,6 +11,16 @@ import {
 type AuthContextType = {
   authenticated: boolean;
   isAuthenicating: boolean;
+  loginError: AuthError | null;
+  signOutError: AuthError | null;
+  /**
+   * Logs in the user
+   * @param email
+   * @param password
+   * @returns True if login was successful
+   */
+  login: (email: string, password: string) => Promise<boolean>;
+  signOut: () => Promise<boolean>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -17,6 +28,21 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthContextProvider({ children }: PropsWithChildren) {
   const [authenticated, setAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState<AuthError | null>(null);
+  const [signOutError, setSignOutError] = useState<AuthError | null>(null);
+
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    setIsLoading(false);
+    setLoginError(error);
+    setAuthenticated(!error);
+
+    return !error;
+  };
 
   useEffect(() => {
     const getSession = async () => {
@@ -45,11 +71,26 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     getSession();
   }, []);
 
+  const signOut = async () => {
+    setIsLoading(true);
+    const { error } = await supabase.auth.signOut();
+    setSignOutError(error);
+    setIsLoading(false);
+    if (!error) {
+      setAuthenticated(false);
+    }
+    return !error;
+  };
+
   return (
     <AuthContext.Provider
       value={{
         authenticated,
         isAuthenicating: isLoading,
+        loginError,
+        login,
+        signOutError,
+        signOut,
       }}
     >
       {children}
