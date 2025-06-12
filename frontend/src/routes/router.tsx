@@ -40,7 +40,7 @@ export default function AppRouter() {
           }
         />
         <Route
-          path="/indivGroup"
+          path="/indivGroup/:id"
           element={
             <Wrapper>
               <IndividualGroupPage />
