@@ -27,7 +27,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthContextProvider({ children }: PropsWithChildren) {
   const [authenticated, setAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [loginError, setLoginError] = useState<AuthError | null>(null);
   const [signOutError, setSignOutError] = useState<AuthError | null>(null);
 
@@ -46,25 +46,26 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const getSession = async () => {
+      setIsLoading(true);
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
-      const jwt = session?.access_token;
-      if (jwt) {
-        const response = await fetch("http://localhost:8000/groups/groupName", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        });
+      // const jwt = session?.access_token;
+      // if (jwt) {
+      //   const response = await fetch("http://localhost:8000/users/getGroups", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${jwt}`,
+      //     },
+      //   });
 
-        const result = await response.json();
-        console.log(result);
-      } else {
-        console.error("No session found, user not authenticated.");
-      }
+      //   const result = await response.json();
+      //   console.log(result);
+      // } else {
+      //   console.error("No session found, user not authenticated.");
+      // }
       setAuthenticated(!!session);
       setIsLoading(false);
     };

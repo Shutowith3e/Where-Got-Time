@@ -9,7 +9,7 @@ function Footer() {
           <img src="/logo.png" className="max-h-10"></img>
           <p className="text-xs text-slate-600">&copy;2025 Where Got Time</p>
         </div>
-        <div className="flex flex-col items-center space-y-3 mb-2" col-start-8>
+        <div className="flex flex-col items-center space-y-3 mb-2">
           <h3 className="font-extrabold text-slate-800 items-center">
             Contact Us
           </h3>
