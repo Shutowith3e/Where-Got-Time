@@ -52,7 +52,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
 
       const jwt = session?.access_token;
       if (jwt) {
-        const response = await fetch("http://localhost:8000/groups/groupName", {
+        const response = await fetch("http://localhost:8000/users/getGroups", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
