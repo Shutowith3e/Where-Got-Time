@@ -2,15 +2,96 @@ import { MagicCard } from "@/components/magicui/magic-card";
 import NavBar from "@/components/NavBar";
 import { IoMdSearch } from "react-icons/io";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
+const groupList = [
+  {
+    gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
+    groupName: "group 1",
+    groupDescription: "This is a group description",
+  },
+  {
+    gid: "74cf7e70-1c97-405e-9957-0858f3968176",
+    groupName: "abc 2",
+    groupDescription: "testing 1 2 3",
+  },
+  {
+    gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
+    groupName: "abc 3",
+    groupDescription: "blue flex box red text",
+  },
+  {
+    gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
+    groupName: "abc 4",
+    groupDescription:
+      "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
+  },
+
+  {
+    gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
+    groupName: "group 1",
+    groupDescription: "This is a group description",
+  },
+  {
+    gid: "74cf7e70-1c97-405e-9957-0858f3968176",
+    groupName: "abc 2",
+    groupDescription: "testing 1 2 3",
+  },
+  {
+    gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
+    groupName: "abc 3",
+    groupDescription: "blue flex box red text",
+  },
+  {
+    gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
+    groupName: "abc 4",
+    groupDescription:
+      "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
+  },
+  {
+    gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
+    groupName: "group 1",
+    groupDescription: "This is a group description",
+  },
+  {
+    gid: "74cf7e70-1c97-405e-9957-0858f3968176",
+    groupName: "abc 2",
+    groupDescription: "testing 1 2 3",
+  },
+  {
+    gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
+    groupName: "abc 3",
+    groupDescription: "blue flex box red text",
+  },
+  {
+    gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
+    groupName: "abc 4",
+    groupDescription:
+      "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
+  },
+];
+
+type GroupItem = (typeof groupList)[number];
+
+function FilteredGroup({
+  item: { gid, groupName, groupDescription },
+}: {
+  item: GroupItem;
+}) {
+  return (
+    <Link
+      to={`/indivGroup/${gid}`}
+      className="flex basis-1/3 flex-col text-slate-900 bg-slate-100 p-4 rounded-3xl font-semibold hover:bg-slate-200 items-center gap-2 "
+    >
+      <p className="mx-auto">{groupName.toUpperCase()}</p>
+      <p className="text-slate-600 text-sm font-light w-full overflow-ellipsis overflow-hidden whitespace-nowrap text-center">
+        {groupDescription}
+      </p>
+    </Link>
+  );
+}
 
 export default function MainGroupPage() {
-  const groupList = [
-    "55dd8f46-b6a1-471a-a6b2-0a042102919c",
-    "74cf7e70-1c97-405e-9957-0858f3968176",
-    "19980a33-6cbf-4520-adf5-81aa34142f67",
-    "1a418fb8-d234-4ef7-9a11-91f464057636",
-  ];
-
   const [inputValue, setInputValue] = useState("");
 
   const inputChange = (event: any) => {
@@ -26,7 +107,7 @@ export default function MainGroupPage() {
           gradientColor="262626"
           className="mx-auto rounded-2xl py-1.5 px-30 flex flex-row justify-center"
         >
-          <p className="text-slate-500 flex gap-2">
+          <div className="text-slate-500 flex gap-2">
             <IoMdSearch className="flex m-auto" />
             <input
               type="text"
@@ -35,13 +116,15 @@ export default function MainGroupPage() {
               onChange={inputChange}
               className="outline-none"
             />
-          </p>
+          </div>
         </MagicCard>
-        <ul className="flex flex-col items-center gap-2">
+        <ul className="grid grid-cols-2 gap-4 flex-wrap justify-center m-5 overflow-y-scroll max-h-[70vh]">
           {groupList
-            .filter((x) => x.toLowerCase().includes(inputValue.toLowerCase()))
-            .map((x) => (
-              <li>{x}</li>
+            .filter((x) =>
+              x.groupName.toUpperCase().includes(inputValue.toUpperCase())
+            )
+            .map((x, i) => (
+              <FilteredGroup key={i} item={x} />
             ))}
         </ul>
       </div>
