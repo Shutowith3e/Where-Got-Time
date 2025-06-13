@@ -4,7 +4,8 @@ const router = express.Router();
 import {
 	getGroups,
 	getEmail,
-	getUserEvents
+	getUserEvents,
+	getUserPersonalGroup
 }from '../controllers/userController.js';
 
 //router.get
@@ -12,4 +13,5 @@ import {
 router.post('/getGroups',getGroups);
 router.post('/getEmail',getEmail);
 router.post('/getUserEvents',getUserEvents);
+router.post('/getUserPersonalGroup', getUserPersonalGroup);
 export default router;

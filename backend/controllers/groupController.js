@@ -26,15 +26,15 @@ const checkAdmin = async (req, res) => {
 const createGroup = async (req, res) => {
     // get gid from req.body, uid from req.uid (from auth middleware)
     const uid = req.uid; 
-    const { group_name } = req.body;
+    const { group_name , group_description, emails_to_invite} = req.body;
 
     // check if all data is received 
-    if (!group_name || !uid) {
-        return res.status(400).json({ message: "Missing group name or uid." });
+    if (!group_name || !group_description || !emails_to_invite) {
+        return res.status(400).json({ message: "Missing group name, group description, or members to invite." });
     }
     
     // create the grp 
-    const { data, error: groupCreationError } = await service.createGroup(group_name, uid); // gid and grp name returned if successful
+    const { data, error: groupCreationError } = await service.createGroup(group_name, group_description, uid, emails_to_invite); // gid and grp name returned if successful
     
     if (groupCreationError){
         return res.status(500).json({ message: "Unable to create group."}); 
@@ -48,7 +48,7 @@ const createGroup = async (req, res) => {
     return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid});
 } //tested, works
 
-const getGroupName = async (req, res) => {
+const getGroupDetails = async (req, res) => {
     // get gid from FE
     const {gid} = req.body; 
     // check if gid is received 
@@ -56,7 +56,7 @@ const getGroupName = async (req, res) => {
         return res.status(400).json({ error: "Group ID (gid) is required" });
     }
 
-    const {data, error: getNameError} = await service.getGroupName(gid);
+    const {data, error: getNameError} = await service.getGroupDetails(gid);
     if (getNameError){
         return res.status(500).json({message: "Error getting group name"});
     }
@@ -79,7 +79,24 @@ const getGroupMembers = async (req, res) => {
     }
     
     return res.status(200).json({data}); 
-} //tested, works
+} // tested, works 
+
+const getGroupMembersEmails = async (req, res) => {
+    // get gid from FE
+    const {gid} = req.body; 
+    // check if gid is received 
+    if (!gid) {
+        return res.status(400).json({ error: "Group ID (gid) is required" });
+    }
+    
+    const {data, error: getMembersEmailsError} = await service.getGroupMembersEmails(gid);
+
+    if (getMembersEmailsError){
+        return res.status(500).json({message: "Could not retrieve group members' emails"});
+    }
+    
+    return res.status(200).json({data}); 
+}// tested, works
 
 const getGroupEvents = async (req, res) => {
     // get gid from FE
@@ -97,8 +114,6 @@ const getGroupEvents = async (req, res) => {
     // parse data and return list of uids accordingly 
     return res.status(200).json({data}); 
 } //tested, works
-
-
 
 
 const getAdmins = async (req, res) => {
@@ -144,9 +159,10 @@ const acceptGroupInvite = async (req, res) => {
 export{
     checkAdmin, 
     createGroup,
-    getGroupName,
+    getGroupDetails,
     getGroupMembers,
     getGroupEvents,
     getAdmins,
-    acceptGroupInvite
+    acceptGroupInvite,
+    getGroupMembersEmails
 };

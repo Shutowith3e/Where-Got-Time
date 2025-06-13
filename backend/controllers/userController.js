@@ -8,6 +8,17 @@ const getEmail = async (req,res) => {
 	}
 	return res.status(200).json({data})
 }
+
+const getUserPersonalGroup = async (req, res) => {
+	//get uid from jwt 
+	const uid = req.uid;
+	const { data, error } = await service.getUserPersonalGroup(uid); 
+	if(error){
+		return res.status(500).json({message: "Error retrieving personal gid"})
+	}
+	return res.status(200).json({data})
+}
+
 const getGroups = async (req,res) => {
 	const uid = req.uid;
 	const {data,error} = await service.getGroups(uid);
@@ -27,6 +38,7 @@ const getUserEvents = async (req,res) => {
 export{
 	getEmail,
 	getGroups,
-	getUserEvents
+	getUserEvents,
+	getUserPersonalGroup
 }
 // export {fun1,fun2,etc}
