@@ -11,6 +11,7 @@ import {
     getAdmins
     } 
 from '../controllers/groupController.js';
+import { acceptGroupInvite } from "../models/groupService.js";
 
 
 //router.get
@@ -23,6 +24,7 @@ router.post("/groupName", getGroupName);
 router.post("/groupMembers", getGroupMembers);
 router.post("/groupEvents", getGroupEvents);
 router.post("/groupAdmins", getAdmins);
+router.patch("/acceptGroupInvite", acceptGroupInvite);
 
 
 

@@ -1,5 +1,5 @@
 import supabase from "./connection.js";
-import { addGroupMember } from "./adminService.js";
+import { inviteGroupMembers } from "./adminService.js";
 // make functions to query db here
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
@@ -15,13 +15,13 @@ const checkAdmin = async(uid,gid) =>{
 } //tested, works
 
 const getGroupName = async (gid) => {
-	const {data, error} = await supabase.from('group').select('group_name').eq('gid',gid);
+	const {data, error} = await supabase.from('group').select('group_name', 'group_description').eq('gid',gid);
 	if (error){
 		return {error};
 	}
 	// parse data and return group name accordingly 
-    const group_name = data[0].group_name;
-    return {data: group_name}; 
+	const group_name = data[0].group_name;
+    return {data}; 
 }// tested, works
 
 const getGroupMembers = async (gid) => {
@@ -55,7 +55,7 @@ const createGroup = async (group_name, uid) => {
 		const created_gid = grpInfo[0].gid;
 		
 		// adding creator, admin by default
-		const {data, error:addAdminError} = addGroupMember(uid, created_gid); 
+		const {data, error:addAdminError} = await supabase.from('group_members').insert({uid: uid, gid: created_gid, invite_accepted: true}) //auto sets invite accepted to true for creator
 		// if can add the creator  
 		if(!addAdminError){
 			return {data: grpInfo}; // returns gid and group_name to controller 
@@ -94,12 +94,14 @@ const getGroupEvents = async (gid) => {
 	return await supabase.from('event').select("*").eq('gid',gid);
 }//tested, works
 
+const acceptGroupInvite = async (uid, gid) =>{
+	return await supabase.from('group_members').update({invite_accepted:true}).match({uid:uid, gid:gid});
+} // tested, works 
 
 
 
 
-
-
+//console.log(await acceptGroupInvite("244b4c5a-6578-4af9-9a87-6f4aada352ea", "74cf7e70-1c97-405e-9957-0858f3968176"));
 
 //below is testing script before routes
 
@@ -114,7 +116,7 @@ const testuid = '244b4c5a-6578-4af9-9a87-6f4aada352ea';
 //console.log(await supabase.from('group').insert({group_name:"testtestest"}).select());// let supabase generate the uuid)
 //console.log(await getGroupMembers(testgid));
 
-//console.log(await getGroupName("31e408d7-e4ab-4d77-bdd5-3c84646d0a92"));
+console.log(await getGroupName("74cf7e70-1c97-405e-9957-0858f3968176"));
 //export model funcs
 export {
 	checkAdmin,
@@ -122,7 +124,8 @@ export {
 	getGroupMembers,
 	createGroup,
 	getAdmins,
-	getGroupEvents
+	getGroupEvents,
+	acceptGroupInvite
 };
 
 // const { data, error } = await supabase.auth.signInWithPassword({

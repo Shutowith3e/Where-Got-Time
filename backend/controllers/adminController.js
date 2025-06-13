@@ -1,23 +1,21 @@
 import * as service from '../models/adminService.js';
 
-const addGroupMember = async (req, res) => {
+const inviteGroupMembers = async (req, res) => {
 		// get uid and gid from req.body, admin uid from req.uid (from auth middleware)
 
-        const {uid, gid} = req.body; 
+        const {uid_arr, gid} = req.body; 
 
         // if gid or uid is missing 
-        if (!gid || !uid) {
-            return res.status(400).json({ message: "Missing gid or uid in request body" });
+        if (!gid || !uid_arr || uid_arr.length === 0) {
+            return res.status(400).json({ message: "Missing gid or uid array in request body" });
         }
         // call model func to add member 
-        const { error } = await service.addGroupMember(uid, gid, false); // is_admin is false by default
+        const { error } = await service.inviteGroupMembers(uid_arr, gid); // is_admin is false by default
         if (error){
-			return res.status(500).json({message:"Error adding member"});
+			return res.status(500).json({message:"Error inviting members. Please try again"});
 		}
-        return res.status(200).json({ message: "Member added successfully!" });
-} //tested, works. assuming gid and uid is sent in by FE req body (tbc). 
-// UPDATE: uid shld be sent in via jwt token (not reflected in func above yet)
-// UPDATE UPDATE: reflected
+        return res.status(200).json({ message: "Invites sent out to members successfully!" });
+} //tested, works
 
 
 const deleteGroupMember = async (req, res) => {
@@ -123,7 +121,6 @@ const createEvent = async (req, res) => {
 // tested, works 
 
 const deleteEvent = async (req, res) => {
-
         const {eid} = req.body; // either get frm fe or call anth func in be to get 
 
         // check if everyth is entered correctly 
@@ -131,7 +128,7 @@ const deleteEvent = async (req, res) => {
             return res.status(400).json({ error: "Missing eid" });
         }
 
-        const { error} = await service.deleteEvent(eid); 
+        const { error } = await service.deleteEvent(eid); 
         if (error){
 			return res.status(500).json({message: "Error deleting event"});
 		}
@@ -152,7 +149,7 @@ const getHighPriorityEvent = async (req, res) => {
 } // this func is only written for ONE member. it shld be called repeatedly if u nid multiple members' info
 ////////////////////////////////////////
 export {
-	addGroupMember,
+	inviteGroupMembers,
 	deleteGroup,
 	deleteGroupMember,
 	makeAdmin,

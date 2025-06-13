@@ -31,9 +31,9 @@ const getUserEvents = async (uid) =>{
 
 // below is for testing without routes, delete when done
 // to run this u need a copy of the .env file in this directory
-const {data,error} = await getUserEvents('7d118413-0d8d-43ba-822a-79187099a4c4');
+// const {data,error} = await getUserEvents('7d118413-0d8d-43ba-822a-79187099a4c4');
 //console.log(data[0].event)//this is how to get one event, may need a for loop or smth
-console.log(data);
+// console.log(data);
 export {
 	getEmail,
 	getGroups,

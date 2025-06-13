@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import {
     deleteGroup,
-    addGroupMember,
+    inviteGroupMembers,
     deleteGroupMember,
     makeAdmin,
     removeAdmin,
@@ -13,7 +13,7 @@ import {
 
 router.post("/createEvent", createEvent);
 router.delete("/deleteEvent", deleteEvent);
-router.post("/addGroupMember", addGroupMember);
+router.post("/inviteGroupMembers", inviteGroupMembers);
 router.delete("/deleteGroupMember", deleteGroupMember);
 router.put("/removeAdmin", removeAdmin);
 router.delete("/deleteGroup", deleteGroup);

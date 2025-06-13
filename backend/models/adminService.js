@@ -1,8 +1,22 @@
 import supabase from "./connection.js";
 // this is where all the routes that require admin access will go
-const addGroupMember = async (uid, gid, is_admin) => {
-	return await supabase.from('group_members').insert({uid:uid, gid:gid, is_admin:is_admin});
+const inviteGroupMembers = async (uid_arr, gid) => {
+	const insertData = uid_arr.map(uid => ({
+		uid: uid, 
+		gid: gid,
+		is_admin: false, // is_admin set to false by default
+		invite_accepted: null 
+	}));
+
+	const { data , error } = await supabase.from('group_members').insert(insertData);
+	if(error){
+		return {error}
+	};
+
+	return {data}; 
+	
 } //tested, works
+
 
 const deleteGroup = async(gid) => {
 	return await supabase.from('group').delete().eq('gid',gid);
@@ -35,7 +49,7 @@ const getHighPriorityEvents = async(uid) => {
 /////////////////////////////
 
 export {
-	addGroupMember,
+	inviteGroupMembers,
 	deleteGroup,
 	deleteGroupMember,
 	makeAdmin,
@@ -47,3 +61,4 @@ export {
 
 //console.log(await createEvent("5c6cb264-5134-41a6-8549-46d3df1029d3", "idw attend how", "2023-01-01T00:00:00Z","2023-01-01T00:00:00Z", null, true));
 //console.log(await deleteGroupMember('244b4c5a-6578-4af9-9a87-6f4aada352ea','e0884a99-4d9a-4fa6-8fa5-eb5426804650'));
+//console.log(await inviteGroupMember("244b4c5a-6578-4af9-9a87-6f4aada352ea", "62af6a4a-e77c-4124-8c13-93c08644e49a"));
