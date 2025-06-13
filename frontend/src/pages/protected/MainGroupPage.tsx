@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import { IoMdSearch } from "react-icons/io";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import EventCard from "@/components/EventCard";
 
 const groupList = [
   {
@@ -127,6 +128,29 @@ export default function MainGroupPage() {
               <FilteredGroup key={i} item={x} />
             ))}
         </ul>
+        <EventCard
+          title={"Group Events (In The Next 2 Weeks)"}
+          events={[
+            {
+              group: "test123",
+              count: 10,
+              event: "Attend Heap Workshop",
+              date: "2025-06-10 00:00:00",
+            },
+            {
+              group: "test234",
+              count: 20,
+              event: "Attend API Workshop",
+              date: "2025-07-11 12:20:00",
+            },
+            {
+              group: "test",
+              count: 50,
+              event: "Workshop",
+              date: "2025-06-10 00:00:00",
+            },
+          ]}
+        ></EventCard>
       </div>
     </>
   );
