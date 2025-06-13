@@ -119,6 +119,26 @@ const getAdmins = async (req, res) => {
 
 }
 
+const acceptGroupInvite = async (req, res) => {
+    // get uid from auth middleware and gid from req body 
+    const uid = req.uid; 
+    const {gid} = req.body; 
+
+    // check if all data is received 
+    if (!gid || !uid) {
+        return res.status(400).json({ message: "Missing gid or uid." });
+    }
+
+    // update the db to change accept boolean to true 
+    const {error} = await service.acceptGroupInvite(uid, gid); 
+    
+    if (error){
+        return res.status(500).json({message: "Error accepting invite"}); 
+    }
+    
+    return res.status(200).json({message: "You have joined the group!"});
+    
+}
 
 // export controller functions
 export{
@@ -127,5 +147,6 @@ export{
     getGroupName,
     getGroupMembers,
     getGroupEvents,
-    getAdmins
+    getAdmins,
+    acceptGroupInvite
 };
