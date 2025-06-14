@@ -22,25 +22,17 @@ const getGroups = async (uid) =>{
 	if(error){
 		return {data:null,error};
 	}
-	const admin_arr = grpData.map(obj=>{
-		if(obj.is_admin && obj.user.personal_grp !== obj.group.gid){
-			return obj.group;
+	const admin_arr = [];
+	const member_arr = [];
+	function loader(value){ 
+		if(value.is_admin && value.user.personal_grp !== value.group.gid){
+			admin_arr.push(value.group);
 		}
-		else{
-			return null;
-		}
-	}
-	).filter(Boolean);// removes null values
-
-	const member_arr = grpData.map(obj=>{
-		if(!obj.is_admin && obj.user.personal_grp !== obj.group.gid){
-			return obj.group;
-		}
-		else{
-			return null;
+		else if(!value.is_admin && value.user.personal_grp !== value.group.gid){
+			member_arr.push(value.group);
 		}
 	}
-	).filter(Boolean);// removes null values
+	grpData.forEach(loader);
 	return {data:{admin_arr,member_arr},error}
 }
 
