@@ -1,5 +1,4 @@
 import supabase from "./connection.js";
-import { emailUidConverter } from "./userService.js";
 // this is where all the routes that require admin access will go
 const inviteGroupMembers = async (uid_arr, gid) => {
 	const insertData = uid_arr.map(uid => ({

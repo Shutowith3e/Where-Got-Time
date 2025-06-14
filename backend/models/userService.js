@@ -3,34 +3,6 @@ import supabase from "./connection.js";
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
 
-const emailUidConverter = async (user_info_arr) => { // takes in a string of either UID or email 
-	const converted_arr = user_info_arr.map(async (user_info) => {
-		if(user_info.includes("@")){ // checks for @ symbol to determine if it's email 
-			const {data, error} = await supabase.from('user').select('uid').eq('email', user_info); 
-			
-			if(!error){
-				const uid = data[0].uid
-				return uid
-			}
-		}
-
-		else{
-			// if it's UID it returns email 
-			const {data, error} = await supabase.from('user').select('email').eq('uid', user_info);
-			
-			if(!error){
-				const email = data[0].email
-				return email
-			}
-		}
-
-		return {error}
-	})
-
-	return Promise.all(converted_arr);
-	
-} //tested, works 
-
 
 const getEmail = async (uid) => {
 	return await supabase.from("user").select('email').eq('uid',uid);
@@ -93,7 +65,6 @@ export {
 	getEmail,
 	getGroups,
 	getUserEvents,
-	emailUidConverter,
 	getUserPersonalGroup
 }
 //console.log(await supabase.from('user').select('uid').eq('email', "yongsoon.ng.2024@computing.smu.edu.sg"));

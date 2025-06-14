@@ -1,6 +1,6 @@
 import supabase from "./connection.js";
 import { inviteGroupMembers } from "./adminService.js";
-import { emailUidConverter } from "./userService.js";
+import { emailToUid,UidToEmail } from "./helper.js";
 // make functions to query db here
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
@@ -41,65 +41,51 @@ const getGroupMembersEmails = async (gid) => {
 	const {data, error} = await getGroupMembers(gid); 
 	
 	if(!error){ 
-		const email_arr = await emailUidConverter(data); 
-		return {data: email_arr};
+		return await UidToEmail(data); 
 	}
-
 	return {error}; 
 } // tested, works
 
 const createGroup = async (group_name, group_description, uid, emails_to_invite) => { 
 	// create group first 
 	const {data: grpInfo, error: grpNameInsertError} = await supabase.from('group').insert({group_name:group_name, group_description:group_description}).select();// let supabase generate the uuid
-	
+	if(grpNameInsertError){// for if u can't create group 
+		return {error:grpNameInsertError}; 
+	}
 	// if can create, add the creator 
-	if(!grpNameInsertError){
-		// group's auto gen GID
-		const created_gid = grpInfo[0].gid;
-		
-		// adding creator, admin by default
-		const {data, error:addAdminError} = await supabase.from('group_members').insert({uid: uid, gid: created_gid, invite_accepted: true}) //auto sets invite accepted to true for creator
-		// if can add the creator  
-		if(!addAdminError){
-			// convert emails to UIDs
-			const uids_to_invite = await emailUidConverter(emails_to_invite);
-			// invite all members 
-			const {error} = await inviteGroupMembers(uids_to_invite, created_gid); 
-			if(!error){
-				return {data: grpInfo, message: "Members invited successfully"}; // returns gid and group_name to controller 
-			}
-			
-			return {data: grpInfo, error}; 
-		}
-		else{
-			// return error
-			return {addAdminError}; 
-		}
+	// group's auto gen GID
+	const created_gid = grpInfo[0].gid;
+	// adding creator, admin by default
+	const {data, error:addCreatorError} = await supabase.from('group_members').insert({uid: uid, gid: created_gid, invite_accepted: true}) //auto sets invite accepted to true for creator
+	// if can add the creator  
+	if(addCreatorError){
+		return {error:addCreatorError};
 	}
-	else { // for if u can't create group 
-		return {grpNameInsertError}; 
+	// convert emails to UIDs
+	const {data:uids_to_invite,error:conversionError} = await emailToUid(emails_to_invite);
+	if(conversionError){
+		return {error:conversionError};
 	}
-} //tested, works 
+	// invite all members 
+	const {error} = await inviteGroupMembers(uids_to_invite, created_gid); 
+	if(!error){
+		return {data: grpInfo, message: "Members invited successfully"}; // returns gid and group_name to controller 
+	}
+	return {data: grpInfo, error}; 
+}
+
+
+ //tested, works 
 
 const getAdmins = async (gid) => {
-	const {data, error} = await supabase.from('group_members').select('uid').match({gid:gid, is_admin:true});
+	const {data, error} = await supabase.from('group_members').select('uid,user(email)').match({gid:gid, is_admin:true});
 
 	if (error){
 		return {error};
 	}
-
-	// create loader function to format data into one array
-	function loader(value){ 
-		admins.push(value.uid); 
-	}
-
-	 // parse data and return list of uids accordingly 
-	let admins = []; 
-	data.forEach(loader); 
-
-	const admin_emails = await emailUidConverter(admins); 
-
-	return {data: admin_emails};
+	const admin_emails = data.map(obj => obj.user.email)
+	
+	return {data:admin_emails,error};
 	
 }//tested, works
 
