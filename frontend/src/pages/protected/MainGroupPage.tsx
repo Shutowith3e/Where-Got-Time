@@ -10,65 +10,77 @@ const groupList = [
     gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
     groupName: "group 1",
     groupDescription: "This is a group description",
+    isAdmin: true,
   },
   {
     gid: "74cf7e70-1c97-405e-9957-0858f3968176",
     groupName: "abc 2",
     groupDescription: "testing 1 2 3",
+    isAdmin: true,
   },
   {
     gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
     groupName: "abc 3",
     groupDescription: "blue flex box red text",
+    isAdmin: false,
   },
   {
     gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
     groupName: "abc 4",
     groupDescription:
       "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
+    isAdmin: false,
   },
 
   {
     gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
     groupName: "group 1",
     groupDescription: "This is a group description",
+    isAdmin: true,
   },
   {
     gid: "74cf7e70-1c97-405e-9957-0858f3968176",
     groupName: "abc 2",
     groupDescription: "testing 1 2 3",
+    isAdmin: true,
   },
   {
     gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
     groupName: "abc 3",
     groupDescription: "blue flex box red text",
+    isAdmin: false,
   },
   {
     gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
     groupName: "abc 4",
     groupDescription:
       "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
+    isAdmin: false,
   },
   {
     gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
     groupName: "group 1",
     groupDescription: "This is a group description",
+    isAdmin: true,
   },
   {
     gid: "74cf7e70-1c97-405e-9957-0858f3968176",
     groupName: "abc 2",
     groupDescription: "testing 1 2 3",
+    isAdmin: true,
   },
   {
     gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
     groupName: "abc 3",
     groupDescription: "blue flex box red text",
+    isAdmin: false,
   },
   {
     gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
     groupName: "abc 4",
     groupDescription:
       "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
+    isAdmin: false,
   },
 ];
 
@@ -103,7 +115,7 @@ export default function MainGroupPage() {
   return (
     <>
       <NavBar />
-      <div className="flex flex-col">
+      <div className="flex flex-col bg-gradient-to-b from-rose-900/30 p-5">
         <MagicCard
           gradientColor="262626"
           className="mx-auto rounded-2xl py-1.5 px-30 flex flex-row justify-center"
@@ -124,6 +136,7 @@ export default function MainGroupPage() {
             .filter((x) =>
               x.groupName.toUpperCase().includes(inputValue.toUpperCase())
             )
+            .sort((a, b) => a.groupName.localeCompare(b.groupName))
             .map((x, i) => (
               <FilteredGroup key={i} item={x} />
             ))}
@@ -135,7 +148,7 @@ export default function MainGroupPage() {
               group: "test123",
               count: 10,
               event: "Attend Heap Workshop",
-              date: "2025-06-10 00:00:00",
+              date: "2025-08-10 16:30:00",
             },
             {
               group: "test234",
