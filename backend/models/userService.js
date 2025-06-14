@@ -45,56 +45,32 @@ const getUserPersonalGroup = async (uid) => {
 	return {error}
 }
 
-const getGroups = async (uid) => {
-	//get personal gid of user 
-	const { data: personal_gid } = await getUserPersonalGroup(uid); 
+const getGroups = async (uid) =>{
+	const {data:grpData,error} = await supabase.from('group_members').select(`is_admin, group(*),user(personal_grp)`).match({"uid":uid,invite_accepted:true});
+	if(error){
+		return {data:null,error};
+	}
+	const admin_arr = grpData.map(obj=>{
+		if(obj.is_admin && obj.user.personal_grp !== obj.group.gid){
+			return obj.group;
+		}
+		else{
+			return null;
+		}
+	}
+	).filter(Boolean);// removes null values
 
-	//exclude personal gid frm groups returned
-	// get an arr for GIDs which user is admin, another arr for user is NOT admin 
-	const{data:admin_arr ,error: adminArrError} =  await supabase.from("group_members").select("gid").match({"uid":uid, is_admin:true}).neq("gid", personal_gid);
-	const{data:member_arr ,error: memberArrError} =  await supabase.from("group_members").select("gid").match({"uid":uid, is_admin:false}).neq("gid", personal_gid);
-
-	// if any one cannot return, whole thing will return error
-	if (!admin_arr || !member_arr) {
-		return { data: null, error }
-	};
-
-	if(admin_arr && member_arr){// if all data is returned, execute
-		const final_admin_arr = await Promise.all(
-			admin_arr.map(async (value)=>{
-				const {data: grpInfo , error: grpError} = await supabase.from('group').select().eq('gid', value.gid);
-				
-				if (grpError){
-					return {grpError};
-				}
-
-				// retrieve the data from each object in the array returned by grpInfo query 
-				const gid = grpInfo[0].gid;
-				const group_name = grpInfo[0].group_name;
-				const group_description = grpInfo[0].group_description;
-
-				// store the group details in a JSON
-				return {gid, group_name, group_description}
-			})
-		);
-
-		// rinse and repeat for member array 
-		const final_member_arr = await Promise.all(
-			member_arr.map(async (value)=>{
-				const {data: grpInfo , error: grpError} = await supabase.from('group').select().eq('gid', value.gid);
-				if (grpError){
-					return {grpError};
-				}
-				const gid = grpInfo[0].gid;
-				const group_name = grpInfo[0].group_name;
-				const group_description = grpInfo[0].group_description;
-				return {gid, group_name, group_description}
-			})
-		);
-
-		return {final_admin_arr, final_member_arr}
-	}	
-} // tested, works
+	const member_arr = grpData.map(obj=>{
+		if(!obj.is_admin && obj.user.personal_grp !== obj.group.gid){
+			return obj.group;
+		}
+		else{
+			return null;
+		}
+	}
+	).filter(Boolean);// removes null values
+	return {data:{admin_arr,member_arr},error}
+}
 
 const getUserEvents = async (uid) =>{
 	let processedData = null;
