@@ -1,5 +1,6 @@
 import supabase from "./connection.js";
 import { inviteGroupMembers } from "./adminService.js";
+import { emailUidConverter } from "./userService.js";
 // make functions to query db here
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
@@ -14,18 +15,25 @@ const checkAdmin = async(uid,gid) =>{
 	return {isAdmin:null,error};// returns null isAdmin if error js to make working with it easier
 } //tested, works
 
-const getGroupName = async (gid) => {
-	const {data, error} = await supabase.from('group').select('group_name', 'group_description').eq('gid',gid);
-	if (error){
+const getGroupDetails = async (gid) => {
+	// get grp name
+	const {data: grpName, error: grpNameError} = await supabase.from('group').select('group_name').eq('gid',gid);
+	// get grp desc 
+	const {data: grpDesc, error: grpDescError} = await supabase.from('group').select('group_description').eq('gid',gid);
+	
+	if (grpNameError || grpDescError){
 		return {error};
 	}
+
 	// parse data and return group name accordingly 
-	const group_name = data[0].group_name;
-    return {data}; 
+	const group_name = grpName[0].group_name;
+	const group_description = grpDesc[0].group_description;
+    
+	return {data: {group_name:group_name, group_description:group_description}}; 
 }// tested, works
 
 const getGroupMembers = async (gid) => {
-	const {data, error} = await supabase.from('group_members').select('uid').eq('gid',gid);
+	const {data, error} = await supabase.from('group_members').select('uid').match({'gid':gid, 'invite_accepted': true});
 	
 	if(error){
 		return {error}; 
@@ -40,25 +48,41 @@ const getGroupMembers = async (gid) => {
     }
 	
 	return {data: group_members}; 
-}//tested,works
+}// tested, works
 
-const createGroup = async (group_name, uid) => { 
-	//TODO: ACCOMPLISHED
-	//im thinking we import and call addGroupMember directly to add the creator 
-	//UPDATE: done 
+const getGroupMembersEmails = async (gid) => {	
+	const {data, error} = await getGroupMembers(gid); 
+	
+	if(!error){ 
+		const email_arr = await emailUidConverter(data); 
+		return {data: email_arr};
+	}
 
+	return {error}; 
+} // tested, works
+
+const createGroup = async (group_name, group_description, uid, emails_to_invite) => { 
 	// create group first 
-	const {data: grpInfo, error: grpNameInsertError} = await supabase.from('group').insert({group_name:group_name}).select();// let supabase generate the uuid
+	const {data: grpInfo, error: grpNameInsertError} = await supabase.from('group').insert({group_name:group_name, group_description:group_description}).select();// let supabase generate the uuid
 	
 	// if can create, add the creator 
 	if(!grpNameInsertError){
+		// group's auto gen GID
 		const created_gid = grpInfo[0].gid;
 		
 		// adding creator, admin by default
 		const {data, error:addAdminError} = await supabase.from('group_members').insert({uid: uid, gid: created_gid, invite_accepted: true}) //auto sets invite accepted to true for creator
 		// if can add the creator  
 		if(!addAdminError){
-			return {data: grpInfo}; // returns gid and group_name to controller 
+			// convert emails to UIDs
+			const uids_to_invite = await emailUidConverter(emails_to_invite);
+			// invite all members 
+			const {error} = await inviteGroupMembers(uids_to_invite, created_gid); 
+			if(!error){
+				return {data: grpInfo, message: "Members invited successfully"}; // returns gid and group_name to controller 
+			}
+			
+			return {data: grpInfo, error}; 
 		}
 		else{
 			// return error
@@ -86,7 +110,9 @@ const getAdmins = async (gid) => {
 	let admins = []; 
 	data.forEach(loader); 
 
-	return {data: admins};
+	const admin_emails = await emailUidConverter(admins); 
+
+	return {data: admin_emails};
 	
 }//tested, works
 
@@ -108,24 +134,27 @@ const acceptGroupInvite = async (uid, gid) =>{
 const testgid = '5c6cb264-5134-41a6-8549-46d3df1029d3';
 
 const testuid = '244b4c5a-6578-4af9-9a87-6f4aada352ea';
-//console.log(await createGroup("another random group name"));
-//console.log(await getGroupName("53cbbfc8-cf4a-4f93-a5f5-8ae265be91d7"));
+//console.log(await createGroup("dessert you", [""]));
+//console.log(await getGroupName("1734e999-dfb5-4ff3-a6b3-b350b750f76b"));
 // const {isAdmin,error} = await checkAdmin(testuid,testgid);
 // console.log(isAdmin,error);
 
 //console.log(await supabase.from('group').insert({group_name:"testtestest"}).select());// let supabase generate the uuid)
 //console.log(await getGroupMembers(testgid));
 
-console.log(await getGroupName("74cf7e70-1c97-405e-9957-0858f3968176"));
+//console.log(await getAdmins("1a418fb8-d234-4ef7-9a11-91f464057636"));
 //export model funcs
+//console.log(await getGroupMembers("74cf7e70-1c97-405e-9957-0858f3968176"));
+//console.log(await getGroupMembersEmails("74cf7e70-1c97-405e-9957-0858f3968176"));
 export {
 	checkAdmin,
-	getGroupName,
+	getGroupDetails,
 	getGroupMembers,
 	createGroup,
 	getAdmins,
 	getGroupEvents,
-	acceptGroupInvite
+	acceptGroupInvite,
+	getGroupMembersEmails
 };
 
 // const { data, error } = await supabase.auth.signInWithPassword({
@@ -133,3 +162,4 @@ export {
 // 	password: 'Password123#',
 // });
 // console.log(data); 
+

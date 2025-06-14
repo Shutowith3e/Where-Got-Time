@@ -5,13 +5,14 @@ const router = express.Router();
 import { 
     checkAdmin, 
     createGroup, 
-    getGroupName, 
+    getGroupDetails, 
     getGroupMembers, 
     getGroupEvents,
-    getAdmins
+    getAdmins,
+    acceptGroupInvite,
+    getGroupMembersEmails
     } 
 from '../controllers/groupController.js';
-import { acceptGroupInvite } from "../models/groupService.js";
 
 
 //router.get
@@ -20,13 +21,12 @@ import { acceptGroupInvite } from "../models/groupService.js";
 router.post("/checkAdmin", checkAdmin);//changed to checkAdmin
 router.post("/createGroup", createGroup);
 
-router.post("/groupName", getGroupName);
+router.post("/groupDetails", getGroupDetails);
 router.post("/groupMembers", getGroupMembers);
 router.post("/groupEvents", getGroupEvents);
 router.post("/groupAdmins", getAdmins);
 router.patch("/acceptGroupInvite", acceptGroupInvite);
-
-
+router.post("/groupMembersEmails", getGroupMembersEmails); 
 
 
 
