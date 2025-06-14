@@ -16,20 +16,7 @@ const checkAdmin = async(uid,gid) =>{
 } //tested, works
 
 const getGroupDetails = async (gid) => {
-	// get grp name
-	const {data: grpName, error: grpNameError} = await supabase.from('group').select('group_name').eq('gid',gid);
-	// get grp desc 
-	const {data: grpDesc, error: grpDescError} = await supabase.from('group').select('group_description').eq('gid',gid);
-	
-	if (grpNameError || grpDescError){
-		return {error};
-	}
-
-	// parse data and return group name accordingly 
-	const group_name = grpName[0].group_name;
-	const group_description = grpDesc[0].group_description;
-    
-	return {data: {group_name:group_name, group_description:group_description}}; 
+	return await supabase.from('group').select(`group_name, group_description`).eq('gid',gid);
 }// tested, works
 
 const getGroupMembers = async (gid) => {
