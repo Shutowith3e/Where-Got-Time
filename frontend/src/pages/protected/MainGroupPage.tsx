@@ -87,7 +87,7 @@ const groupList = [
 type GroupItem = (typeof groupList)[number];
 
 function FilteredGroup({
-  item: { gid, groupName, groupDescription },
+  item: { gid, groupName, groupDescription, isAdmin },
 }: {
   item: GroupItem;
 }) {
@@ -96,7 +96,14 @@ function FilteredGroup({
       to={`/indivGroup/${gid}`}
       className="flex basis-1/3 flex-col text-slate-900 bg-slate-100 p-4 rounded-3xl font-semibold hover:bg-slate-200 items-center gap-2 "
     >
-      <p className="mx-auto">{groupName.toUpperCase()}</p>
+      <p className="mx-auto text-lg">
+        {groupName.toUpperCase()}
+        {isAdmin ? (
+          <div className="font-light text-sm">Admin</div>
+        ) : (
+          <div className="font-extralight text-sm">Member</div>
+        )}{" "}
+      </p>
       <p className="text-slate-600 text-sm font-light w-full overflow-ellipsis overflow-hidden whitespace-nowrap text-center">
         {groupDescription}
       </p>
