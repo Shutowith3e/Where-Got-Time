@@ -1,11 +1,49 @@
+import { MagicCard } from "@/components/magicui/magic-card";
 import NavBar from "@/components/NavBar";
+import { useForm } from "react-hook-form";
 
 export default function CreateGroupPage() {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+  const onSubmit = (data: any) => console.log(data);
   return (
     <>
-    <NavBar />
-      <h1>Create New Group</h1>
-      <h2>Working on it!</h2>
+      <NavBar />
+      <div className="flex justify-center items-center bg-gradient-to-b from-rose-900/30 p-8 flex-col gap-4">
+        <h1 className="text-center text-3xl font-semibold ">
+          Create New Group
+        </h1>
+        <MagicCard gradientColor="262626" className="rounded-2xl p-8 gap-y-8">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <div className="gap-2">
+              Group Name:
+              <input
+                {...register("groupName", { required: true })}
+                aria-invalid={errors.groupName ? "true" : "false"}
+              />
+              {errors.groupName?.type === "required" && (
+                <p role="alert" className="font-light text-sm text-red-600">
+                  Group name is required
+                </p>
+              )}
+            </div>
+            <div>
+              Group Description: <input {...register("groupDescription")} />
+            </div>
+            <input
+              type="submit"
+              value="Create Group"
+              className="rounded-2xl bg-violet-100 p-1 px-4"
+            />
+          </form>
+        </MagicCard>
+      </div>
     </>
   );
 }
