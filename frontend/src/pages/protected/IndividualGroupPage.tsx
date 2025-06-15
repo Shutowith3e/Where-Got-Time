@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import IndividualCalendar from "@/components/IndividualCalendar";
 
 //pls only tap group 1 from main user page, data is hard coded
+//events stuff come from yongsoon
 
 export default function IndividualGroupPage() {
   type Group = {
@@ -56,9 +57,19 @@ export default function IndividualGroupPage() {
       <NavBar />
       <p>{id}</p>
       <div className="flex flex-col p-2">
-        <h1 className="text-3xl mx-auto font-semibold">
-          {group.groupName.toUpperCase()}'S CALENDAR
-        </h1>
+        <div className="gap-y-2">
+          <h1 className="text-3xl font-semibold text-center ">
+            {group.groupName.toUpperCase()}'S CALENDAR
+          </h1>
+          {group.is_admin ? (
+            <button className="rounded-2xl bg-violet-100 py-1 px-4 flex mx-auto">
+              Edit Group
+            </button>
+          ) : (
+            ""
+          )}
+        </div>
+
         <p className="text-lg font-light mx-auto p-2">
           {group.groupDescription}
         </p>
@@ -75,6 +86,7 @@ export default function IndividualGroupPage() {
             <p key={index}>{a} </p>
           ))}
         </div>
+
         <div className="mx-auto p-4">
           {group.events
             .sort(
@@ -85,7 +97,7 @@ export default function IndividualGroupPage() {
                 <p>Date: {event.date}</p>
                 <p>Event Name: {event.name}</p>
                 <p className="flex flex-row gap-1">
-                  Members Attending:{" "}
+                  Members Attending:
                   {event.members.map((member, index) => (
                     <p key={index}>{member}</p>
                   ))}
