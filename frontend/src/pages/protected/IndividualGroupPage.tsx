@@ -2,8 +2,20 @@ import NavBar from "@/components/NavBar";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import IndividualCalendar from "@/components/IndividualCalendar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 //pls only tap group 1 from main user page, data is hard coded
+//will throw into react hook form for the edit group button
 //events stuff come from yongsoon
 
 export default function IndividualGroupPage() {
@@ -50,8 +62,10 @@ export default function IndividualGroupPage() {
     const findGroup = data.find((g) => g.gid === id);
     setGroup(findGroup || null);
     return;
-  });
+  }, []);
+
   if (!group) return "Invalid";
+
   return (
     <>
       <NavBar />
@@ -61,13 +75,28 @@ export default function IndividualGroupPage() {
           <h1 className="text-3xl font-semibold text-center ">
             {group.groupName.toUpperCase()}'S CALENDAR
           </h1>
-          {group.is_admin ? (
-            <button className="rounded-2xl bg-violet-100 py-1 px-4 flex mx-auto">
-              Edit Group
-            </button>
-          ) : (
-            ""
-          )}
+          <div className="flex justify-center ">
+            {group.is_admin && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline">Edit Group</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Edit Group Details</AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <div>
+                    <p>Group Name: {group.groupName}</p>
+                    <p>Group Description: {group.groupDescription}</p>
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction>Update</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
         </div>
 
         <p className="text-lg font-light mx-auto p-2">
