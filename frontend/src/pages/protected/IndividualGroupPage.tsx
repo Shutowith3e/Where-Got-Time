@@ -1,6 +1,7 @@
 import NavBar from "@/components/NavBar";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import IndividualCalendar from "@/components/IndividualCalendar";
 
 //pls only tap group 1 from main user page, data is hard coded
 
@@ -61,6 +62,7 @@ export default function IndividualGroupPage() {
         <p className="text-lg font-light mx-auto p-2">
           {group.groupDescription}
         </p>
+        <IndividualCalendar></IndividualCalendar>
         <div className="flex flex-row gap-1 mx-auto ">
           Admins:
           {group.admins.map((a, index) => (
@@ -72,6 +74,24 @@ export default function IndividualGroupPage() {
           {group.members.map((a, index) => (
             <p key={index}>{a} </p>
           ))}
+        </div>
+        <div className="mx-auto p-4">
+          {group.events
+            .sort(
+              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            )
+            .map((event, index) => (
+              <div key={index} className="p-2">
+                <p>Date: {event.date}</p>
+                <p>Event Name: {event.name}</p>
+                <p className="flex flex-row gap-1">
+                  Members Attending:{" "}
+                  {event.members.map((member, index) => (
+                    <p key={index}>{member}</p>
+                  ))}
+                </p>
+              </div>
+            ))}
         </div>
       </div>
     </>
