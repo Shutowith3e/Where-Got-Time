@@ -24,7 +24,7 @@ export default function SignupPage() {
   /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
   const onSubmit = async (data: any) => {
     const { email, password } = data;
-    const { error } = await supabase.auth.signUp({
+    const { data:signUpData, error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -32,7 +32,12 @@ export default function SignupPage() {
     if (error) {
       setMessage(`${error.message}`);
       return;
-    } else {
+    }
+    // have to put the !== null or it throws error, but it would never return null unless error
+    else if(signUpData.user !== null && JSON.stringify(signUpData.user.user_metadata) === '{}'){
+      setMessage("Error: account already exists!")
+    }
+    else {
       setMessage("Sign up Successful! Please Check Your Email!");
     }
   };
