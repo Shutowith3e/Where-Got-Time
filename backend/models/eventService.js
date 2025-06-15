@@ -1,5 +1,4 @@
 import supabase from "./connection.js";
-import { emailUidConverter } from "./userService.js";
 // make functions to query db here
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}

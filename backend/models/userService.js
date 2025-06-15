@@ -3,34 +3,6 @@ import supabase from "./connection.js";
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
 
-const emailUidConverter = async (user_info_arr) => { // takes in a string of either UID or email 
-	const converted_arr = user_info_arr.map(async (user_info) => {
-		if(user_info.includes("@")){ // checks for @ symbol to determine if it's email 
-			const {data, error} = await supabase.from('user').select('uid').eq('email', user_info); 
-			
-			if(!error){
-				const uid = data[0].uid
-				return uid
-			}
-		}
-
-		else{
-			// if it's UID it returns email 
-			const {data, error} = await supabase.from('user').select('email').eq('uid', user_info);
-			
-			if(!error){
-				const email = data[0].email
-				return email
-			}
-		}
-
-		return {error}
-	})
-
-	return Promise.all(converted_arr);
-	
-} //tested, works 
-
 
 const getEmail = async (uid) => {
 	return await supabase.from("user").select('email').eq('uid',uid);
@@ -45,56 +17,24 @@ const getUserPersonalGroup = async (uid) => {
 	return {error}
 }
 
-const getGroups = async (uid) => {
-	//get personal gid of user 
-	const { data: personal_gid } = await getUserPersonalGroup(uid); 
-
-	//exclude personal gid frm groups returned
-	// get an arr for GIDs which user is admin, another arr for user is NOT admin 
-	const{data:admin_arr ,error: adminArrError} =  await supabase.from("group_members").select("gid").match({"uid":uid, is_admin:true}).neq("gid", personal_gid);
-	const{data:member_arr ,error: memberArrError} =  await supabase.from("group_members").select("gid").match({"uid":uid, is_admin:false}).neq("gid", personal_gid);
-
-	// if any one cannot return, whole thing will return error
-	if (!admin_arr || !member_arr) {
-		return { data: null, error }
-	};
-
-	if(admin_arr && member_arr){// if all data is returned, execute
-		const final_admin_arr = await Promise.all(
-			admin_arr.map(async (value)=>{
-				const {data: grpInfo , error: grpError} = await supabase.from('group').select().eq('gid', value.gid);
-				
-				if (grpError){
-					return {grpError};
-				}
-
-				// retrieve the data from each object in the array returned by grpInfo query 
-				const gid = grpInfo[0].gid;
-				const group_name = grpInfo[0].group_name;
-				const group_description = grpInfo[0].group_description;
-
-				// store the group details in a JSON
-				return {gid, group_name, group_description}
-			})
-		);
-
-		// rinse and repeat for member array 
-		const final_member_arr = await Promise.all(
-			member_arr.map(async (value)=>{
-				const {data: grpInfo , error: grpError} = await supabase.from('group').select().eq('gid', value.gid);
-				if (grpError){
-					return {grpError};
-				}
-				const gid = grpInfo[0].gid;
-				const group_name = grpInfo[0].group_name;
-				const group_description = grpInfo[0].group_description;
-				return {gid, group_name, group_description}
-			})
-		);
-
-		return {final_admin_arr, final_member_arr}
-	}	
-} // tested, works
+const getGroups = async (uid) =>{
+	const {data:grpData,error} = await supabase.from('group_members').select(`is_admin, group(*),user(personal_grp)`).match({"uid":uid,invite_accepted:true});
+	if(error){
+		return {data:null,error};
+	}
+	const admin_arr = [];
+	const member_arr = [];
+	function loader(value){ 
+		if(value.is_admin && value.user.personal_grp !== value.group.gid){
+			admin_arr.push(value.group);
+		}
+		else if(!value.is_admin && value.user.personal_grp !== value.group.gid){
+			member_arr.push(value.group);
+		}
+	}
+	grpData.forEach(loader);
+	return {data:{admin_arr,member_arr},error}
+}
 
 const getUserEvents = async (uid) =>{
 	let processedData = null;
@@ -117,7 +57,6 @@ export {
 	getEmail,
 	getGroups,
 	getUserEvents,
-	emailUidConverter,
 	getUserPersonalGroup
 }
 //console.log(await supabase.from('user').select('uid').eq('email', "yongsoon.ng.2024@computing.smu.edu.sg"));
