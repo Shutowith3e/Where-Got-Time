@@ -17,7 +17,7 @@ export type GroupEvent = {
 export async function GetUserEvents(): Promise<GroupEvent[]> {
   const {
     data: { data },
-  } = await axiosInstance.post<GetUserEventsDto>("/user/getUserEvents");
+  } = await axiosInstance.post<GetUserEventsDto>("/users/getUserEvents");
 
   return data.map<GroupEvent>(
     ({
