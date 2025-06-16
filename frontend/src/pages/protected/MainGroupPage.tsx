@@ -4,87 +4,8 @@ import { IoMdSearch } from "react-icons/io";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import EventCard from "@/components/EventCard";
-
-const groupList = [
-  {
-    gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
-    groupName: "group 1",
-    groupDescription: "This is a group description",
-    isAdmin: true,
-  },
-  {
-    gid: "74cf7e70-1c97-405e-9957-0858f3968176",
-    groupName: "abc 2",
-    groupDescription: "testing 1 2 3",
-    isAdmin: true,
-  },
-  {
-    gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
-    groupName: "abc 3",
-    groupDescription: "blue flex box red text",
-    isAdmin: false,
-  },
-  {
-    gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
-    groupName: "abc 4",
-    groupDescription:
-      "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
-    isAdmin: false,
-  },
-
-  {
-    gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
-    groupName: "group 1",
-    groupDescription: "This is a group description",
-    isAdmin: true,
-  },
-  {
-    gid: "74cf7e70-1c97-405e-9957-0858f3968176",
-    groupName: "abc 2",
-    groupDescription: "testing 1 2 3",
-    isAdmin: true,
-  },
-  {
-    gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
-    groupName: "abc 3",
-    groupDescription: "blue flex box red text",
-    isAdmin: false,
-  },
-  {
-    gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
-    groupName: "abc 4",
-    groupDescription:
-      "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
-    isAdmin: false,
-  },
-  {
-    gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
-    groupName: "group 1",
-    groupDescription: "This is a group description",
-    isAdmin: true,
-  },
-  {
-    gid: "74cf7e70-1c97-405e-9957-0858f3968176",
-    groupName: "abc 2",
-    groupDescription: "testing 1 2 3",
-    isAdmin: true,
-  },
-  {
-    gid: "19980a33-6cbf-4520-adf5-81aa34142f67",
-    groupName: "abc 3",
-    groupDescription: "blue flex box red text",
-    isAdmin: false,
-  },
-  {
-    gid: "1a418fb8-d234-4ef7-9a11-91f464057636",
-    groupName: "abc 4",
-    groupDescription:
-      "this is a very very very very very long good description. NOTHING BEATS A JET 2 HOLIDAY AND RIGHT NOW U CAN SAVE 50 POUNDS, PER PERSON. THATS 200 POUNDS OFF FOR A FAMILY OF FOUR",
-    isAdmin: false,
-  },
-];
-
-type GroupItem = (typeof groupList)[number];
+import { getGroupData, type GroupItem } from "@/services/get-group-data";
+import { useQuery } from "@tanstack/react-query";
 
 function FilteredGroup({
   item: { gid, groupName, groupDescription, isAdmin },
@@ -96,14 +17,14 @@ function FilteredGroup({
       to={`/indivGroup/${gid}`}
       className="flex basis-1/3 flex-col text-slate-900 bg-slate-100 p-4 rounded-3xl font-semibold hover:bg-slate-200 items-center gap-2 "
     >
-      <p className="mx-auto text-lg">
+      <div className="mx-auto text-lg">
         {groupName.toUpperCase()}
         {isAdmin ? (
-          <div className="font-light text-sm">Admin</div>
+          <p className="font-light text-sm">Admin</p>
         ) : (
-          <div className="font-extralight text-sm">Member</div>
-        )}{" "}
-      </p>
+          <p className="font-extralight text-sm">Member</p>
+        )}
+      </div>
       <p className="text-slate-600 text-sm font-light w-full overflow-ellipsis overflow-hidden whitespace-nowrap text-center">
         {groupDescription}
       </p>
@@ -114,10 +35,19 @@ function FilteredGroup({
 export default function MainGroupPage() {
   const [inputValue, setInputValue] = useState("");
 
+  const { data: groupList, isLoading } = useQuery({
+    queryKey: ["user-groups"],
+    queryFn: getGroupData,
+  });
+
   const inputChange = (event: any) => {
     const value = event.target.value;
     setInputValue(value);
   };
+
+  if (isLoading || !groupList) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>

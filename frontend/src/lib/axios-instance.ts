@@ -2,7 +2,7 @@ import supabase from "@/helper/supabaseClient";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.VITE_BACKEND_URL ?? "http://localhost:8000",
+  baseURL: import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000",
 });
 
 axiosInstance.interceptors.request.use(async (context) => {
