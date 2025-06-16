@@ -4,7 +4,7 @@ import { IoMdSearch } from "react-icons/io";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import EventCard from "@/components/EventCard";
-import { getGroupData, type GroupItem } from "@/services/get-group-data";
+import { getGroupData, type GroupItem } from "@/services/groups/get-group-data";
 import { useQuery } from "@tanstack/react-query";
 
 function FilteredGroup({
@@ -20,9 +20,9 @@ function FilteredGroup({
       <div className="mx-auto text-lg">
         {groupName.toUpperCase()}
         {isAdmin ? (
-          <p className="font-light text-sm">Admin</p>
+          <p className="font-light text-sm text-center">Admin</p>
         ) : (
-          <p className="font-extralight text-sm">Member</p>
+          <p className="font-extralight text-sm text-center">Member</p>
         )}
       </div>
       <p className="text-slate-600 text-sm font-light w-full overflow-ellipsis overflow-hidden whitespace-nowrap text-center">
