@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import EventCard from "@/components/EventCard";
 import { getGroupData, type GroupItem } from "@/services/groups/get-group-data";
 import { useQuery } from "@tanstack/react-query";
+import { GetUserEvents } from "@/services/events/get-user-events-data";
+import dayjs from "dayjs";
 
 function FilteredGroup({
   item: { gid, groupName, groupDescription, isAdmin },
@@ -40,12 +42,17 @@ export default function MainGroupPage() {
     queryFn: getGroupData,
   });
 
+  const { data: groupEventList, isFetching } = useQuery({
+    queryKey: ["user-events"],
+    queryFn: GetUserEvents,
+  });
+
   const inputChange = (event: any) => {
     const value = event.target.value;
     setInputValue(value);
   };
 
-  if (isLoading || !groupList) {
+  if (isLoading || !groupList || isFetching || !groupEventList) {
     return <p>Loading...</p>;
   }
 
@@ -80,26 +87,14 @@ export default function MainGroupPage() {
         </ul>
         <EventCard
           title={"Group Events (In The Next 2 Weeks)"}
-          events={[
-            {
-              group: "test123",
-              count: 10,
-              event: "Attend Heap Workshop",
-              date: "2025-08-10 16:30:00",
-            },
-            {
-              group: "test234",
-              count: 20,
-              event: "Attend API Workshop",
-              date: "2025-07-11 12:20:00",
-            },
-            {
-              group: "test",
-              count: 50,
-              event: "Workshop",
-              date: "2025-06-10 00:00:00",
-            },
-          ]}
+          events={groupEventList.map(
+            ({ groupName, eventName, startDatetime, highPriority }) => ({
+              group: groupName,
+              event: eventName,
+              date: dayjs(startDatetime).format("DD/MM/YYYY (hh.m A)"),
+              highPriority,
+            })
+          )}
         ></EventCard>
       </div>
     </>
