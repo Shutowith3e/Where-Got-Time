@@ -1,101 +1,105 @@
 import supabase from "./connection.js";
 import { inviteGroupMembers } from "./adminService.js";
-import { emailToUid,UidToEmail } from "./helper.js";
+import { emailToUid, UidToEmail } from "./helper.js";
 // make functions to query db here
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
 
-const checkAdmin = async(uid,gid) =>{
+const checkAdmin = async (uid, gid) => {
 	// will only error if invalid gid
-	const {data, error} = await getAdmins(gid);
-	if(!error){
+	const { data, error } = await getAdmins(gid);
+	if (!error) {
 		const isAdmin = data.includes(uid);
-		return {isAdmin,error}
+		return { isAdmin, error }
 	}
-	return {isAdmin:null,error};// returns null isAdmin if error js to make working with it easier
+	return { isAdmin: null, error };// returns null isAdmin if error js to make working with it easier
 } //tested, works
 
 const getGroupDetails = async (gid) => {
-	return await supabase.from('group').select(`group_name, group_description`).eq('gid',gid);
+	return await supabase.from('group').select(`group_name, group_description`).eq('gid', gid);
 }// tested, works
 
 const getGroupMembers = async (gid) => {
-	const {data, error} = await supabase.from('group_members').select('uid').match({'gid':gid, 'invite_accepted': true});
-	
-	if(error){
-		return {error}; 
+	const { data, error } = await supabase.from('group_members').select('uid').match({ 'gid': gid, 'invite_accepted': true });
+
+	if (error) {
+		return { error };
 	}
 
 	// parse data and return list of uids accordingly 
-    let group_members = []; 
-    data.forEach(loader); 
+	let group_members = [];
+	data.forEach(loader);
 
-    function loader(value){ 
-        group_members.push(value.uid); 
-    }
-	
-	return {data: group_members}; 
+	function loader(value) {
+		group_members.push(value.uid);
+	}
+
+	return { data: group_members };
 }// tested, works
 
-const getGroupMembersEmails = async (gid) => {	
-	const {data, error} = await getGroupMembers(gid); 
-	
-	if(!error){ 
-		return await UidToEmail(data); 
+const getGroupMembersEmails = async (gid) => {
+	const { data, error } = await getGroupMembers(gid);
+
+	if (!error) {
+		return await UidToEmail(data);
 	}
-	return {error}; 
+	return { error };
 } // tested, works
 
-const createGroup = async (group_name, group_description, uid, emails_to_invite) => { 
+const createGroup = async (group_name, group_description, uid, emails_to_invite) => {
 	// create group first 
-	const {data: grpInfo, error: grpNameInsertError} = await supabase.from('group').insert({group_name:group_name, group_description:group_description}).select();// let supabase generate the uuid
-	if(grpNameInsertError){// for if u can't create group 
-		return {error:grpNameInsertError}; 
+	const { data: grpInfo, error: grpNameInsertError } = await supabase.from('group').insert({ group_name: group_name, group_description: group_description }).select();// let supabase generate the uuid
+	if (grpNameInsertError) {// for if u can't create group 
+		return { error: grpNameInsertError };
 	}
 	// if can create, add the creator 
 	// group's auto gen GID
 	const created_gid = grpInfo[0].gid;
 	// adding creator, admin by default
-	const {data, error:addCreatorError} = await supabase.from('group_members').insert({uid: uid, gid: created_gid, invite_accepted: true}) //auto sets invite accepted to true for creator
+	const { data, error: addCreatorError } = await supabase.from('group_members').insert({ uid: uid, gid: created_gid, invite_accepted: true }) //auto sets invite accepted to true for creator
 	// if can add the creator  
-	if(addCreatorError){
-		return {error:addCreatorError};
+	if (addCreatorError) {
+		return { error: addCreatorError };
 	}
 	// convert emails to UIDs
-	const {data:uids_to_invite,error:conversionError} = await emailToUid(emails_to_invite);
-	if(conversionError){
-		return {error:conversionError};
+	const { data: uids_to_invite, error: conversionError } = await emailToUid(emails_to_invite);
+	if (conversionError) {
+		return { error: conversionError };
 	}
 	// invite all members 
-	const {error} = await inviteGroupMembers(uids_to_invite, created_gid); 
-	if(!error){
-		return {data: grpInfo, message: "Members invited successfully"}; // returns gid and group_name to controller 
+	const { error } = await inviteGroupMembers(uids_to_invite, created_gid);
+	if (!error) {
+		return { data: grpInfo, message: "Members invited successfully" }; // returns gid and group_name to controller 
 	}
-	return {data: grpInfo, error}; 
+	return { data: grpInfo, error };
 }
 
 
- //tested, works 
+//tested, works 
 
 const getAdmins = async (gid) => {
-	const {data, error} = await supabase.from('group_members').select('uid,user(email)').match({gid:gid, is_admin:true});
+	const { data, error } = await supabase.from('group_members').select('uid,user(email)').match({ gid: gid, is_admin: true });
 
-	if (error){
-		return {error};
+	if (error) {
+		return { error };
 	}
 	const admin_emails = data.map(obj => obj.user.email)
-	
-	return {data:admin_emails,error};
-	
+
+	return { data: admin_emails, error };
+
 }//tested, works
 
 const getGroupEvents = async (gid) => {
-	return await supabase.from('event').select("*").eq('gid',gid);
+	return await supabase.from('event').select("*").eq('gid', gid);
 }//tested, works
 
-const acceptGroupInvite = async (uid, gid) =>{
-	return await supabase.from('group_members').update({invite_accepted:true}).match({uid:uid, gid:gid});
+const acceptGroupInvite = async (uid, gid) => {
+	return await supabase.from('group_members').update({ invite_accepted: true }).match({ uid: uid, gid: gid });
 } // tested, works 
+
+const searchEmails = async (searchTerm) => {
+	return await supabase.from('user').select('email').like('email', `%${searchTerm}%`).limit(10);
+}
 
 
 
@@ -127,7 +131,8 @@ export {
 	getAdmins,
 	getGroupEvents,
 	acceptGroupInvite,
-	getGroupMembersEmails
+	getGroupMembersEmails,
+	searchEmails,
 };
 
 // const { data, error } = await supabase.auth.signInWithPassword({
