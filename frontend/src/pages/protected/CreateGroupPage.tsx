@@ -1,5 +1,8 @@
 import { MagicCard } from "@/components/magicui/magic-card";
 import NavBar from "@/components/NavBar";
+import SearchEmails from "@/components/SearchEmails";
+import SelectedMembers from "@/components/SelectedMembers";
+
 import { useForm } from "react-hook-form";
 
 export default function CreateGroupPage() {
@@ -22,10 +25,13 @@ export default function CreateGroupPage() {
             className="flex flex-col gap-4"
           >
             <div className="gap-2">
+              <SearchEmails />
+              <SelectedMembers />
               Group Name:
               <input
                 {...register("groupName", { required: true })}
                 aria-invalid={errors.groupName ? "true" : "false"}
+                className="ml-2 rounded-full border-2 border-slate-100"
               />
               {errors.groupName?.type === "required" && (
                 <p role="alert" className="font-light text-sm text-red-600">
@@ -33,8 +39,12 @@ export default function CreateGroupPage() {
                 </p>
               )}
             </div>
-            <div>
-              Group Description: <input {...register("groupDescription")} />
+            <div className="flex flex-col">
+              Group Description:{" "}
+              <textarea
+                {...register("groupDescription")}
+                className="border-2 border-slate-100 rounded-lg"
+              ></textarea>
             </div>
             <input
               type="submit"
