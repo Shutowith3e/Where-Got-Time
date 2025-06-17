@@ -34,15 +34,44 @@ function FilteredGroup({
   );
 }
 
-export default function MainGroupPage() {
-  const [inputValue, setInputValue] = useState("");
-
-  const { data: groupList, isLoading } = useQuery({
+function GroupList({ filterSearch }: { filterSearch: string }) {
+  const { data: groupList, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-groups"],
     queryFn: getGroupData,
   });
+  if (isGroupsPending) {
+    return (
+      <ul className="grid grid-cols-2 gap-4 flex-wrap justify-center m-5 overflow-y-scroll max-h-[70vh]">
+        {[...new Array(2).keys()].map(() => (
+          <div className="h-26 rounded-3xl bg-slate-100 flex p-4 gap-2 flex-col">
+            <div className="mx-auto text-lg">
+              <div className="h-4 w-32 rounded-xl bg-slate-200 animate-pulse mx-auto" />
+              <div className="h-3 w-16 rounded-xl mt-2 bg-slate-200 animate-pulse mx-auto" />
+            </div>
+            <div className="h-8 w-48 rounded-xl bg-slate-200 animate-pulse mx-auto" />
+          </div>
+        ))}
+      </ul>
+    );
+  }
+  return (
+    <ul className="grid grid-cols-2 gap-4 flex-wrap justify-center m-5 overflow-y-scroll max-h-[70vh]">
+      {(groupList ?? [])
+        .filter((x) =>
+          x.groupName.toUpperCase().includes(filterSearch.toUpperCase())
+        )
+        .sort((a, b) => a.groupName.localeCompare(b.groupName))
+        .map((x, i) => (
+          <FilteredGroup key={i} item={x} />
+        ))}
+    </ul>
+  );
+}
 
-  const { data: groupEventList, isFetching } = useQuery({
+export default function MainGroupPage() {
+  const [inputValue, setInputValue] = useState("");
+
+  const { data: groupEventList, isPending: isUserEventsPending } = useQuery({
     queryKey: ["user-events"],
     queryFn: GetUserEvents,
   });
@@ -52,7 +81,7 @@ export default function MainGroupPage() {
     setInputValue(value);
   };
 
-  if (isLoading || !groupList || isFetching || !groupEventList) {
+  if (isUserEventsPending) {
     return <p>Loading...</p>;
   }
 
@@ -75,23 +104,14 @@ export default function MainGroupPage() {
             />
           </div>
         </MagicCard>
-        <ul className="grid grid-cols-2 gap-4 flex-wrap justify-center m-5 overflow-y-scroll max-h-[70vh]">
-          {groupList
-            .filter((x) =>
-              x.groupName.toUpperCase().includes(inputValue.toUpperCase())
-            )
-            .sort((a, b) => a.groupName.localeCompare(b.groupName))
-            .map((x, i) => (
-              <FilteredGroup key={i} item={x} />
-            ))}
-        </ul>
+        <GroupList filterSearch={inputValue} />
         <EventCard
           title={"Group Events (In The Next 2 Weeks)"}
-          events={groupEventList.map(
+          events={(groupEventList ?? []).map(
             ({ groupName, eventName, startDatetime, highPriority }) => ({
               group: groupName,
               event: eventName,
-              date: dayjs(startDatetime).format("DD/MM/YYYY (hh.m A)"),
+              date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
               highPriority,
             })
           )}
