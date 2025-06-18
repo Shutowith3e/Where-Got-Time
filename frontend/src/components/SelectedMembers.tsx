@@ -1,6 +1,6 @@
 function SelectedMember({ email }: { email: string }) {
   return (
-    <p className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+    <p className="overflow-ellipsis overflow-hidden whitespace-nowrap w-full">
       {email}
     </p>
   );
