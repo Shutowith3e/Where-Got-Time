@@ -24,7 +24,7 @@ export default function CreateGroupPage() {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            <div className="gap-2">
+            <div className="flex flex-col gap-4">
               <SearchEmails />
               <SelectedMembers />
               Group Name:
