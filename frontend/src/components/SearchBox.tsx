@@ -1,4 +1,4 @@
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
 function MemberSearch({
   email,
@@ -30,15 +30,12 @@ export default function SearchBox({
   selectedEmails,
   setSelectedEmails,
 }: EmailResultProps) {
-  useEffect(() => {
-    console.log("📢 selectedEmails changed:", selectedEmails);
-  }, [selectedEmails]);
-
   return (
     <div className="flex absolute bg-slate-50 w-full border border-slate-200 rounded-b-lg z-index-20">
       <div className="p-1 flex-col">
         {(emails ?? []).map((email) => (
           <MemberSearch
+            key={email}
             email={email}
             onClick={() => {
               if (!selectedEmails.includes(email)) {
