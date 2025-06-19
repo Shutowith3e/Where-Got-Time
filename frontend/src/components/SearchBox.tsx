@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 
 function MemberSearch({
   email,
@@ -22,7 +22,7 @@ type EmailResultProps = {
   emails?: string[];
   isLoading: boolean;
   selectedEmails: string[];
-  setSelectedEmails: (value: string[] | ((prev: string[]) => string[])) => void;
+  setSelectedEmails: Dispatch<SetStateAction<string[]>>;
 };
 
 export default function SearchBox({
