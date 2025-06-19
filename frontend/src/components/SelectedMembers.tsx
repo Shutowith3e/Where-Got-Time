@@ -6,17 +6,18 @@ function SelectedMember({ email }: { email: string }) {
   );
 }
 
-export default function SelectedMembers() {
+export default function SelectedMembers({
+  selectedEmails,
+}: {
+  selectedEmails: string[];
+}) {
   return (
     <div className="flex flex-col p-1 border-2 border-slate-200 rounded-lg max-h-35 ">
       <p className="text-sm font-light text-slate-700 pb-1">Selected Members</p>
       <div className="p-1 overflow-y-scroll">
-        <SelectedMember email="example@gmail.com" />
-        <SelectedMember email="example@gmail.com" />
-        <SelectedMember email="example@gmail.com" />
-        <SelectedMember email="example@gmail.com" />
-        <SelectedMember email="example@gmail.com" />
-        <SelectedMember email="example@gmail.com" />
+        {selectedEmails.map((selectedEmail) => (
+          <SelectedMember email={selectedEmail} />
+        ))}
       </div>
     </div>
   );
