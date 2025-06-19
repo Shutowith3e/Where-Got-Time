@@ -32,7 +32,7 @@ export default function SearchEmails() {
     <div>
       <div
         className={cn(
-          "rounded-t-lg bg-slate-50 px-4 py-1 flex flex-row items-center justify-center gap-4",
+          "rounded-t-lg bg-slate-50 px-4 py-1 flex flex-row items-center justify-center gap-4 relative",
           !showSearchBox && "rounded-b-lg"
         )}
       >
@@ -43,7 +43,7 @@ export default function SearchEmails() {
           placeholder="Search For Emails ..."
           className="outline-none"
           onFocus={() => setShowSearchBox(true)}
-          onBlur={() => setShowSearchBox(false)}
+          onBlur={() => setTimeout(() => setShowSearchBox(false), 200)}
         />
       </div>
       {showSearchBox && (

@@ -1,6 +1,18 @@
-function MemberSearch({ email }: { email: string }) {
+import { useEffect, useState } from "react";
+
+function MemberSearch({
+  email,
+  onClick,
+}: {
+  email: string;
+  onClick: () => void;
+}) {
   return (
-    <p className="w-58 overflow-ellipsis overflow-hidden whitespace-nowrap font-light ">
+    <p
+      className="w-58 overflow-ellipsis overflow-hidden whitespace-nowrap font-light cursor-pointer
+hover:bg-slate-100"
+      onClick={onClick}
+    >
       {email}
     </p>
   );
@@ -11,11 +23,24 @@ type EmailResultProps = {
   isLoading: boolean;
 };
 export default function SearchBox({ emails }: EmailResultProps) {
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log("📢 selectedEmails changed:", selectedEmails);
+  }, [selectedEmails]);
+  
   return (
     <div className="flex absolute bg-slate-50 w-full border border-slate-200 rounded-b-lg z-index-20">
       <div className="p-1 flex-col">
         {(emails ?? []).map((email) => (
-          <MemberSearch email={email} />
+          <MemberSearch
+            email={email}
+            onClick={() => {
+              if (!selectedEmails.includes(email)) {
+                setSelectedEmails((prev_arr) => [...prev_arr, email]);
+              }
+            }}
+          />
         ))}
       </div>
     </div>
