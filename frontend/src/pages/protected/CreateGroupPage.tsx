@@ -2,6 +2,7 @@ import { MagicCard } from "@/components/magicui/magic-card";
 import NavBar from "@/components/NavBar";
 import SearchEmails from "@/components/SearchEmails";
 import SelectedMembers from "@/components/SelectedMembers";
+import { useState } from "react";
 
 import { useForm } from "react-hook-form";
 
@@ -12,6 +13,8 @@ export default function CreateGroupPage() {
     handleSubmit,
   } = useForm();
   const onSubmit = (data: any) => console.log(data);
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  
   return (
     <>
       <NavBar />
@@ -25,7 +28,7 @@ export default function CreateGroupPage() {
             className="flex flex-col gap-4"
           >
             <div className="flex flex-col">
-              <SearchEmails />
+              <SearchEmails selectedEmails={selectedEmails} setSelectedEmails={setSelectedEmails}/>
               <SelectedMembers />
               Group Name:
               <input

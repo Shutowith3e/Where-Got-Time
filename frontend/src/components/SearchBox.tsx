@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function MemberSearch({
   email,
@@ -21,14 +21,18 @@ hover:bg-slate-100"
 type EmailResultProps = {
   emails?: string[];
   isLoading: boolean;
+  selectedEmails: string[];
+  setSelectedEmails: (value: string[] | ((prev: string[]) => string[])) => void;
 };
-export default function SearchBox({ emails }: EmailResultProps) {
-  const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-
+export default function SearchBox({
+  emails,
+  selectedEmails,
+  setSelectedEmails,
+}: EmailResultProps) {
   useEffect(() => {
     console.log("📢 selectedEmails changed:", selectedEmails);
   }, [selectedEmails]);
-  
+
   return (
     <div className="flex absolute bg-slate-50 w-full border border-slate-200 rounded-b-lg z-index-20">
       <div className="p-1 flex-col">

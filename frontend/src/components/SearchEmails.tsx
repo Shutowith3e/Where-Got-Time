@@ -6,7 +6,13 @@ import { useDebounceCallback } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
 
-export default function SearchEmails() {
+export default function SearchEmails({
+  selectedEmails,
+  setSelectedEmails,
+}: {
+  selectedEmails: string[];
+  setSelectedEmails: (value: string[] | ((prev: string[]) => string[])) => void;
+}) {
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const {
@@ -20,7 +26,7 @@ export default function SearchEmails() {
         `/groups/searchEmails?searchTerm=${searchTerm}`
       );
     },
-    enabled: !!searchTerm,
+    enabled: false,
   });
 
   const debounced = useDebounceCallback((searchTerm: string) => {
@@ -50,6 +56,8 @@ export default function SearchEmails() {
         <SearchBox
           emails={searchTerm ? data?.data : undefined}
           isLoading={isSearchingEmails}
+          selectedEmails={selectedEmails}
+          setSelectedEmails={setSelectedEmails}
         />
       )}
     </div>
