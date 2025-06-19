@@ -14,7 +14,7 @@ export default function CreateGroupPage() {
   } = useForm();
   const onSubmit = (data: any) => console.log(data);
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  
+
   return (
     <>
       <NavBar />
@@ -28,8 +28,11 @@ export default function CreateGroupPage() {
             className="flex flex-col gap-4"
           >
             <div className="flex flex-col">
-              <SearchEmails selectedEmails={selectedEmails} setSelectedEmails={setSelectedEmails}/>
-              <SelectedMembers />
+              <SearchEmails
+                selectedEmails={selectedEmails}
+                setSelectedEmails={setSelectedEmails}
+              />
+              <SelectedMembers selectedEmails={selectedEmails} />
               Group Name:
               <input
                 {...register("groupName", { required: true })}

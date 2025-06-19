@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { IoMdSearch } from "react-icons/io";
 import SearchBox from "./SearchBox";
 import { cn } from "@/lib/utlis";
@@ -11,26 +11,31 @@ export default function SearchEmails({
   setSelectedEmails,
 }: {
   selectedEmails: string[];
-  setSelectedEmails: (value: string[] | ((prev: string[]) => string[])) => void;
+  setSelectedEmails: Dispatch<SetStateAction<string[]>>;
 }) {
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchTerm = useRef("");
   const {
-    data,
+    data: queriedEmails,
     isLoading: isSearchingEmails,
     refetch,
   } = useQuery({
     queryKey: ["email-search-term"],
     queryFn: async () => {
-      return axiosInstance.get<string[]>(
-        `/groups/searchEmails?searchTerm=${searchTerm}`
+      // Prevent empty search terms from being queried
+      if (!searchTerm.current) return;
+
+      const { data } = await axiosInstance.get<string[]>(
+        `/groups/searchEmails?searchTerm=${searchTerm.current}`
       );
+
+      return data;
     },
     enabled: false,
   });
 
-  const debounced = useDebounceCallback((searchTerm: string) => {
-    setSearchTerm(searchTerm);
+  const debounced = useDebounceCallback((newSearchTerm: string) => {
+    searchTerm.current = newSearchTerm;
     refetch();
   }, 500);
 
@@ -54,7 +59,7 @@ export default function SearchEmails({
       </div>
       {showSearchBox && (
         <SearchBox
-          emails={searchTerm ? data?.data : undefined}
+          emails={queriedEmails}
           isLoading={isSearchingEmails}
           selectedEmails={selectedEmails}
           setSelectedEmails={setSelectedEmails}

@@ -24,6 +24,7 @@ type EmailResultProps = {
   selectedEmails: string[];
   setSelectedEmails: (value: string[] | ((prev: string[]) => string[])) => void;
 };
+
 export default function SearchBox({
   emails,
   selectedEmails,
