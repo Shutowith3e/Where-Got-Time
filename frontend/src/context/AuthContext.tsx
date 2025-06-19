@@ -50,7 +50,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-
+      console.log(session?.access_token);
       // const jwt = session?.access_token;
       // if (jwt) {
       //   const response = await fetch("http://localhost:8000/users/getGroups", {
