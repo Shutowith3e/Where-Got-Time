@@ -27,7 +27,7 @@ export default function CreateGroupPage() {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-2">
               <SearchEmails
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
@@ -38,22 +38,28 @@ export default function CreateGroupPage() {
               />
               Group Name:
               <input
-                {...register("groupName", { required: true })}
-                aria-invalid={errors.groupName ? "true" : "false"}
-                className="ml-2 rounded-full border-2 border-slate-100"
+                {...register("group_name", { required: true })}
+                aria-invalid={errors.group_name ? "true" : "false"}
+                className="ml-2 rounded-full border-2 border-slate-100 px-2"
               />
-              {errors.groupName?.type === "required" && (
+              {errors.group_name?.type === "required" && (
                 <p role="alert" className="font-light text-sm text-red-600">
                   Group name is required
                 </p>
               )}
             </div>
             <div className="flex flex-col">
-              Group Description:{" "}
+              Group Description:
               <textarea
-                {...register("groupDescription")}
-                className="border-2 border-slate-100 rounded-lg"
+                {...register("group_description", { maxLength: 100 })}
+                aria-invalid={errors.group_description ? "true" : "false"}
+                className="border-2 border-slate-100 rounded-lg px-2"
               ></textarea>
+              {errors?.group_description?.type === "maxLength" && (
+                <p role="alert" className="font-light text-sm text-red-600">
+                  Group Description is too long!
+                </p>
+              )}
             </div>
             <input
               type="submit"
