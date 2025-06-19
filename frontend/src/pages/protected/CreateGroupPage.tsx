@@ -32,7 +32,10 @@ export default function CreateGroupPage() {
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
               />
-              <SelectedMembers selectedEmails={selectedEmails} />
+              <SelectedMembers
+                selectedEmails={selectedEmails}
+                setSelectedEmails={setSelectedEmails}
+              />
               Group Name:
               <input
                 {...register("groupName", { required: true })}
