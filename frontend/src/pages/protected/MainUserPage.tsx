@@ -11,7 +11,7 @@ export default function MainUserPage() {
 
 
   return (
-    <div className="flex min-h-dvh flex-col bg-gradient-to-b from-rose-900/60 ">
+    <div className="flex min-h-dvh flex-col bg-gradient-to-b from-rose-900/30 ">
       <NavBar />
 
       {/* Wrap main content and sidebar horizontally */}
@@ -21,7 +21,7 @@ export default function MainUserPage() {
         <div className="flex-1 px-6 py-6">
 
           {/* Week Navigation */}
-          <div className="mb-4 flex items-center justify-center gap-4">
+          <div className="mb-5 flex items-center justify-center gap-5">
             <button className="rounded bg-gray-400 px-4 py-2 text-white">◀</button>
             <span className="font-semibold">Week</span>
             <button className="rounded bg-gray-400 px-4 py-2 text-white">▶</button>
@@ -35,11 +35,11 @@ export default function MainUserPage() {
           </div>
 
           {/* Your Events */}
-          <div className="rounded-lg bg-white p-6 shadow">
+          <div className="rounded-lg bg-white p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between">
               <h2 className="text-lg font-semibold">Your Events</h2>
 
-              <div className="flex gap-2 mt-2 sm:mt-0">
+              <div className="flex gap-3">
               {/* Create Event Button */}
               <button
               onClick={() => setShowCreateModal(true)}
@@ -77,7 +77,7 @@ export default function MainUserPage() {
 
 
         {/* Right sidebar */}
-        <aside className="bg-gradient-to-b from-purple-400/60 w-72 flex-shrink-0 p-6 md:block">
+        <aside className="bg-purple-400 w-72 flex-shrink-0 p-6 md:block">
           <div className="rounded-xl bg-white p-4 shadow">
             <h3 className="text-md font-semibold">Notification / grp invites</h3>
             <p className="mt-2 text-sm text-red-500">You have X schedule clashes</p>
@@ -85,9 +85,8 @@ export default function MainUserPage() {
             {/* Event Conflict Placeholder*/}
             <div className="mt-4 rounded-md bg-gray-100 p-2 text-sm">
 
-              <p>
-                <strong>Clash:</strong> A event - Group 1
-              </p>
+              <p> <strong>Clash:</strong> A event - Group 1 </p>
+
               <p>B event - Group 2</p>
 
             </div>

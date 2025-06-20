@@ -1,71 +1,92 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 type DeleteEventModalProps = {
   onClose: () => void;
 };
 
 export default function DeleteEventModal({ onClose }: DeleteEventModalProps) {
-  const [eventName, setEventName] = useState("");
-  const [eventId, setEventId] = useState("");
-  const [notify, setNotify] = useState(false);
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+  const onSubmit = (data: any) => console.log(data);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
         <h2 className="mb-6 text-center text-3xl font-bold text-red-500">Delete Event</h2>
 
-        {/* Form Fields */}
-        <div className="mb-4">
-          <label className="block font-medium">Event Name:</label>
-          <input
-            type="text"
-            className="mt-1 w-full rounded border px-3 py-2"
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-          />
-        </div>
+        <div className="mb-6 rounded-lg bg-white-100 p-4">
+        <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+        >
 
-        <div className="mb-4">
-          <label className="block font-medium">Event ID:</label>
-          <input
-            type="text"
-            className="mt-1 w-full rounded border px-3 py-2"
-            value={eventId}
-            onChange={(e) => setEventId(e.target.value)}
-          />
-        </div>
+          <div className="gap-2">
+            <label className="font-bold block mt-2 mb-2">* Event Name:</label> 
+            <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            placeholder="Supplementary Lesson"
+            {...register("eventName", { required: true })}
+            aria-invalid={errors.eventName ? "true" : "false"}
+            />
+            {errors.eventName?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+            *Event name is required
+            </p>
+            )}
+          </div>
 
-        {/* Notify Members Toggle */}
-        <div className="mb-6 flex items-center gap-2">
+          <div>
+            <label className="font-bold block mt-2 mb-2">* Event ID:</label> 
+            <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            placeholder="88888"
+            {...register("eventID", { required: true })}
+            aria-invalid={errors.eventID ? "true" : "false"}
+            />
+            {errors.eventID?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+            *Event ID is required
+            </p>
+            )}
+          </div>
+
+          <div className="mt-2 mb-2">
           <input
-            type="checkbox"
-            id="notify"
-            className="h-4 w-4"
-            checked={notify}
-            onChange={(e) => setNotify(e.target.checked)}
+          type="checkbox"
+          {...register("notifyMembers")}
+          className="h-4 w-6"
           />
-          <label htmlFor="notify" className="text-sm font-medium">
-            Notify Members
+          <label className="font-bold">
+          Notify Members
           </label>
-        </div>
-
-        {/* Buttons */}
-        <div className="mb-2 flex justify-between">
+          </div>
+          
+          {/* Buttons */}
+          <div className="flex justify-between">
           <button
-            onClick={onClose}
-            className="rounded border border-black px-4 py-2"
-          >
-            Back
+          onClick={onClose}
+          className="rounded-2xl bg-white p-1 px-4 border">
+          Back
           </button>
-          <button className="rounded border border-black px-4 py-2">
-            Save
-          </button>
-        </div>
+
+          <input
+          type="submit"
+          value="Delete"
+          className="rounded-2xl bg-red-500 p-1 px-4 border"
+          />
+          </div>
 
         {/* Note */}
-        <p className="text-center text-xs text-gray-500 mt-1 text-red-500">
-          Note: Event cannot be retrieved after it has been deleted!!!
+        <p className="text-center text-small font-bold mt-1 text-red-500">
+        Note: Event cannot be retrieved after it has been deleted!!!
         </p>
+          
+        </form>
+        </div>
+
       </div>
     </div>
   );

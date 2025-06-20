@@ -1,17 +1,16 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 type UpdateEventModalProps = {
   onClose: () => void;
 };
 
 export default function UpdateEventModal({ onClose }: UpdateEventModalProps) {
-  const [eventName, setEventName] = useState("");
-  const [date, setDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [recurring, setRecurring] = useState("");
-  const [priority, setPriority] = useState("");
-  const [description, setDescription] = useState("");
+const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+  const onSubmit = (data: any) => console.log(data);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -35,65 +34,106 @@ export default function UpdateEventModal({ onClose }: UpdateEventModalProps) {
         </div>
 
         {/* Form Portion */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <input
-            placeholder="Event Name"
-            className="rounded border px-3 py-2"
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-          />
-          <input
-            type="date"
-            className="rounded border px-3 py-2"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-          <input
-            placeholder="Start Time"
-            className="rounded border px-3 py-2"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-          />
-          <input
-            placeholder="End Time"
-            className="rounded border px-3 py-2"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-          />
-          <input
-            placeholder="Recurring"
-            className="rounded border px-3 py-2"
-            value={recurring}
-            onChange={(e) => setRecurring(e.target.value)}
-          />
-          <input
-            placeholder="Priority"
-            className="rounded border px-3 py-2"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          />
-        </div>
+            <div className="mb-6 rounded-lg bg-white-100 p-4">
+        
+            <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+            >
 
-        <textarea
-          placeholder="Description"
-          className="mb-4 w-full rounded border px-3 py-2"
-          rows={3}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+            <div className="gap-2">
+            <label className="font-bold block mt-2 mb-2"> *Event Name: </label>
+            <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            placeholder="Learning Journey to SMU"
+            {...register("eventName", { required: true })}
+            aria-invalid={errors.eventName ? "true" : "false"}
+            />
+            {errors.eventName?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              *Event name is required
+            </p>
+            )}
+    
+            <label className="font-bold block mt-2 mb-2"> Event Description: </label>
+            <input 
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            placeholder="Explore SCIS facilities"
+            {...register("eventDescription")} />
 
-        {/* Buttons */}
-        <div className="flex justify-between">
-          <button
+
+            <label className="font-bold block mt-2 mb-2"> *Event Start Date & Time:</label>
+            <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            type="datetime-local"
+            {...register("startDate", {
+            required: true,
+            })}
+            aria-invalid={errors.startDate ? "true" : "false"}
+            />
+            {errors.startDate?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+            *Start Date & Time is required
+            </p>
+            )}
+
+            <label className="font-bold block mt-2 mb-2"> *Event End Date & Time:</label>
+            <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            type="datetime-local"
+            {...register("endDate", {
+            required: true,
+            validate: (value, formValues) => {
+            const start = new Date(formValues.startDate).getTime();
+            const end = new Date(value).getTime();
+            return end >= start || "*End date/time must be after start date/time";
+            },
+            })}
+            aria-invalid={errors.endDate ? "true" : "false"}
+            />
+            {errors.endDate && (
+            <p role="alert" className="font-light text-sm text-red-600">
+            {errors.endDate.message?.toString()}
+            </p>
+            )}
+            
+            <label className="font-bold block mt-2 mb-2"> Recurring: </label>
+            <input 
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            {...register("rRule")} />
+            
+            <div className=" flex items-center mt-2">
+            <input 
+            type="checkbox"
+            {...register("highPriority")}
+            className="h-4 w-6"
+            />
+            <label className="font-bold">
+            High Priority
+            </label>
+            </div>
+
+            </div>
+           
+
+            <div className="flex justify-between">
+            <button
             onClick={onClose}
-            className="rounded border border-black px-4 py-2"
-          >
+            className="rounded-2xl bg-white p-1 px-4 border">
             Back
-          </button>
-          <button className="rounded border border-black px-4 py-2">
-            Save
-          </button>
+            </button>
+
+            <input
+            type="submit"
+            value="Update"
+            className="rounded-2xl bg-yellow-500 p-1 px-4 border"
+            />
+            </div>
+
+            </form>
+        
         </div>
+
       </div>
     </div>
   );
