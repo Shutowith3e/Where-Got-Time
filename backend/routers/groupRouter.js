@@ -2,17 +2,17 @@ import express from "express";
 const router = express.Router();
 //import {task1,task2,etc} from "../controllers/taskController";
 //route creation
-import { 
-    checkAdmin, 
-    createGroup, 
-    getGroupDetails, 
-    getGroupMembers, 
+import {
+    checkAdmin,
+    createGroup,
+    getGroupDetails,
+    getGroupMembers,
     getGroupEvents,
     getAdmins,
     acceptGroupInvite,
-    getGroupMembersEmails
-    } 
-from '../controllers/groupController.js';
+    getGroupMembersEmails,
+    searchEmails,
+} from '../controllers/groupController.js';
 
 
 //router.get
@@ -26,7 +26,8 @@ router.post("/groupMembers", getGroupMembers);
 router.post("/groupEvents", getGroupEvents);
 router.post("/groupAdmins", getAdmins);
 router.patch("/acceptGroupInvite", acceptGroupInvite);
-router.post("/groupMembersEmails", getGroupMembersEmails); 
+router.post("/groupMembersEmails", getGroupMembersEmails);
+router.get("/searchEmails", searchEmails);
 
 
 
