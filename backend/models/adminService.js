@@ -1,6 +1,11 @@
 import supabase from "./connection.js";
+import { emailToUid } from "./helper.js";
 // this is where all the routes that require admin access will go
-const inviteGroupMembers = async (uid_arr, gid) => {
+const inviteGroupMembers = async (email_arr, gid) => {
+	const {data:uid_arr, error: conversionError} = await emailToUid(email_arr);
+	if(conversionError){
+		return {error: conversionError};
+	}
 	const insertData = uid_arr.map(uid => ({
 		uid: uid, 
 		gid: gid,

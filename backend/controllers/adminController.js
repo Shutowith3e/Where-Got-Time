@@ -1,5 +1,5 @@
 import * as service from '../models/adminService.js';
-import { emailToUid } from '../models/helper.js';
+
 
 const inviteGroupMembers = async (req, res) => {
 		// get uid and gid from req.body, admin uid from req.uid (from auth middleware)
@@ -11,15 +11,9 @@ const inviteGroupMembers = async (req, res) => {
             return res.status(400).json({ message: "Missing gid or uid array in request body" });
         }
         // take in email, fe sends emails over
-        const { data: uid_arr, error: conversionError } = await emailToUid(email_arr);
-        if(conversionError){
-			return res.status(400).json({
-                message:"Invalid email provided", 
-                rejected: conversionError.rejected
-            });
-        }
+
         // call model func to add member 
-        const { error } = await service.inviteGroupMembers(uid_arr, gid); // is_admin is false by default
+        const { error } = await service.inviteGroupMembers(email_arr, gid); // is_admin is false by default
         if (error){
 			return res.status(500).json({message:"Error inviting members. Please try again"});
 		}
