@@ -1,5 +1,5 @@
 type Event = {
-  count: number;
+  highPriority: boolean;
   group: string;
   event: string;
   date: string;
@@ -14,12 +14,16 @@ export type EventCardProps = {
   events: Event[];
 };
 
-function EventChip({ event: { count, event, group, date } }: EventChipProps) {
+function EventChip({
+  event: { highPriority, event, group, date },
+}: EventChipProps) {
   return (
     <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
       <div className="text-sm font-light m-auto">{date}</div>
       {group.toUpperCase()} - {event}
-      <div className="text-sm font-light m-auto">({count} Members)</div>
+      {highPriority && (
+        <div className="text-sm font-light m-auto ">High Priority</div>
+      )}
     </div>
   );
 }

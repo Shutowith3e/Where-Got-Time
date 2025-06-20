@@ -1,5 +1,13 @@
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
 import { AuthContextProvider } from "./context/AuthContext";
 import AppRouter from "./routes/router";
+// react-query setup
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
+
+dayjs.extend(isBetween);
+
 function Footer() {
   return (
     <>
@@ -28,10 +36,12 @@ function Footer() {
 export default function App() {
   return (
     <>
-      <AuthContextProvider>
-        <AppRouter />
-        <Footer />
-      </AuthContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+          <AppRouter />
+          <Footer />
+        </AuthContextProvider>
+      </QueryClientProvider>
     </>
   );
 }
