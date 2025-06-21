@@ -7,12 +7,12 @@
 //     ]
 // }
 
-type GroupDetail = {
+type GroupDetails = {
   group_name: string;
   group_description: string;
 };
 
-export type GroupDetailDto = {
-  data: GroupDetail[]
+export type GroupDetailsDto = {
+  data: GroupDetails[]
   
 };
