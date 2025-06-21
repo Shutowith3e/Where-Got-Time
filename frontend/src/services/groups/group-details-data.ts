@@ -6,13 +6,12 @@ export type IndividualGroupDetail = {
   groupDescription: string;
 };
 
-export async function IndividualGroupDetail(): Promise<
-  IndividualGroupDetail[]
-> {
-  const { data:{data:GroupDetails} } = await axiosInstance.post<GroupDetailsDto>(
-    "/groups/groupDetails"
-  );
-  return GroupDetails.map<IndividualGroupDetail>(
+// renamed to gid, backend takes in gid
+export async function IndividualGroupDetail(gid : string): Promise<IndividualGroupDetail[]> {
+  const {
+    data: { data: groupDetails },
+  } = await axiosInstance.post<GroupDetailsDto>("/groups/groupDetails",{gid});
+  return groupDetails.map<IndividualGroupDetail>(
     ({ group_name, group_description }) => ({
       groupName: group_name,
       groupDescription: group_description,
