@@ -19,58 +19,58 @@ import { Button } from "@/components/ui/button";
 //events stuff come from yongsoon
 
 export default function IndividualGroupPage() {
-  type Group = {
-    gid: string;
-    groupName: string;
-    groupDescription: string;
-    is_admin: boolean;
-    admins: string[];
-    members: string[];
-    events: {
-      name: string;
-      date: string;
-      members: string[];
-    }[];
-  };
+  // type Group = {
+  //   gid: string;
+  //   groupName: string;
+  //   groupDescription: string;
+  //   is_admin: boolean;
+  //   admins: string[];
+  //   members: string[];
+  //   events: {
+  //     name: string;
+  //     date: string;
+  //     members: string[];
+  //   }[];
+  // };
   const { id } = useParams();
-  const [group, setGroup] = useState<Group | null>(null);
-  useEffect(() => {
-    //mock data, will replace with calls to be later
-    const data = [
-      {
-        gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
-        groupName: "group 1",
-        groupDescription: "This is a group description",
-        is_admin: true,
-        admins: ["u1", "u2"],
-        members: ["u3", "u4"],
-        events: [
-          {
-            name: "Attend Heap Workshop",
-            date: "2025-08-10 16:30:00",
-            members: ["u1", "u2", "u3", "u4"],
-          },
-          {
-            name: "Attend API Workshop",
-            date: "2025-09-10 12:30:00",
-            members: ["u1", "u2", "u3"],
-          },
-        ],
-      },
-    ];
+  // const [group, setGroup] = useState<Group | null>(null);
+  // useEffect(() => {
+  //   //mock data, will replace with calls to be later
+  //   const data = [
+  //     {
+  //       gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
+  //       groupName: "group 1",
+  //       groupDescription: "This is a group description",
+  //       is_admin: true,
+  //       admins: ["u1", "u2"],
+  //       members: ["u3", "u4"],
+  //       events: [
+  //         {
+  //           name: "Attend Heap Workshop",
+  //           date: "2025-08-10 16:30:00",
+  //           members: ["u1", "u2", "u3", "u4"],
+  //         },
+  //         {
+  //           name: "Attend API Workshop",
+  //           date: "2025-09-10 12:30:00",
+  //           members: ["u1", "u2", "u3"],
+  //         },
+  //       ],
+  //     },
+  //   ];
 
-    const findGroup = data.find((g) => g.gid === id);
-    setGroup(findGroup || null);
-    return;
-  }, []);
+  //   const findGroup = data.find((g) => g.gid === id);
+  //   setGroup(findGroup || null);
+  //   return;
+  // }, []);
 
-  if (!group) return "Invalid";
+  // if (!group) return "Invalid";
 
   return (
     <>
       <NavBar />
       <p>{id}</p>
-      <div className="flex flex-col p-2">
+      {/* <div className="flex flex-col p-2">
         <div className="gap-y-2">
           <h1 className="text-3xl font-semibold text-center ">
             {group.groupName.toUpperCase()}'S CALENDAR
@@ -134,7 +134,7 @@ export default function IndividualGroupPage() {
               </div>
             ))}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
