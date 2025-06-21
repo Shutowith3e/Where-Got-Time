@@ -13,10 +13,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { IndividualGroupDetail } from "@/services/groups/group-details-data";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
 //events stuff come from yongsoon
+
+//bruh idk alr i need to use them seperately for some areas
+function GroupDetails({ id }: { id: string }) {
+  return useQuery({
+    queryKey: ["group-details"],
+    queryFn: () => IndividualGroupDetail(id),
+  });
+}
 
 export default function IndividualGroupPage() {
   // type Group = {
@@ -32,7 +42,14 @@ export default function IndividualGroupPage() {
   //     members: string[];
   //   }[];
   // };
+
   const { id } = useParams();
+  if (!id) {
+    return <p>Invalid Group ID!</p>;
+  }
+  const { data: groupDetail } = GroupDetails({ id });
+  const group = groupDetail?.[0];
+
   // const [group, setGroup] = useState<Group | null>(null);
   // useEffect(() => {
   //   //mock data, will replace with calls to be later
@@ -69,7 +86,19 @@ export default function IndividualGroupPage() {
   return (
     <>
       <NavBar />
-      <p>{id}</p>
+      {/* <p>{id}</p> */}
+      <div className="flex flex-col p-2">
+        <div className="gap-y-2">
+          <h1 className="text-3xl font-semibold text-center ">
+            {group?.groupName.toUpperCase()}'S CALENDAR
+          </h1>
+          <div className="flex justify-center ">
+            <p className="text-lg font-light mx-auto p-2">
+              {group?.groupDescription}
+            </p>
+          </div>
+        </div>
+      </div>
       {/* <div className="flex flex-col p-2">
         <div className="gap-y-2">
           <h1 className="text-3xl font-semibold text-center ">
