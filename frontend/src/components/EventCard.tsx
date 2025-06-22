@@ -34,8 +34,8 @@ export default function EventCard({ title, events }: EventCardProps) {
       <h3 className="text-xl mx-auto font-bold px-4 mb-4">{title}</h3>
       {events
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .map((x) => (
-          <EventChip event={x} />
+        .map((x, i) => (
+          <EventChip key={i} event={x} />
         ))}
     </div>
   );
