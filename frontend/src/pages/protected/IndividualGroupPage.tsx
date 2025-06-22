@@ -1,6 +1,5 @@
 import NavBar from "@/components/NavBar";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import IndividualCalendar from "@/components/IndividualCalendar";
 import {
   AlertDialog,
@@ -14,18 +13,21 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { IndividualGroupDetail } from "@/services/groups/group-details-data";
+import { getGroupData } from "@/services/groups/get-group-data";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
 //events stuff come from yongsoon
 
-//bruh idk alr i need to use them seperately for some areas
-function GroupDetails({ id }: { id: string }) {
-  return useQuery({
-    queryKey: ["group-details"],
-    queryFn: () => IndividualGroupDetail(id),
+// use the prev end point, but only get the current group
+function CurrentGroupInfo(id: string) {
+  const { data: currentGroupInfo, isPending: isGroupsPending } = useQuery({
+    queryKey: ["user-groups"],
+    queryFn: getGroupData,
   });
+
+  const group = currentGroupInfo?.find((group) => group.gid === id);
+  return { group, isGroupsPending };
 }
 
 export default function IndividualGroupPage() {
@@ -47,8 +49,23 @@ export default function IndividualGroupPage() {
   if (!id) {
     return <p>Invalid Group ID!</p>;
   }
-  const { data: groupDetail } = GroupDetails({ id });
-  const group = groupDetail?.[0];
+  const { group, isGroupsPending } = CurrentGroupInfo(id);
+  if (!group){
+    return <p>No Such Group!</p>;
+  }
+
+  if (isGroupsPending) {
+    return (
+      <div className="flex flex-col p-2">
+        <div className="gap-y-2">
+          <h1 className="text-3xl font-semibold text-center rounded-xl bg-slate-200 animate-pulse"></h1>
+          <div className="flex justify-center ">
+            <p className="text-lg font-light mx-auto p-2 rounded-xl bg-slate-200 animate-pulse"></p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // const [group, setGroup] = useState<Group | null>(null);
   // useEffect(() => {
@@ -86,26 +103,17 @@ export default function IndividualGroupPage() {
   return (
     <>
       <NavBar />
+      
+
       {/* <p>{id}</p> */}
+
       <div className="flex flex-col p-2">
-        <div className="gap-y-2">
-          <h1 className="text-3xl font-semibold text-center ">
-            {group?.groupName.toUpperCase()}'S CALENDAR
-          </h1>
-          <div className="flex justify-center ">
-            <p className="text-lg font-light mx-auto p-2">
-              {group?.groupDescription}
-            </p>
-          </div>
-        </div>
-      </div>
-      {/* <div className="flex flex-col p-2">
         <div className="gap-y-2">
           <h1 className="text-3xl font-semibold text-center ">
             {group.groupName.toUpperCase()}'S CALENDAR
           </h1>
           <div className="flex justify-center ">
-            {group.is_admin && (
+            {group?.isAdmin && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="outline">Edit Group</Button>
@@ -132,7 +140,7 @@ export default function IndividualGroupPage() {
           {group.groupDescription}
         </p>
         <IndividualCalendar></IndividualCalendar>
-        <div className="flex flex-row gap-1 mx-auto ">
+        {/* <div className="flex flex-row gap-1 mx-auto ">
           Admins:
           {group.admins.map((a, index) => (
             <p key={index}>{a} </p>
@@ -162,8 +170,8 @@ export default function IndividualGroupPage() {
                 </p>
               </div>
             ))}
-        </div>
-      </div> */}
+        </div> */}
+      </div> 
     </>
   );
 }
