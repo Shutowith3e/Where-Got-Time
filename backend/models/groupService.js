@@ -40,28 +40,8 @@ const getGroupMembers = async (gid) => {
 
 
 const createGroup = async (group_name, group_description, creator_email, emails_to_invite) => {
-	// create group first 
-	const { data: grpInfo, error: grpNameInsertError } = await supabase.from('group').insert({ group_name: group_name, group_description: group_description }).select();// let supabase generate the uuid
-	if (grpNameInsertError) {// for if u can't create group 
-		return { error: grpNameInsertError };
-	}
-	// if can create, add the creator 
-	// group's auto gen GID
-	const created_gid = grpInfo[0].gid;
-	// adding creator, admin by default
-	const { data, error: addCreatorError } = await supabase.from('group_members').insert({ email: creator_email, gid: created_gid, invite_accepted: true }) //auto sets invite accepted to true for creator
-	// if can add the creator  
-	if (addCreatorError) {
-		return { error: addCreatorError };
-	}
-
-	// invite all members 
-	const { error } = await inviteGroupMembers(emails_to_invite, created_gid);
-	if (!error) {
-		return { data: grpInfo, message: "Members invited successfully" }; // returns gid and group_name to controller 
-	}
-	return { data: grpInfo, error };
-}
+	return await supabase.rpc('create_group_and_invite',{group_name_inp:group_name, group_description_inp: group_description, creator_email,emails_to_invite});
+} // returns gid, group_name in data when success
 
 
 //tested, works 
