@@ -1,6 +1,6 @@
 import supabase from "./connection.js";
 import { inviteGroupMembers } from "./adminService.js";
-import { emailToUid, UidToEmail } from "./helper.js";
+
 // make functions to query db here
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
