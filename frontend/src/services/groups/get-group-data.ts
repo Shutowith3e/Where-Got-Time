@@ -14,21 +14,15 @@ export async function getGroupData(): Promise<GroupItem[]> {
   } = await axiosInstance.post<GetGroupsDto>("/users/getGroups");
 
   return [
-    ...data.admin_arr.map<GroupItem>(
-      ({ gid, group_description, group_name }) => ({
-        gid: gid,
-        groupDescription: group_description,
-        groupName: group_name,
-        isAdmin: true,
-      })
-    ),
-    ...data.member_arr.map<GroupItem>(
-      ({ gid, group_description, group_name }) => ({
-        gid: gid,
-        groupDescription: group_description,
-        groupName: group_name,
-        isAdmin: false,
-      })
+    ...data.adminArr.map<GroupItem>((group) => ({
+      ...group,
+      isAdmin: true,
+    })),
+    ...data.memberArr.map<GroupItem>(((group)=>({
+      ...group,
+      isAdmin:false,
+    }))
+     
     ),
   ];
 }
