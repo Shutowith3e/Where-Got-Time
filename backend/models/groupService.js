@@ -1,5 +1,5 @@
 import supabase from "./connection.js";
-import { inviteGroupMembers } from "./adminService.js";
+
 
 // make functions to query db here
 //also add functions to handle other business rules here
@@ -16,7 +16,11 @@ const checkAdmin = async (email, gid) => {
 } //tested, works
 
 const getGroupDetails = async (gid) => {
-	return await supabase.from('group').select(`group_name, group_description`).eq('gid', gid);
+	const {data,error} =  await supabase.from('group').select(`group_name, group_description`).eq('gid', gid);
+	if(error){
+		return {error};
+	}
+	return {data:data[0]};
 }// tested, works
 
 const getGroupMembers = async (gid) => {
@@ -48,7 +52,16 @@ const createGroup = async (group_name, group_description, creator_email, emails_
 
 const getAdmins = async (gid) => {
 
-	return await supabase.from('group_members').select('email').match({ gid: gid, is_admin: true });
+	const {data, error} =  await supabase.from('group_members').select('email').match({ gid: gid, is_admin: true });
+	if(error){
+		return {error};
+	}
+	const admins = [];
+	data.forEach(loader)
+	function loader(value){
+		admins.push(value.email)
+	}
+	return {data:admins};
 
 }//tested, works
 
