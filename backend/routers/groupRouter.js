@@ -17,14 +17,13 @@ import {
 //router.get
 //router.post etc etc for each of the routes
 // route definition
+router.patch("/acceptGroupInvite", acceptGroupInvite);
 router.post("/checkAdmin", checkAdmin);//changed to checkAdmin
 router.post("/createGroup", createGroup);
-
+router.post("/groupAdmins", getAdmins); 
 router.post("/groupDetails", getGroupDetails);
-router.post("/groupMembers", getGroupMembers);
 router.post("/groupEvents", getGroupEvents);
-router.post("/groupAdmins", getAdmins);
-router.patch("/acceptGroupInvite", acceptGroupInvite);
+router.post("/groupMembers", getGroupMembers);
 router.get("/searchEmails", searchEmails);
 
 
