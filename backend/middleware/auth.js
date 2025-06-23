@@ -17,7 +17,7 @@ const authJWT = async (req,res,next) =>{
 		// verify the jwt is legit and decode it
 		const decoded = jwt.verify(token,process.env.SUPABASE_JWT_SECRET);
 		//throws the uid u get into req so the next route can js access using req.uid
-		req.uid = decoded.user_metadata.sub ; //this is js how the supabase jwt is structured dw
+		req.email = decoded.user_metadata.email ; //this is js how the supabase jwt is structured dw
 		next(); // go to next route so for eg ur routes will look like router.get('')
 	}
 	catch(err){
