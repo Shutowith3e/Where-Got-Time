@@ -2,13 +2,13 @@ import * as service from '../models/adminService.js';
 
 
 const inviteGroupMembers = async (req, res) => {
-		// get uid and gid from req.body, admin uid from req.uid (from auth middleware)
+		// get email and gid from req.body, admin email from req.email (from auth middleware)
 
         const {email_arr, gid} = req.body; 
 
-        // if gid or uid is missing 
+        // if gid or email is missing 
         if (!gid || !email_arr || email_arr.length === 0) {
-            return res.status(400).json({ message: "Missing gid or uid array in request body" });
+            return res.status(400).json({ message: "Missing gid or email array in request body" });
         }
         // take in email, fe sends emails over
 
@@ -22,17 +22,17 @@ const inviteGroupMembers = async (req, res) => {
 
 
 const deleteGroupMember = async (req, res) => {
-    // get gid and uid rom req.body, admin's uid from req.uid (from auth middleware)
+    // get gid and email rom req.body, admin's email from req.email (from auth middleware)
 
-    const {gid, uid} = req.body; 
+    const {gid, email} = req.body; 
     
-    // if gid or uid is missing 
-    if (!gid || !uid) {
-        return res.status(400).json({ message: "Missing gid or member's uid" });
+    // if gid or email is missing 
+    if (!gid || !email) {
+        return res.status(400).json({ message: "Missing gid or member's email" });
     }
 
     // call model func to delete member 
-    const { error } = await service.deleteGroupMember(uid, gid); 
+    const { error } = await service.deleteGroupMember(email, gid); 
     if (error) {
         return res.status(500).json({message: "Error deleting member"});
     }
@@ -41,17 +41,17 @@ const deleteGroupMember = async (req, res) => {
 } //tested, works
 
 const makeAdmin = async (req, res) => {
-        // getting gid and uid from fe 
+        // getting gid and email from fe 
 
-        const {gid, uid} = req.body; 
+        const {gid, email} = req.body; 
         
-        // if gid or uid is missing 
-        if (!gid || !uid) {
-            return res.status(400).json({ message: "Missing gid or uid in request body" });
+        // if gid or email is missing 
+        if (!gid || !email) {
+            return res.status(400).json({ message: "Missing gid or email in request body" });
         }
 
         // call model func to make a user admin 
-        const { data,error} = await service.makeAdmin(uid, gid); 
+        const { data,error} = await service.makeAdmin(email, gid); 
         if (error){
 			return res.status(500).json({message: "Error making admin"});
 		}
@@ -65,18 +65,18 @@ const makeAdmin = async (req, res) => {
  //tested, works.
 
 const removeAdmin = async (req, res) => {
-        // getting gid and uid from fe 
+        // getting gid and email from fe 
 
-        const {uid, gid} = req.body; 
+        const {email, gid} = req.body; 
         
-        // if gid or uid is missing 
-        if (!gid || !uid) {
-            return res.status(400).json({ message: "Missing gid or uid in request body" });
+        // if gid or email is missing 
+        if (!gid || !email) {
+            return res.status(400).json({ message: "Missing gid or email in request body" });
         }
 
         // call model func to make a user admin 
-        const {data, error} = await service.removeAdmin(uid, gid); 
-        //case 1 invalid uid i.e completely wrong format not uuid
+        const {data, error} = await service.removeAdmin(email, gid); 
+        //case 1 invalid email i.e completely wrong format not uemail
         if (error){
 			return res.status(500).json({message: "Error removing admin"});
 		}
@@ -144,11 +144,11 @@ const deleteEvent = async (req, res) => {
 const getHighPriorityEvent = async (req, res) => {
     // how to get just one first ?
     // create an empty lst 
-    // get all EIDs which are high priority using UID from event_part. (call model func gethpevents)
+    // get all EIDs which are high priority using email from event_part. (call model func gethpevents)
         // shove the EIDs in lst
 
 
-    // input: uid. call getUserevents. 
+    // input: email. call getUserevents. 
 } // this func is only written for ONE member. it shld be called repeatedly if u nid multiple members' info
 ////////////////////////////////////////
 export {
