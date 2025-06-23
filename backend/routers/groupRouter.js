@@ -10,7 +10,6 @@ import {
     getGroupEvents,
     getAdmins,
     acceptGroupInvite,
-    getGroupMembersEmails,
     searchEmails,
 } from '../controllers/groupController.js';
 
@@ -26,7 +25,6 @@ router.post("/groupMembers", getGroupMembers);
 router.post("/groupEvents", getGroupEvents);
 router.post("/groupAdmins", getAdmins);
 router.patch("/acceptGroupInvite", acceptGroupInvite);
-router.post("/groupMembersEmails", getGroupMembersEmails);
 router.get("/searchEmails", searchEmails);
 
 

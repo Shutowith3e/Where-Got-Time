@@ -1,13 +1,9 @@
 import supabase from "./connection.js";
-import { emailToUid } from "./helper.js";
+
 // this is where all the routes that require admin access will go
 const inviteGroupMembers = async (email_arr, gid) => {
-	const {data:uid_arr, error: conversionError} = await emailToUid(email_arr);
-	if(conversionError){
-		return {error: conversionError};
-	}
-	const insertData = uid_arr.map(uid => ({
-		uid: uid, 
+	const insertData = email_arr.map(email => ({
+		email: email, 
 		gid: gid,
 		is_admin: false, // is_admin set to false by default
 		invite_accepted: null 
@@ -27,16 +23,16 @@ const deleteGroup = async(gid) => {
 	return await supabase.from('group').delete().eq('gid',gid);
 } //tested, works 
 
-const deleteGroupMember = async (uid, gid) =>{
-	return await supabase.from('group_members').delete().match({'uid':uid, 'gid':gid});
+const deleteGroupMember = async (email, gid) =>{
+	return await supabase.from('group_members').delete().match({'email':email, 'gid':gid});
 } //tested, works
 
-const makeAdmin = async (uid, gid) =>{
-	return await supabase.from('group_members').update({is_admin:true}).match({'uid':uid, 'gid':gid,'is_admin':false}).select();
+const makeAdmin = async (email, gid) =>{
+	return await supabase.from('group_members').update({is_admin:true}).match({'email':email, 'gid':gid,'is_admin':false}).select();
 } //tested, works
 
-const removeAdmin = async (uid, gid) =>{
-	return await supabase.from('group_members').update({is_admin:false}).match({'uid':uid, 'gid':gid,'is_admin':true}).select();
+const removeAdmin = async (email, gid) =>{
+	return await supabase.from('group_members').update({is_admin:false}).match({'email':email, 'gid':gid,'is_admin':true}).select();
 } //tested, works, updated to make sure person must be admin in the first place
 
 const createEvent = async (gid, event_name, start_datetime, end_datetime, rrule, high_priority) => {
@@ -48,8 +44,8 @@ const deleteEvent = async (eid) => {
 } //tested, works 
 
 /////////// WIP ////////////
-const getHighPriorityEvents = async(uid) => {
-	return await supabase.from('event').select('eid').match({'uid':uid, high_priority:true});
+const getHighPriorityEvents = async(email) => {
+	return await supabase.from('event').select('eid').match({'email':email, high_priority:true});
 } 
 /////////////////////////////
 

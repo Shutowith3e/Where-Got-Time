@@ -1,18 +1,11 @@
 import * as service from "../models/userService.js";
 //TODO implement functionalities for routes here
-const getEmail = async (req,res) => {
-	const uid = req.uid;
-	const {data,error} = await service.getEmail(uid);
-	if(error){
-		return res.status(500).json({message:"Error retrieving email"})
-	}
-	return res.status(200).json({data})
-}
+
 
 const getUserPersonalGroup = async (req, res) => {
-	//get uid from jwt 
-	const uid = req.uid;
-	const { data, error } = await service.getUserPersonalGroup(uid); 
+	//get email from jwt 
+	const email = req.email;
+	const { data, error } = await service.getUserPersonalGroup(email); 
 	if(error){
 		return res.status(500).json({message: "Error retrieving personal gid"})
 	}
@@ -20,23 +13,23 @@ const getUserPersonalGroup = async (req, res) => {
 }
 
 const getGroups = async (req,res) => {
-	const uid = req.uid;
-	const {data,error} = await service.getGroups(uid);
+	const email = req.email;
+	const {data,error} = await service.getGroups(email);
 	if(error){
 		return res.status(500).json({message:"Error retrieving groups"})
 	}
 	return res.status(200).json({data})
 }
 const getUserEvents = async (req,res) => {
-	const uid = req.uid;
-	const {data,error} = await service.getUserEvents(uid);
+	const email = req.email;
+	const {data,error} = await service.getUserEvents(email);
 	if(error){
 		return res.status(500).json({message:"Error retrieving user events"})
 	}
 	return res.status(200).json({data})
 }
 export{
-	getEmail,
+
 	getGroups,
 	getUserEvents,
 	getUserPersonalGroup

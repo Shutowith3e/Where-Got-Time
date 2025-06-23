@@ -4,12 +4,10 @@ import supabase from "./connection.js";
 //eg const get users = async () => {return await supabase.from("user").select("*")}
 
 
-const getEmail = async (uid) => {
-	return await supabase.from("user").select('email').eq('uid', uid);
-}//tested, works
 
-const getUserPersonalGroup = async (uid) => {
-	const { data, error } = await supabase.from('user').select('personal_grp').eq('uid', uid);
+
+const getUserPersonalGroup = async (email) => {
+	const { data, error } = await supabase.from('user').select('personal_grp').eq('email', email);
 	if (!error) {
 		const personal_gid = data[0].personal_grp;
 		return { data: personal_gid }
@@ -17,8 +15,8 @@ const getUserPersonalGroup = async (uid) => {
 	return { error }
 }
 
-const getGroups = async (uid) => {
-	const { data: grpData, error } = await supabase.from('group_members').select(`is_admin, group(*),user(personal_grp)`).match({ "uid": uid, invite_accepted: true });
+const getGroups = async (email) => {
+	const { data: grpData, error } = await supabase.from('group_members').select(`is_admin, group(*),user(personal_grp)`).match({ "email": email, invite_accepted: true });
 	if (error) {
 		return { data: null, error };
 	}
@@ -36,9 +34,9 @@ const getGroups = async (uid) => {
 	return { data: { admin_arr, member_arr }, error }
 }
 
-const getUserEvents = async (uid) => {
+const getUserEvents = async (email) => {
 	let processedData = null;
-	const { data, error } = await supabase.from('event_participants').select('event(*, group(*))').eq('uid', uid);
+	const { data, error } = await supabase.from('event_participants').select('event(*, group(*))').eq('email', email);
 	if (data) {// if any data is returned, execute, else, data is null
 		processedData = []
 		data.forEach((value) => { processedData.push(value.event) });
@@ -54,7 +52,7 @@ const getUserEvents = async (uid) => {
 //console.log(data[0].event)//this is how to get one event, may need a for loop or smth
 // console.log(data);
 export {
-	getEmail,
+
 	getGroups,
 	getUserEvents,
 	getUserPersonalGroup
