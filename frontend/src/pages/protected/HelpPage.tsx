@@ -11,10 +11,10 @@ export default function HelpPage() {
   return (
     <>
       <NavBar />
-      <div className="flex flex-col gap-2 p-2 md:p-5 bg-gradient-to-b from-rose-900/20">
+      <div className="flex flex-col gap-2 p-2 md:p-5 bg-gradient-to-b from-rose-900/30">
         <MagicCard
           gradientColor="262626"
-          className="w-[350px] md:w-[550px] m-auto rounded-2xl px-30 flex flex-col justify-center p-7 gap-4"
+          className="w-[350px] md:w-[550px] m-auto rounded-2xl flex flex-col justify-center p-8 gap-4"
         >
           <h1 className="text-3xl font-semibold mx-auto text-center">
             Need Help? We've Got You Covered
