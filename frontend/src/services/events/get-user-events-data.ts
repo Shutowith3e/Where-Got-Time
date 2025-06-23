@@ -22,24 +22,24 @@ export async function GetUserEvents(): Promise<GroupEvent[]> {
   return data
     .map<GroupEvent>(
       ({
-        group: { group_name, group_description },
+        group: { groupName, groupDescription },
         eid,
         gid,
         rrule,
-        event_name,
-        end_datetime,
-        high_priority,
-        start_datetime,
+        eventName,
+        endDatetime,
+        highPriority,
+        startDatetime,
       }) => ({
-        eid: eid,
-        gid: gid,
-        groupName: group_name,
-        groupDescription: group_description,
-        rrule: rrule,
-        eventName: event_name,
-        startDatetime: dayjs(start_datetime),
-        endDatetime: dayjs(end_datetime),
-        highPriority: high_priority,
+        eid,
+        gid,
+        groupName,
+        groupDescription,
+        rrule,
+        eventName,
+        startDatetime: dayjs(startDatetime),
+        endDatetime: dayjs(endDatetime),
+        highPriority,
       })
     )
     .filter(({ startDatetime }) =>

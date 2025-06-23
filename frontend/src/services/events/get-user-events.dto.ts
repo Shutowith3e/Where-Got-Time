@@ -23,10 +23,10 @@ type EventData = {
   gid: string;
   group: GroupData;
   rrule: null | string;
-  event_name: string;
-  start_datetime: string;
-  end_datetime: string;
-  high_priority: boolean;
+  eventName: string;
+  startDatetime: string;
+  endDatetime: string;
+  highPriority: boolean;
 };
 
 export type GetUserEventsDto = {
