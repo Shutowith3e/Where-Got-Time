@@ -41,8 +41,8 @@ const createGroup = async (req, res) => {
     }
 
     // extract grp name from data 
-    const created_grpname = data[0].group_name;
-    const created_gid = data[0].gid;
+    const created_grpname = data.group_name;
+    const created_gid = data.gid;
 
     //send response back to client. not sure if inclusion of GID is necessary
     return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid });
