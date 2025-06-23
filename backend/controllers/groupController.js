@@ -157,12 +157,13 @@ const acceptGroupInvite = async (req, res) => {
 
 const searchEmails = async (req, res) => {
     // GET http://localhost:8000/group/searchEmails?searchTerm=blahblahblah
+    const uid = req.uid;
     const searchTerm = req.query.searchTerm;
     if (!searchTerm) {
         return res.status(400).json({ message: "Missing search term!" });
     }
 
-    const { data, error } = await service.searchEmails(searchTerm);
+    const { data, error } = await service.searchEmails(uid,searchTerm);
     if (error) {
         res.status(500).json({ message: `Error searching for ${searchTerm}` })
     }
