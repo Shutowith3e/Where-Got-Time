@@ -112,7 +112,7 @@ export default function MainGroupPage() {
           events={(groupEventList ?? []).map(
             ({ groupName, eventName, startDatetime, highPriority }) => ({
               group: groupName,
-              event: eventName,
+              eventName: eventName,
               date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
               highPriority,
             })
