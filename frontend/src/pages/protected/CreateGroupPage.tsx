@@ -19,8 +19,6 @@ export default function CreateGroupPage() {
       emails_to_invite: selectedEmails,
     };
     createGroupMutation.mutate(fullForm);
-    // console.log(fullForm);
-    console.log("Sending to backend:", fullForm);
   };
 
   const createGroupMutation = useMutation({
