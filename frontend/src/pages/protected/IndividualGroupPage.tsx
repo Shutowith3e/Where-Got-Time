@@ -14,21 +14,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getGroupData } from "@/services/groups/get-group-data";
+import { getIndividualGroupEvent } from "@/services/events/get-group-events-data";
+import dayjs from "dayjs";
+import EventCard from "@/components/EventCard";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
 //events stuff come from yongsoon
 
 // use the prev end point, but only get the current group
-function CurrentGroupInfo(id: string) {
-  const { data: currentGroupInfo, isPending: isGroupsPending } = useQuery({
-    queryKey: ["user-groups"],
-    queryFn: getGroupData,
-  });
-
-  const group = currentGroupInfo?.find((group) => group.gid === id);
-  return { group, isGroupsPending };
-}
 
 export default function IndividualGroupPage() {
   // type Group = {
@@ -46,12 +40,28 @@ export default function IndividualGroupPage() {
   // };
 
   const { id } = useParams();
+  const { data: currentGroupInfo, isPending: isGroupsPending } = useQuery({
+    queryKey: ["user-groups"],
+    queryFn: getGroupData,
+  });
+
+  const { data: currentGroupEvents, isPending: isEventPending } = useQuery({
+    queryKey: ["user-group-events"],
+    queryFn: () => getIndividualGroupEvent(id!),
+  });
+
   if (!id) {
     return <p>Invalid Group ID!</p>;
   }
-  const { group, isGroupsPending } = CurrentGroupInfo(id);
-  if (!group){
+
+  const group = currentGroupInfo?.find((group) => group.gid === id);
+  if (!group) {
     return <p>No Such Group!</p>;
+  }
+
+  const groupEvent = currentGroupEvents;
+  if (!groupEvent) {
+    return <p>No Such Group Event!</p>;
   }
 
   if (isGroupsPending) {
@@ -67,43 +77,17 @@ export default function IndividualGroupPage() {
     );
   }
 
-  // const [group, setGroup] = useState<Group | null>(null);
-  // useEffect(() => {
-  //   //mock data, will replace with calls to be later
-  //   const data = [
-  //     {
-  //       gid: "55dd8f46-b6a1-471a-a6b2-0a042102919c",
-  //       groupName: "group 1",
-  //       groupDescription: "This is a group description",
-  //       is_admin: true,
-  //       admins: ["u1", "u2"],
-  //       members: ["u3", "u4"],
-  //       events: [
-  //         {
-  //           name: "Attend Heap Workshop",
-  //           date: "2025-08-10 16:30:00",
-  //           members: ["u1", "u2", "u3", "u4"],
-  //         },
-  //         {
-  //           name: "Attend API Workshop",
-  //           date: "2025-09-10 12:30:00",
-  //           members: ["u1", "u2", "u3"],
-  //         },
-  //       ],
-  //     },
-  //   ];
-
-  //   const findGroup = data.find((g) => g.gid === id);
-  //   setGroup(findGroup || null);
-  //   return;
-  // }, []);
-
-  // if (!group) return "Invalid";
+  if (isEventPending) {
+    return (
+      <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
+        <h3 className="text-xl mx-auto font-bold px-4 mb-4"></h3>
+      </div>
+    );
+  }
 
   return (
     <>
       <NavBar />
-      
 
       {/* <p>{id}</p> */}
 
@@ -135,43 +119,24 @@ export default function IndividualGroupPage() {
             )}
           </div>
         </div>
-
         <p className="text-lg font-light mx-auto p-2">
           {group.groupDescription}
         </p>
         <IndividualCalendar></IndividualCalendar>
-        {/* <div className="flex flex-row gap-1 mx-auto ">
-          Admins:
-          {group.admins.map((a, index) => (
-            <p key={index}>{a} </p>
-          ))}
-        </div>
-        <div className="flex flex-row gap-1 mx-auto ">
-          Members:
-          {group.members.map((a, index) => (
-            <p key={index}>{a} </p>
-          ))}
-        </div>
-
-        <div className="mx-auto p-4">
-          {group.events
-            .sort(
-              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-            )
-            .map((event, index) => (
-              <div key={index} className="p-2">
-                <p>Date: {event.date}</p>
-                <p>Event Name: {event.name}</p>
-                <p className="flex flex-row gap-1">
-                  Members Attending:
-                  {event.members.map((member, index) => (
-                    <p key={index}>{member}</p>
-                  ))}
-                </p>
-              </div>
-            ))}
-        </div> */}
-      </div> 
+        <EventCard
+          title={"All Group Events"}
+          events={(groupEvent ?? []).map(
+            ({ eventName, startDatetime, highPriority }) => ({
+              eventName,
+              // Empty cause we dont get back group name
+              group: "",
+              date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
+              highPriority,
+            })
+          )}
+          getEventString={({ eventName: event }) => event}
+        ></EventCard>
+      </div>
     </>
   );
 }
