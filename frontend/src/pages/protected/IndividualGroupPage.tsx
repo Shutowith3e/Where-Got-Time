@@ -129,13 +129,13 @@ export default function IndividualGroupPage() {
           events={(groupEvent ?? []).map(
             ({ eventName, startDatetime, highPriority }) => ({
               eventName,
-              // Empty cause we dont get back group name
               group: "",
               date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
               highPriority,
             })
           )}
           getEventString={({ eventName: event }) => event}
+          isAdmin={group?.isAdmin}
         ></IndividualEventCard>
       </div>
     </>
