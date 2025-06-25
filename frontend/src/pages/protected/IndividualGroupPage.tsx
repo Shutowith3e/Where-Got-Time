@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getGroupData } from "@/services/groups/get-group-data";
 import { getIndividualGroupEvent } from "@/services/events/get-group-events-data";
 import dayjs from "dayjs";
-import EventCard from "@/components/EventCard";
+import IndividualEventCard from "@/components/IndividualEventCard";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -123,7 +123,8 @@ export default function IndividualGroupPage() {
           {group.groupDescription}
         </p>
         <IndividualCalendar></IndividualCalendar>
-        <EventCard
+
+        <IndividualEventCard
           title={"All Group Events"}
           events={(groupEvent ?? []).map(
             ({ eventName, startDatetime, highPriority }) => ({
@@ -135,7 +136,7 @@ export default function IndividualGroupPage() {
             })
           )}
           getEventString={({ eventName: event }) => event}
-        ></EventCard>
+        ></IndividualEventCard>
       </div>
     </>
   );
