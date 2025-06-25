@@ -24,6 +24,7 @@ type IndividualEvent = {
 type EventChipProps = {
   event: IndividualEvent;
   getEventString: (event: IndividualEvent) => string;
+  isAdmin: boolean;
 };
 
 export type EventCardProps = {
@@ -33,7 +34,11 @@ export type EventCardProps = {
   isAdmin: boolean;
 };
 
-function EventChip({ event: eventData, getEventString }: EventChipProps) {
+function EventChip({
+  isAdmin,
+  event: eventData,
+  getEventString,
+}: EventChipProps) {
   const { highPriority, date, eventName } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   return (
@@ -48,42 +53,46 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
         </div>
 
         <div className="flex flex-row gap-3 m-auto">
-          <Button
-            variant="outline"
-            className=" rounded-full w-5 h-6"
-            onClick={() => setShowUpdateModal(true)}
-          >
-            <IoMdCreate />
-          </Button>
-          {showUpdateModal && (
-            <UpdateEventModal onClose={() => setShowUpdateModal(false)} />
-          )}
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" className="rounded-full w-5 h-6 ">
-                <IoIosClose />
+          {isAdmin && (
+            <>
+              <Button
+                variant="outline"
+                className=" rounded-full w-5 h-6"
+                onClick={() => setShowUpdateModal(true)}
+              >
+                <IoMdCreate />
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete Group Event</AlertDialogTitle>
-              </AlertDialogHeader>
-              <div>
-                <p>
-                  Are you sure you want to delete{" "}
-                  <span className="font-bold">{eventName}</span> ?
-                </p>
-                <p></p>
-              </div>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction variant="destructive">
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+              {showUpdateModal && (
+                <UpdateEventModal onClose={() => setShowUpdateModal(false)} />
+              )}
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="rounded-full w-5 h-6 ">
+                    <IoIosClose />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Group Event</AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <div>
+                    <p>
+                      Are you sure you want to delete{" "}
+                      <span className="font-bold">{eventName}</span> ?
+                    </p>
+                    <p></p>
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction variant="destructive">
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -120,7 +129,12 @@ export default function IndividualEventCard({
       {events
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((x, i) => (
-          <EventChip key={i} event={x} getEventString={getEventString} />
+          <EventChip
+            key={i}
+            event={x}
+            getEventString={getEventString}
+            isAdmin={isAdmin}
+          />
         ))}
     </div>
   );
