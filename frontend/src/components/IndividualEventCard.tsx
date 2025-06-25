@@ -1,3 +1,9 @@
+import { IoIosClose, IoMdCreate } from "react-icons/io";
+import { Button } from "./ui/button";
+import { useState } from "react";
+import CreateEventModal from "./CreateEvent";
+import UpdateEventModal from "./UpdateEvent";
+
 type IndividualEvent = {
   highPriority: boolean;
   group: string;
@@ -18,6 +24,7 @@ export type EventCardProps = {
 
 function EventChip({ event: eventData, getEventString }: EventChipProps) {
   const { highPriority, date } = eventData;
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   return (
     <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
       <div className="flex flex-row gap-8">
@@ -30,8 +37,13 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
         </div>
 
         <div className="flex flex-row gap-3 m-auto">
-          <div className="bg-black rounded-full w-5 h-5"></div>
-          <div className="bg-black rounded-full w-5 h-5 "></div>
+          <Button variant="outline" className=" rounded-full w-5 h-6" onClick={()=>setShowUpdateModal(true)}>
+            <IoMdCreate />
+          </Button>
+          {showUpdateModal && (<UpdateEventModal onClose={()=>setShowUpdateModal(false)}/>)}
+          <Button variant="outline" className="rounded-full w-5 h-6 ">
+            <IoIosClose />
+          </Button>
         </div>
       </div>
     </div>
@@ -44,10 +56,19 @@ export default function IndividualEventCard({
   getEventString = ({ group, eventName }) =>
     `${group.toUpperCase()} - ${eventName}`,
 }: EventCardProps) {
+  const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
   return (
     <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
-      <h3 className="text-xl mx-auto font-bold px-4 mb-4">{title}</h3>
-
+      <div className="flex flex-row justify-center gap-5">
+        <h3 className="text-xl font-bold px-4 mb-4 ml-15">{title}</h3>
+        <Button variant={"outline"} onClick={() => setShowCreateModal(true)}>
+          {" "}
+          Create Event
+        </Button>
+        {showCreateModal && (
+          <CreateEventModal onClose={() => setShowCreateModal(false)} />
+        )}
+      </div>
       {events
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((x, i) => (
