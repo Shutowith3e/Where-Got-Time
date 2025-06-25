@@ -13,7 +13,7 @@ const {
   const onSubmit = (data: any) => console.log(data);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 rounded-2xl">
       <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
         <h2 className="mb-4 text-center text-3xl font-bold text-yellow-600">Update Event</h2>
 
