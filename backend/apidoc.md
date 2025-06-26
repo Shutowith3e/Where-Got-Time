@@ -496,6 +496,8 @@ Returns an array of emails of users participating in the event.
 ## /admins
 All endpoints in here require you to be an admin of the group to access.
 
+You **must** include `gid` in req body to verify admin access, regardless of whether the endpoint requires it or not.
+
 ---
 
 ### POST /admins/createEvent
