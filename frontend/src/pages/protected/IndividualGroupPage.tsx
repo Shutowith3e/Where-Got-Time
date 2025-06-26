@@ -113,7 +113,8 @@ export default function IndividualGroupPage() {
         <IndividualEventCard
           title={"All Group Events"}
           events={(groupEvent ?? []).map(
-            ({eventName, startDatetime, highPriority }) => ({
+            ({eid,eventName, startDatetime, highPriority }) => ({
+              eid,
               eventName,
               group: "",
               date: dayjs(startDatetime).format("DD MMM (hh:m A)"),

@@ -15,6 +15,7 @@ import {
 } from "./ui/alert-dialog";
 
 type IndividualEvent = {
+  eid: string;
   highPriority: boolean;
   group: string;
   eventName: string;
@@ -25,6 +26,7 @@ type EventChipProps = {
   event: IndividualEvent;
   getEventString: (event: IndividualEvent) => string;
   isAdmin: boolean;
+  gid: string;
 };
 
 export type EventCardProps = {
@@ -37,11 +39,13 @@ export type EventCardProps = {
 
 function EventChip({
   isAdmin,
+  gid,
   event: eventData,
   getEventString,
 }: EventChipProps) {
-  const { highPriority, date, eventName } = eventData;
+  const { eid, highPriority, date, eventName } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  
   return (
     <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
       <div className="flex flex-row gap-8">
@@ -64,7 +68,7 @@ function EventChip({
                 <IoMdCreate />
               </Button>
               {showUpdateModal && (
-                <UpdateEventModal onClose={() => setShowUpdateModal(false)} />
+                <UpdateEventModal onClose={() => setShowUpdateModal(false)} gid={gid} eid={eid}/>
               )}
 
               <AlertDialog>
@@ -135,6 +139,7 @@ export default function IndividualEventCard({
             event={x}
             getEventString={getEventString}
             isAdmin={isAdmin}
+            gid={gid}
           />
         ))}
     </div>
