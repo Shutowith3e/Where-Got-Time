@@ -43,11 +43,11 @@ const deleteEvent = async (eid) => {
 	return await supabase.from('event').delete().match({'eid':eid});
 } //tested, works 
 
-/////////// WIP ////////////
-const getHighPriorityEvents = async(email) => {
-	return await supabase.from('event').select('eid').match({'email':email, high_priority:true});
+/////////// DONE ////////////
+const getHighPriorityEvents = async(gid) => {
+	return await supabase.rpc('get_users_highprio_event_by_group',{target_group_id:gid});
 } 
-/////////////////////////////
+
 
 export {
 	inviteGroupMembers,
