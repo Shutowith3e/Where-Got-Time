@@ -32,8 +32,9 @@ export default function IndividualGroupPage() {
   });
 
   const { data: currentGroupEvents, isPending: isEventPending } = useQuery({
-    queryKey: ["user-group-events"],
+    queryKey: ["user-group-events",id],
     queryFn: () => getIndividualGroupEvent(id!),
+    
   });
 
   if (!id) {

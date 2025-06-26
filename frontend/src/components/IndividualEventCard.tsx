@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import axiosInstance from "@/lib/axios-instance";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type IndividualEvent = {
   eid: string;
@@ -38,12 +39,12 @@ export type EventCardProps = {
   gid: string;
 };
 
-type deleteEventProps = {
+type DeleteEventProps = {
   eid: string;
   gid: string;
 };
 
-async function deleteEvent({ eid, gid }: deleteEventProps) {
+async function deleteEvent({ eid, gid }: DeleteEventProps) {
   const {
     data: { data },
   } = await axiosInstance.delete("/admins/deleteEvent", {
@@ -52,9 +53,7 @@ async function deleteEvent({ eid, gid }: deleteEventProps) {
       eid,
     },
   });
-  if (!data) {
-    return <p>Error !</p>;
-  }
+  return data;
 }
 
 function EventChip({
@@ -65,6 +64,17 @@ function EventChip({
 }: EventChipProps) {
   const { eid, highPriority, date, eventName } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: deleteEvent,
+    onSuccess: () => {
+      console.log("Successfully deleted");
+      return queryClient.invalidateQueries({
+        queryKey: ["user-group-events", gid],
+      });
+      // queryClient.refetchQueries({queryKey:["user-group-events"]});
+    },
+  });
 
   return (
     <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
@@ -107,7 +117,7 @@ function EventChip({
                   </AlertDialogHeader>
                   <div>
                     <p>
-                      Are you sure you want to delete{" "}
+                      Are you sure you want to delete?
                       <span className="font-bold">{eventName}</span> ?
                     </p>
                     <p></p>
@@ -116,7 +126,9 @@ function EventChip({
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       variant="destructive"
-                      onClick={() => deleteEvent({ eid, gid })}
+                      onClick={async () => {
+                        await deleteMutation.mutateAsync({ eid, gid });
+                      }}
                     >
                       Delete
                     </AlertDialogAction>
