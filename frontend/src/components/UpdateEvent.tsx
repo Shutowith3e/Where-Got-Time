@@ -15,9 +15,9 @@ const {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 rounded-2xl">
       <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="mb-4 text-center text-3xl font-bold text-yellow-600">Update Event</h2>
+        <h2 className="mb-4 text-center text-3xl font-bold text-black">Update Event</h2>
 
-        {/* Members Portion */}
+        {/* Members Portion
         <div className="mb-6 rounded-lg bg-purple-100 p-4">
           <div className="mb-2 flex items-center justify-between">
             <h3 className="font-semibold">Members</h3>
@@ -31,7 +31,7 @@ const {
             <div className="h-8 w-8 rounded-full bg-gray-300"></div>
             <p className="text-sm text-gray-500">+5 more</p>
           </div>
-        </div>
+        </div> */}
 
         {/* Form Portion */}
             <div className="mb-6 rounded-lg bg-white-100 p-4">
@@ -55,23 +55,23 @@ const {
             </p>
             )}
     
-            <label className="font-bold block mt-2 mb-2"> Event Description: </label>
+            {/* <label className="font-bold block mt-2 mb-2"> Event Description: </label>
             <input 
             className="w-full rounded border border-purple-500 px-3 py-2"
             placeholder="Explore SCIS facilities"
-            {...register("eventDescription")} />
+            {...register("eventDescription")} /> */}
 
 
             <label className="font-bold block mt-2 mb-2"> *Event Start Date & Time:</label>
             <input
             className="w-full rounded border border-purple-500 px-3 py-2"
             type="datetime-local"
-            {...register("startDate", {
+            {...register("startDatetime", {
             required: true,
             })}
-            aria-invalid={errors.startDate ? "true" : "false"}
+            aria-invalid={errors.startDatetime ? "true" : "false"}
             />
-            {errors.startDate?.type === "required" && (
+            {errors.startDatetime?.type === "required" && (
             <p role="alert" className="font-light text-sm text-red-600">
             *Start Date & Time is required
             </p>
@@ -81,26 +81,26 @@ const {
             <input
             className="w-full rounded border border-purple-500 px-3 py-2"
             type="datetime-local"
-            {...register("endDate", {
+            {...register("endDatetime", {
             required: true,
             validate: (value, formValues) => {
-            const start = new Date(formValues.startDate).getTime();
+            const start = new Date(formValues.startDatetime).getTime();
             const end = new Date(value).getTime();
             return end >= start || "*End date/time must be after start date/time";
             },
             })}
-            aria-invalid={errors.endDate ? "true" : "false"}
+            aria-invalid={errors.endDatetime ? "true" : "false"}
             />
-            {errors.endDate && (
+            {errors.endDatetime && (
             <p role="alert" className="font-light text-sm text-red-600">
-            {errors.endDate.message?.toString()}
+            {errors.endDatetime.message?.toString()}
             </p>
             )}
             
             <label className="font-bold block mt-2 mb-2"> Recurring: </label>
             <input 
             className="w-full rounded border border-purple-500 px-3 py-2"
-            {...register("rRule")} />
+            {...register("rrule")} />
             
             <div className=" flex items-center mt-2">
             <input 
@@ -126,7 +126,7 @@ const {
             <input
             type="submit"
             value="Update"
-            className="rounded-2xl bg-yellow-500 p-1 px-4 border"
+            className="rounded-2xl bg-orange-100 hover:bg-orange-200 p-1 px-4 border"
             />
             </div>
 
