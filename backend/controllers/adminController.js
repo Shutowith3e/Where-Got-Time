@@ -141,16 +141,17 @@ const deleteEvent = async (req, res) => {
  //tested, works
 
 ////////////// WIP /////////////////////
-const getHighPriorityEvent = async (req, res) => {
-    // how to get just one first ?
-    // create an empty lst 
-    // get all EIDs which are high priority using email from event_part. (call model func gethpevents)
-        // shove the EIDs in lst
-
-
-    // input: email. call getUserevents. 
-} // this func is only written for ONE member. it shld be called repeatedly if u nid multiple members' info
-////////////////////////////////////////
+const getHighPriorityEvents = async (req, res) => {
+    const {gid} = req.body;
+    if(!gid){
+        return res.status(400).json({error: "Missing gid"})//this should not even happen with checkadmin middleware
+    }
+    const{data,error} = await service.getHighPriorityEvents(gid);
+    if(error){
+        return res.status(500).json({message: "error fetching events",error})
+    }
+    return res.status(200).json({data})
+} 
 export {
 	inviteGroupMembers,
 	deleteGroup,
@@ -159,5 +160,5 @@ export {
 	removeAdmin,
 	deleteEvent,
 	createEvent,
-	getHighPriorityEvent
+	getHighPriorityEvents
 }
