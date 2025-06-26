@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import axiosInstance from "@/lib/axios-instance";
 
 type IndividualEvent = {
   eid: string;
@@ -37,6 +38,25 @@ export type EventCardProps = {
   gid: string;
 };
 
+type deleteEventProps = {
+  eid: string;
+  gid: string;
+};
+
+async function deleteEvent({ eid, gid }: deleteEventProps) {
+  const {
+    data: { data },
+  } = await axiosInstance.delete("/admins/deleteEvent", {
+    data: {
+      gid,
+      eid,
+    },
+  });
+  if (!data) {
+    return <p>Error !</p>;
+  }
+}
+
 function EventChip({
   isAdmin,
   gid,
@@ -45,7 +65,7 @@ function EventChip({
 }: EventChipProps) {
   const { eid, highPriority, date, eventName } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  
+
   return (
     <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
       <div className="flex flex-row gap-8">
@@ -68,7 +88,11 @@ function EventChip({
                 <IoMdCreate />
               </Button>
               {showUpdateModal && (
-                <UpdateEventModal onClose={() => setShowUpdateModal(false)} gid={gid} eid={eid}/>
+                <UpdateEventModal
+                  onClose={() => setShowUpdateModal(false)}
+                  gid={gid}
+                  eid={eid}
+                />
               )}
 
               <AlertDialog>
@@ -90,7 +114,10 @@ function EventChip({
                   </div>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction variant="destructive">
+                    <AlertDialogAction
+                      variant="destructive"
+                      onClick={() => deleteEvent({ eid, gid })}
+                    >
                       Delete
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -126,7 +153,10 @@ export default function IndividualEventCard({
               Create Event
             </Button>
             {showCreateModal && (
-              <CreateEventModal onClose={() => setShowCreateModal(false)} gid={gid}/>
+              <CreateEventModal
+                onClose={() => setShowCreateModal(false)}
+                gid={gid}
+              />
             )}
           </>
         )}
