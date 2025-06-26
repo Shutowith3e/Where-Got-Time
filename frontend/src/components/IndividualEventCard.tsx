@@ -32,6 +32,7 @@ export type EventCardProps = {
   events: IndividualEvent[];
   getEventString?: (eventData: IndividualEvent) => string;
   isAdmin: boolean;
+  gid: string;
 };
 
 function EventChip({
@@ -105,6 +106,7 @@ export default function IndividualEventCard({
   getEventString = ({ group, eventName }) =>
     `${group.toUpperCase()} - ${eventName}`,
   isAdmin,
+  gid,
 }: EventCardProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   return (
@@ -117,11 +119,10 @@ export default function IndividualEventCard({
               variant={"outline"}
               onClick={() => setShowCreateModal(true)}
             >
-              {" "}
               Create Event
             </Button>
             {showCreateModal && (
-              <CreateEventModal onClose={() => setShowCreateModal(false)} />
+              <CreateEventModal onClose={() => setShowCreateModal(false)} gid={gid}/>
             )}
           </>
         )}

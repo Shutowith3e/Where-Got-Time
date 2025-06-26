@@ -25,20 +25,6 @@ import IndividualEventCard from "@/components/IndividualEventCard";
 // use the prev end point, but only get the current group
 
 export default function IndividualGroupPage() {
-  // type Group = {
-  //   gid: string;
-  //   groupName: string;
-  //   groupDescription: string;
-  //   is_admin: boolean;
-  //   admins: string[];
-  //   members: string[];
-  //   events: {
-  //     name: string;
-  //     date: string;
-  //     members: string[];
-  //   }[];
-  // };
-
   const { id } = useParams();
   const { data: currentGroupInfo, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-groups"],
@@ -127,7 +113,7 @@ export default function IndividualGroupPage() {
         <IndividualEventCard
           title={"All Group Events"}
           events={(groupEvent ?? []).map(
-            ({ eventName, startDatetime, highPriority }) => ({
+            ({eventName, startDatetime, highPriority }) => ({
               eventName,
               group: "",
               date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
@@ -136,6 +122,7 @@ export default function IndividualGroupPage() {
           )}
           getEventString={({ eventName: event }) => event}
           isAdmin={group?.isAdmin}
+          gid={id}
         ></IndividualEventCard>
       </div>
     </>
