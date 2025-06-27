@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import IndividualEventCard from "@/components/IndividualEventCard";
 import { getGroupInfo } from "@/services/groups/get-group-info";
+import { GroupContextProvider } from "@/context/GroupContext";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -69,7 +70,7 @@ export default function IndividualGroupPage() {
   // }
 
   return (
-    <>
+    <GroupContextProvider groupInfo={group}>
       <NavBar />
       <div className="flex flex-col p-2">
         <div className="gap-y-2">
@@ -116,10 +117,8 @@ export default function IndividualGroupPage() {
             })
           )}
           getEventString={({ eventName: event }) => event}
-          isAdmin={group?.isAdmin}
-          gid={id}
         />
       </div>
-    </>
+    </GroupContextProvider>
   );
 }
