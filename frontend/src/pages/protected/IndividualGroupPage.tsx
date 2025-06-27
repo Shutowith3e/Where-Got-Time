@@ -32,9 +32,8 @@ export default function IndividualGroupPage() {
   });
 
   const { data: currentGroupEvents, isPending: isEventPending } = useQuery({
-    queryKey: ["user-group-events",id],
+    queryKey: ["user-group-events", id],
     queryFn: () => getIndividualGroupEvent(id!),
-    
   });
 
   if (!id) {
@@ -114,7 +113,7 @@ export default function IndividualGroupPage() {
         <IndividualEventCard
           title={"All Group Events"}
           events={(groupEvent ?? []).map(
-            ({eid,eventName, startDatetime, highPriority }) => ({
+            ({ eid, eventName, startDatetime, highPriority }) => ({
               eid,
               eventName,
               group: "",

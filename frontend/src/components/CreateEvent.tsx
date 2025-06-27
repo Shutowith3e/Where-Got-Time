@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios-instance";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 type CreateEventModalProps = {
@@ -16,16 +16,18 @@ export default function CreateEventModal({
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log(data);
     const fullForm = {
       ...data,
       gid,
     };
-    createEventMutation.mutate(fullForm);
+
+    await createEventMutation.mutateAsync(fullForm);
+    onClose();
   };
 
-  
+  const queryClient = useQueryClient();
   const createEventMutation = useMutation({
     mutationFn: async (formData: any) => {
       const res = await axiosInstance.post("/admins/createEvent", formData);
@@ -33,6 +35,9 @@ export default function CreateEventModal({
     },
     onSuccess: () => {
       console.log("Event created");
+      return queryClient.invalidateQueries({
+        queryKey: ["user-group-events", gid],
+      });
     },
     onError: (error) => {
       console.error(error);

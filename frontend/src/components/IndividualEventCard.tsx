@@ -117,7 +117,7 @@ function EventChip({
                   </AlertDialogHeader>
                   <div>
                     <p>
-                      Are you sure you want to delete?
+                      Are you sure you want to delete
                       <span className="font-bold">{eventName}</span> ?
                     </p>
                     <p></p>
