@@ -27,6 +27,7 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/admins/deleteEvent](#delete-adminsdeleteevent)
 	- [/admins/deleteGroup](#delete-adminsdeletegroup)
 	- [/admins/deleteGroupMember](#delete-adminsdeletegroupmember)
+	- [/admins/getHighPriorityEvents](#post-adminsgethighpriorityevents)
 	- [/admins/inviteGroupMembers](#post-adminsinvitegroupmembers)
 	- [/admins/makeAdmin](#put-adminsmakeadmin)
 	- [/admins/removeAdmin](#put-adminsremoveadmin)
@@ -496,6 +497,8 @@ Returns an array of emails of users participating in the event.
 ## /admins
 All endpoints in here require you to be an admin of the group to access.
 
+You **must** include `gid` in req body to verify admin access, regardless of whether the endpoint requires it or not.
+
 ---
 
 ### POST /admins/createEvent
@@ -578,6 +581,62 @@ Deletes the group
 }
 ```
 note: no data is being returned, just a message
+
+<br>
+
+---
+
+### POST /admins/getHighPriorityEvents
+
+**Description**   
+Gets the high priority events that members of the group is a participant of. 
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group  |
+
+
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+	"data":[
+  {
+    "eid": "23e4e4ba-3a0a-458a-992a-cbcaf571a991",
+    "gid": "62af6a4a-e77c-4124-8c13-93c08644e49a",
+    "rrule": null,
+    "duration": "7 days",
+    "event_name": "idw attend",
+    "end_datetime": "2025-06-30T18:24:10",
+    "high_priority": true,
+    "start_datetime": "2025-06-23T18:24:03",
+    "event_participants": [ 
+		"joey.chik.2024@computing.smu.edu.sg"
+	]
+  },
+  {
+    "eid": "68f9d513-9d12-4f9d-9b95-acc799d6f103",
+    "gid": "21924b54-03cd-40bb-92b6-fac4a0d68e6f",
+    "rrule": null,
+    "duration": "1 day 00:00:02",
+    "event_name": "simi event bro",
+    "end_datetime": "2025-06-21T10:50:10",
+    "high_priority": true,
+    "start_datetime": "2025-06-20T10:50:08",
+    "event_participants": [
+      "jiale.lim.2024@computing.smu.edu.sg",
+      "clarice.lim.2024@computing.smu.edu.sg"
+    ]
+  }
+] 
+}
+```
+
+note: `rrule` can be a string or empty string ('') or null (because of testing data )
+empty string and null are treated as false
 
 <br>
 
