@@ -36,7 +36,7 @@ export default function CreateEventModal({
     onSuccess: () => {
       console.log("Event created");
       return queryClient.invalidateQueries({
-        queryKey: ["user-group-events", gid],
+        queryKey: ["user-group", gid],
       });
     },
     onError: (error) => {

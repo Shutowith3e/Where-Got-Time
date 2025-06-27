@@ -16,7 +16,7 @@
 //     ]
 // }
 
-import type { GroupData } from "../groups/get-groups.dto";
+import type { GroupData } from "../groups/get-user-groups.dto";
 
 type EventData = {
   eid: string;

@@ -13,10 +13,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { getGroupData } from "@/services/groups/get-group-data";
-import { getIndividualGroupEvent } from "@/services/events/get-group-events-data";
 import dayjs from "dayjs";
 import IndividualEventCard from "@/components/IndividualEventCard";
+import { getGroupInfo } from "@/services/groups/get-group-info";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -26,28 +25,18 @@ import IndividualEventCard from "@/components/IndividualEventCard";
 
 export default function IndividualGroupPage() {
   const { id } = useParams();
-  const { data: currentGroupInfo, isPending: isGroupsPending } = useQuery({
-    queryKey: ["user-groups"],
-    queryFn: getGroupData,
+  const { data: group, isPending: isGroupsPending } = useQuery({
+    queryKey: ["user-group", id],
+    queryFn: () => getGroupInfo(id!),
   });
 
-  const { data: currentGroupEvents, isPending: isEventPending } = useQuery({
-    queryKey: ["user-group-events", id],
-    queryFn: () => getIndividualGroupEvent(id!),
-  });
+  // const { data: groupEvent, isPending: isEventPending } = useQuery({
+  //   queryKey: ["user-group-events", id],
+  //   queryFn: () => getIndividualGroupEvent(id!),
+  // });
 
   if (!id) {
     return <p>Invalid Group ID!</p>;
-  }
-
-  const group = currentGroupInfo?.find((group) => group.gid === id);
-  if (!group) {
-    return <p>No Such Group!</p>;
-  }
-
-  const groupEvent = currentGroupEvents;
-  if (!groupEvent) {
-    return <p>No Such Group Event!</p>;
   }
 
   if (isGroupsPending) {
@@ -63,20 +52,25 @@ export default function IndividualGroupPage() {
     );
   }
 
-  if (isEventPending) {
-    return (
-      <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
-        <h3 className="text-xl mx-auto font-bold px-4 mb-4"></h3>
-      </div>
-    );
+  // if (isEventPending) {
+  //   return (
+  //     <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
+  //       <h3 className="text-xl mx-auto font-bold px-4 mb-4"></h3>
+  //     </div>
+  //   );
+  // }
+
+  if (!group) {
+    return <p>No Such Group!</p>;
   }
+
+  // if (!groupEvent) {
+  //   return <p>No Such Group Event!</p>;
+  // }
 
   return (
     <>
       <NavBar />
-
-      {/* <p>{id}</p> */}
-
       <div className="flex flex-col p-2">
         <div className="gap-y-2">
           <h1 className="text-3xl font-semibold text-center ">
@@ -112,7 +106,7 @@ export default function IndividualGroupPage() {
 
         <IndividualEventCard
           title={"All Group Events"}
-          events={(groupEvent ?? []).map(
+          events={group.events.map(
             ({ eid, eventName, startDatetime, highPriority }) => ({
               eid,
               eventName,
@@ -124,7 +118,7 @@ export default function IndividualGroupPage() {
           getEventString={({ eventName: event }) => event}
           isAdmin={group?.isAdmin}
           gid={id}
-        ></IndividualEventCard>
+        />
       </div>
     </>
   );

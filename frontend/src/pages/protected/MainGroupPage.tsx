@@ -4,7 +4,10 @@ import { IoMdSearch } from "react-icons/io";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import EventCard from "@/components/EventCard";
-import { getGroupData, type GroupItem } from "@/services/groups/get-group-data";
+import {
+  getAllUserGroupsData,
+  type GroupItem,
+} from "@/services/groups/get-user-group-data";
 import { useQuery } from "@tanstack/react-query";
 import { GetUserEvents } from "@/services/events/get-user-events-data";
 import dayjs from "dayjs";
@@ -37,7 +40,7 @@ function FilteredGroup({
 function GroupList({ filterSearch }: { filterSearch: string }) {
   const { data: groupList, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-groups"],
-    queryFn: getGroupData,
+    queryFn: getAllUserGroupsData,
   });
   if (isGroupsPending) {
     return (
@@ -71,7 +74,7 @@ function GroupList({ filterSearch }: { filterSearch: string }) {
 export default function MainGroupPage() {
   const [inputValue, setInputValue] = useState("");
 
-//to get user events 
+  //to get user events
   const { data: groupEventList, isPending: isUserEventsPending } = useQuery({
     queryKey: ["user-events"],
     queryFn: GetUserEvents,

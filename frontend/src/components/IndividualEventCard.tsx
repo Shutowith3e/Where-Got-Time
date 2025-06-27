@@ -70,7 +70,8 @@ function EventChip({
     onSuccess: () => {
       console.log("Successfully deleted");
       return queryClient.invalidateQueries({
-        queryKey: ["user-group-events", gid],
+        queryKey: ["user-group", gid],
+        // queryKey: ["user-group-events", gid],
       });
       // queryClient.refetchQueries({queryKey:["user-group-events"]});
     },
@@ -118,7 +119,7 @@ function EventChip({
                   <div>
                     <p>
                       Are you sure you want to delete
-                      <span className="font-bold">{eventName}</span> ?
+                      <span className="font-bold">{eventName} </span> ?
                     </p>
                     <p></p>
                   </div>

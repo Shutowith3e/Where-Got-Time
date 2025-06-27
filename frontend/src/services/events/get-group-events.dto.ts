@@ -12,7 +12,7 @@
 //     ]
 // }
 
-type GroupEventData = {
+export type GroupEventData = {
   eid: string;
   gid: string;
   eventName: string;
