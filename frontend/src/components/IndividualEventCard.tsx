@@ -15,6 +15,7 @@ import {
 } from "./ui/alert-dialog";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useGroup from "@/context/GroupContext";
 
 type IndividualEvent = {
   eid: string;
@@ -27,16 +28,12 @@ type IndividualEvent = {
 type EventChipProps = {
   event: IndividualEvent;
   getEventString: (event: IndividualEvent) => string;
-  isAdmin: boolean;
-  gid: string;
 };
 
 export type EventCardProps = {
   title: string;
   events: IndividualEvent[];
   getEventString?: (eventData: IndividualEvent) => string;
-  isAdmin: boolean;
-  gid: string;
 };
 
 type DeleteEventProps = {
@@ -56,12 +53,10 @@ async function deleteEvent({ eid, gid }: DeleteEventProps) {
   return data;
 }
 
-function EventChip({
-  isAdmin,
-  gid,
-  event: eventData,
-  getEventString,
-}: EventChipProps) {
+function EventChip({ event: eventData, getEventString }: EventChipProps) {
+  const {
+    groupInfo: { gid, isAdmin, groupName },
+  } = useGroup();
   const { eid, highPriority, date, eventName } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const queryClient = useQueryClient();
@@ -114,12 +109,14 @@ function EventChip({
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Group Event</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      Delete Group Event for {groupName}
+                    </AlertDialogTitle>
                   </AlertDialogHeader>
                   <div>
                     <p>
-                      Are you sure you want to delete
-                      <span className="font-bold">{eventName} </span> ?
+                      Are you sure you want to delete{" "}
+                      <span className="font-bold">{eventName}</span> ?
                     </p>
                     <p></p>
                   </div>
@@ -149,10 +146,12 @@ export default function IndividualEventCard({
   events,
   getEventString = ({ group, eventName }) =>
     `${group.toUpperCase()} - ${eventName}`,
-  isAdmin,
-  gid,
 }: EventCardProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const {
+    groupInfo: { gid, isAdmin },
+  } = useGroup();
+
   return (
     <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
       <div className="flex flex-row justify-center gap-5">
@@ -177,13 +176,7 @@ export default function IndividualEventCard({
       {events
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((x, i) => (
-          <EventChip
-            key={i}
-            event={x}
-            getEventString={getEventString}
-            isAdmin={isAdmin}
-            gid={gid}
-          />
+          <EventChip key={i} event={x} getEventString={getEventString} />
         ))}
     </div>
   );
