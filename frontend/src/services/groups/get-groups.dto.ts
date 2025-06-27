@@ -1,10 +1,12 @@
 /**
  * Group data from BE
  */
+
+//assuming the camel casing works
 export type GroupData = {
   gid: string;
-  group_name: string;
-  group_description: string;
+  groupName: string;
+  groupDescription: string;
 };
 
 /**
@@ -15,10 +17,10 @@ export type GetGroupsDto = {
     /**
      * Groups where user is admin in
      */
-    admin_arr: GroupData[];
+    adminArr: GroupData[];
     /**
      * Groups where user is member in
      */
-    member_arr: GroupData[];
+    memberArr: GroupData[];
   };
 };

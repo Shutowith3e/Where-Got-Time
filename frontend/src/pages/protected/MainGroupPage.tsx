@@ -71,11 +71,13 @@ function GroupList({ filterSearch }: { filterSearch: string }) {
 export default function MainGroupPage() {
   const [inputValue, setInputValue] = useState("");
 
+//to get user events 
   const { data: groupEventList, isPending: isUserEventsPending } = useQuery({
     queryKey: ["user-events"],
     queryFn: GetUserEvents,
   });
 
+  //changes when u type into search bar
   const inputChange = (event: any) => {
     const value = event.target.value;
     setInputValue(value);
@@ -110,7 +112,7 @@ export default function MainGroupPage() {
           events={(groupEventList ?? []).map(
             ({ groupName, eventName, startDatetime, highPriority }) => ({
               group: groupName,
-              event: eventName,
+              eventName: eventName,
               date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
               highPriority,
             })
