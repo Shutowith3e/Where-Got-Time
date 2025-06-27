@@ -169,6 +169,7 @@ export default function CreateEventModal({
                 type="submit"
                 value="Create"
                 className="rounded-2xl bg-green-100 p-1 px-4 border hover:bg-green-200"
+                disabled={createEventMutation.isPending}
               />
             </div>
           </form>
