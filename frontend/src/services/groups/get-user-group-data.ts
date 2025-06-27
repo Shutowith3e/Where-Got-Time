@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios-instance";
-import { type GetGroupsDto } from "./get-groups.dto";
+import { type GetGroupsDto } from "./get-user-groups.dto";
 
 export type GroupItem = {
   gid: string;
@@ -8,7 +8,7 @@ export type GroupItem = {
   isAdmin: boolean;
 };
 
-export async function getGroupData(): Promise<GroupItem[]> {
+export async function getAllUserGroupsData(): Promise<GroupItem[]> {
   const {
     data: { data },
   } = await axiosInstance.post<GetGroupsDto>("/users/getGroups");
@@ -18,11 +18,9 @@ export async function getGroupData(): Promise<GroupItem[]> {
       ...group,
       isAdmin: true,
     })),
-    ...data.memberArr.map<GroupItem>(((group)=>({
+    ...data.memberArr.map<GroupItem>((group) => ({
       ...group,
-      isAdmin:false,
-    }))
-     
-    ),
+      isAdmin: false,
+    })),
   ];
 }
