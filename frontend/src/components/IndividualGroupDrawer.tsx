@@ -11,6 +11,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
+import { Button } from "./ui/button";
+import { IoIosClose, IoMdCreate } from "react-icons/io";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -27,7 +29,12 @@ export default function IndividualGroupDrawer() {
               <SidebarMenu>
                 {groupAdmins.map((adminEmail) => (
                   <SidebarMenuItem key={adminEmail}>
-                    <SidebarMenuButton>{adminEmail}</SidebarMenuButton>
+                    <div className="w-[235px] flex flex-row gap-1">
+                      <p className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                        {adminEmail}
+                      </p>
+                      
+                    </div>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -39,7 +46,27 @@ export default function IndividualGroupDrawer() {
               <SidebarMenu>
                 {groupMembers.map((memberEmail) => (
                   <SidebarMenuItem key={memberEmail}>
-                    <SidebarMenuButton>{memberEmail}</SidebarMenuButton>
+                    <div className="w-[235px] flex flex-row gap-1">
+                      <p className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                        {memberEmail}
+                      </p>
+                      {isAdmin && (
+                        <>
+                          <Button
+                            variant="outline"
+                            className=" rounded-full w-5 h-6"
+                          >
+                            <IoMdCreate />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="rounded-full w-5 h-6 "
+                          >
+                            <IoIosClose />
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
