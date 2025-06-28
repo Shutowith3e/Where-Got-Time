@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import IndividualEventCard from "@/components/IndividualEventCard";
 import { getGroupInfo } from "@/services/groups/get-group-info";
 import { GroupContextProvider } from "@/context/GroupContext";
+import IndividualGroupLayout from "./IndividualGroupLayout";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -68,57 +69,60 @@ export default function IndividualGroupPage() {
   // if (!groupEvent) {
   //   return <p>No Such Group Event!</p>;
   // }
-
   return (
     <GroupContextProvider groupInfo={group}>
       <NavBar />
-      <div className="flex flex-col p-2">
-        <div className="gap-y-2">
-          <h1 className="text-3xl font-semibold text-center ">
-            {group.groupName.toUpperCase()}'S CALENDAR
-          </h1>
-          <div className="flex justify-center ">
-            {group?.isAdmin && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline">Edit Group</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Edit Group Details</AlertDialogTitle>
-                  </AlertDialogHeader>
-                  <div>
-                    <p>Group Name: {group.groupName}</p>
-                    <p>Group Description: {group.groupDescription}</p>
-                  </div>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Update</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
+      <IndividualGroupLayout>
+        <div className="flex flex-col p-2">
+          <div className="gap-y-2">
+            <div className="flex flex-row justify-center">
+              <h1 className="text-3xl font-semibold text-center ">
+                {group.groupName.toUpperCase()}'S CALENDAR
+              </h1>
+            </div>
+            <div className="flex justify-center ">
+              {group?.isAdmin && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">Edit Group</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Edit Group Details</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <div>
+                      <p>Group Name: {group.groupName}</p>
+                      <p>Group Description: {group.groupDescription}</p>
+                    </div>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction>Update</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+            </div>
           </div>
-        </div>
-        <p className="text-lg font-light mx-auto p-2">
-          {group.groupDescription}
-        </p>
-        <IndividualCalendar></IndividualCalendar>
+          <p className="text-lg font-light mx-auto p-2">
+            {group.groupDescription}
+          </p>
+          <IndividualCalendar></IndividualCalendar>
 
-        <IndividualEventCard
-          title={"All Group Events"}
-          events={group.events.map(
-            ({ eid, eventName, startDatetime, highPriority }) => ({
-              eid,
-              eventName,
-              group: "",
-              date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
-              highPriority,
-            })
-          )}
-          getEventString={({ eventName: event }) => event}
-        />
-      </div>
+          <IndividualEventCard
+            title={"All Group Events"}
+            events={group.events.map(
+              ({ eid, eventName, startDatetime, highPriority }) => ({
+                eid,
+                eventName,
+                group: "",
+                date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
+                highPriority,
+              })
+            )}
+            getEventString={({ eventName: event }) => event}
+          />
+        </div>
+      </IndividualGroupLayout>
     </GroupContextProvider>
   );
 }
