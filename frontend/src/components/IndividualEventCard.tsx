@@ -1,8 +1,8 @@
 import { IoIosClose, IoMdCreate } from "react-icons/io";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import CreateEventModal from "./CreateEvent";
-import UpdateEventModal from "./UpdateEvent";
+import CreateEventModal from "./ui/event/CreateEvent";
+import UpdateEventModal from "./ui/event/UpdateEvent";
 import {
   AlertDialog,
   AlertDialogAction,

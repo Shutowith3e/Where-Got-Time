@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import { IoMdSearch } from "react-icons/io";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import EventCard from "@/components/EventCard";
+import EventCard from "@/components/ui/event/EventCard";
 import {
   getAllUserGroupsData,
   type GroupItem,
