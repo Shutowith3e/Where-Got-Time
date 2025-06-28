@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
 import { Button } from "./ui/button";
-import { IoIosClose, IoMdCreate } from "react-icons/io";
+import { IoIosClose, IoMdAdd, IoMdCreate } from "react-icons/io";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -23,6 +23,14 @@ export default function IndividualGroupDrawer() {
       <Sidebar side="left" variant="sidebar" className="mt-20">
         <SidebarHeader />
         <SidebarContent>
+          {isAdmin && (
+            <SidebarGroup>
+              <SidebarMenuButton className="max-w-fit rounded-2xl bg-white mx-auto px-4">
+                <IoMdAdd />
+                Invite New Members
+              </SidebarMenuButton>
+            </SidebarGroup>
+          )}
           <SidebarGroup>
             <SidebarGroupLabel>Group Admins </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -33,7 +41,6 @@ export default function IndividualGroupDrawer() {
                       <p className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
                         {adminEmail}
                       </p>
-                      
                     </div>
                   </SidebarMenuItem>
                 ))}
