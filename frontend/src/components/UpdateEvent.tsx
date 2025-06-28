@@ -1,5 +1,6 @@
+import useGroup from "@/context/GroupContext";
 import axiosInstance from "@/lib/axios-instance";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 type UpdateEventModalProps = {
@@ -18,16 +19,23 @@ export default function UpdateEventModal({
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     const fullForm = {
       ...data,
       gid,
+      emailsArray: [...(groupMembers ?? []), ...(groupAdmins ?? [])],
       eid,
     };
     updateEventMutation.mutate(fullForm);
     console.log(fullForm);
+    await updateEventMutation.mutateAsync(fullForm);
+    onClose();
   };
+  const {
+      groupInfo: { groupMembers, groupAdmins },
+    } = useGroup();
 
+  const queryClient = useQueryClient();
   const updateEventMutation = useMutation({
     mutationFn: async (formData: any) => {
       const res = await axiosInstance.post("/admins/updateEvent", formData);
@@ -35,12 +43,14 @@ export default function UpdateEventModal({
     },
     onSuccess: () => {
       console.log("Event created");
+      return queryClient.invalidateQueries({
+        queryKey: ["user-group", gid],
+      });
     },
     onError: (error) => {
       console.error(error);
     },
   });
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 rounded-2xl">
       <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
