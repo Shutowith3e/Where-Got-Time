@@ -1,3 +1,4 @@
+import useGroup from "@/context/GroupContext";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -17,15 +18,20 @@ export default function CreateEventModal({
     handleSubmit,
   } = useForm();
   const onSubmit = async (data: any) => {
-    console.log(data);
     const fullForm = {
       ...data,
       gid,
+      emailsArray: [...(groupMembers??[]), ...(groupAdmins??[])],
     };
+
+    console.log("Submit to be: ", fullForm);
 
     await createEventMutation.mutateAsync(fullForm);
     onClose();
   };
+  const {
+    groupInfo: { groupMembers, groupAdmins },
+  } = useGroup();
 
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
