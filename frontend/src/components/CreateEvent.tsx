@@ -21,6 +21,7 @@ export default function CreateEventModal({
     const fullForm = {
       ...data,
       gid,
+      // wip: take in an array of emails to join event
       emailsArray: [...(groupMembers??[]), ...(groupAdmins??[])],
     };
 
