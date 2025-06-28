@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
 import { Button } from "./ui/button";
-import { IoIosClose, IoMdAdd, IoMdCreate } from "react-icons/io";
+import { IoIosClose, IoMdAdd, IoMdCreate, IoMdRemove } from "react-icons/io";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -20,7 +20,7 @@ export default function IndividualGroupDrawer() {
   } = useGroup();
   return (
     <>
-      <Sidebar side="left" variant="sidebar" className="mt-20">
+      <Sidebar side="left" variant="sidebar" className="mt-20 h-[87vh]">
         <SidebarHeader />
         <SidebarContent>
           {isAdmin && (
@@ -80,7 +80,14 @@ export default function IndividualGroupDrawer() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter />
+        <SidebarFooter>
+          {isAdmin && (
+            <SidebarMenuButton className="max-w-fit rounded-2xl bg-red-50 mx-auto px-4" >
+              <IoMdRemove />
+              Delete Group
+            </SidebarMenuButton>
+          )}
+        </SidebarFooter>
       </Sidebar>
     </>
   );
