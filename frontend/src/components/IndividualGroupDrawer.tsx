@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
 import { Button } from "./ui/button";
-import { IoIosClose, IoMdCreate, IoMdRemove } from "react-icons/io";
+import { IoMdCreate, IoMdRemove } from "react-icons/io";
 import InviteNewMember from "./admin/InviteNewMember";
 import RemoveAdmin from "./admin/RemoveAdmin";
 import RemoveMember from "./admin/RemoveMember";
@@ -43,8 +43,8 @@ export default function IndividualGroupDrawer() {
                       </span>
                       {isAdmin && (
                         <>
-                          <RemoveAdmin adminToRemove={adminEmail}/>
-                          <RemoveMember memberToDelete={adminEmail}/>
+                          <RemoveAdmin adminToRemove={adminEmail} />
+                          <RemoveMember memberToDelete={adminEmail} />
                         </>
                       )}
                     </div>
@@ -71,12 +71,7 @@ export default function IndividualGroupDrawer() {
                           >
                             <IoMdCreate />
                           </Button>
-                          <Button
-                            variant="outline"
-                            className="rounded-full w-5 h-6 "
-                          >
-                            <IoIosClose />
-                          </Button>
+                          <RemoveMember memberToDelete={memberEmail} />
                         </>
                       )}
                     </div>
