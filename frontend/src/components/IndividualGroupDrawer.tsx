@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { IoIosClose, IoMdCreate, IoMdRemove } from "react-icons/io";
 import InviteNewMember from "./admin/InviteNewMember";
 import RemoveAdmin from "./admin/RemoveAdmin";
+import RemoveMember from "./admin/RemoveMember";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -43,12 +44,7 @@ export default function IndividualGroupDrawer() {
                       {isAdmin && (
                         <>
                           <RemoveAdmin adminToRemove={adminEmail}/>
-                          <Button
-                            variant="outline"
-                            className="rounded-full w-5 h-6 "
-                          >
-                            <IoIosClose />
-                          </Button>
+                          <RemoveMember memberToDelete={adminEmail}/>
                         </>
                       )}
                     </div>
