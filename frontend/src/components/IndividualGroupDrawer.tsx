@@ -14,6 +14,7 @@ import {
 import { Button } from "./ui/button";
 import { IoIosClose, IoMdCreate, IoMdRemove } from "react-icons/io";
 import InviteNewMember from "./admin/InviteNewMember";
+import RemoveAdmin from "./admin/RemoveAdmin";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -39,6 +40,17 @@ export default function IndividualGroupDrawer() {
                       <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
                         {adminEmail}
                       </span>
+                      {isAdmin && (
+                        <>
+                          <RemoveAdmin adminToRemove={adminEmail}/>
+                          <Button
+                            variant="outline"
+                            className="rounded-full w-5 h-6 "
+                          >
+                            <IoIosClose />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </SidebarMenuItem>
                 ))}
