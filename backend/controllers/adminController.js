@@ -107,14 +107,14 @@ const deleteGroup = async (req, res) => {
 
 const createEvent = async (req, res) => {
     // get details frm fe
-    const {gid, event_name, start_datetime, end_datetime, rrule, high_priority} = req.body; 
+    const {gid, event_name, start_datetime, end_datetime, rrule, high_priority, email_arr} = req.body; 
     
     // check if everyth is entered correctly 
-    if (!gid || !event_name || !start_datetime || !end_datetime || !high_priority) {
+    if (!gid || !event_name || !start_datetime || !end_datetime || !high_priority|| email_arr.length===0) {
         return res.status(400).json({ error: "Missing details" });
     }
 
-    const { data, error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority);
+    const {error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority,email_arr);
     if (error){
         return res.status(500).json({message: "Error creating event"});
     }

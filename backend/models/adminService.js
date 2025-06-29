@@ -35,8 +35,17 @@ const removeAdmin = async (email, gid) =>{
 	return await supabase.from('group_members').update({is_admin:false}).match({'email':email, 'gid':gid,'is_admin':true}).select();
 } //tested, works, updated to make sure person must be admin in the first place
 
-const createEvent = async (gid, event_name, start_datetime, end_datetime, rrule, high_priority) => {
-	return await supabase.from('event').insert({'gid': gid, 'event_name':event_name, 'start_datetime':start_datetime, 'end_datetime':end_datetime, 'rrule':rrule, high_priority:high_priority}).select();
+const createEvent = async (gid, event_name, start_datetime, end_datetime, rrule, high_priority,email_arr) => {
+	const {data:eidData,error:eventCreationError} = await supabase.from('event').insert({'gid': gid, 'event_name':event_name, 'start_datetime':start_datetime, 'end_datetime':end_datetime, 'rrule':rrule, high_priority:high_priority}).select('eid');
+	if(eventCreationError){
+		return {eventCreationError};
+	}
+	const eid = eidData[0].eid;
+	const insert_arr = email_arr.map(email => ({
+		eid:eid ,
+		email: email 
+	}));
+	return await supabase.from('event_participants').insert(insert_arr);
 } //tested, works 
 
 const deleteEvent = async (eid) => {

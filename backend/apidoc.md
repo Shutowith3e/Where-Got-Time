@@ -544,7 +544,7 @@ Creates an event for the group.
 | `start_datetime`              | string | string representing the start datetime of the event |
 | `end_datetime`              | string  | string representing the end datetime of the event |
 | `high_priority`              | boolean | boolean value representing the priority of the event. `true` for high, `false` for low |
-
+| `email_arr`              | array of strings | Array of emails of event participants |
 
 
 
