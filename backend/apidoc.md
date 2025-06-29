@@ -19,6 +19,7 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/groups/groupDetails](#post-groupsgroupdetails)
 	- [/groups/groupEvent](#post-groupsgroupevents)
 	- [/groups/groupMembers](#post-groupsgroupmembers)
+	- [/groups/leaveGroup](#delete-groupsleavegroup)
 	- [/groups/searchEmails](#get-groupssearchemails)
 - [/events](#events)
 	- [/events/getEventParticipants](#post-eventsgeteventparticipants)
@@ -419,6 +420,33 @@ Returns an array containing all group members' emails, including admins
 |--------------------------|----------|-----------------------|
 | `data`              | Array | An array of `email`s |
 ---
+<br>
+
+
+---
+
+### DELETE /groups/leaveGroup
+
+**Description**   
+Removes the user (self) from the group
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group |
+| `personal_gid`              | string | ID of the user's personal group |
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+	"message":"You have left the group!"
+}
+```
+note: does not return any data, only a message  
+note2: You will get an error if you try to leave a group you are not part of or if you try to leave your personal group
+
 <br>
 
 
