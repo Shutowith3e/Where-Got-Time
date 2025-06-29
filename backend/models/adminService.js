@@ -52,6 +52,14 @@ const deleteEvent = async (eid) => {
 	return await supabase.from('event').delete().match({'eid':eid});
 } //tested, works 
 
+const updateGrpDesc = async(gid,new_desc)=>{
+	return await supabase.from('group').update({group_description:new_desc}).eq('gid',gid)
+}
+
+const updateGrpName = async(gid,new_name)=>{
+	return await supabase.from('group').update({group_name:new_name}).eq('gid',gid)
+}
+
 /////////// DONE ////////////
 const getHighPriorityEvents = async(gid) => {
 	return await supabase.rpc('get_users_highprio_event_by_group',{target_group_id:gid});
@@ -66,7 +74,10 @@ export {
 	removeAdmin,
 	createEvent,
 	deleteEvent,
-	getHighPriorityEvents
+	getHighPriorityEvents,
+	updateGrpDesc,
+	updateGrpName
+
 }
 
 //console.log(await createEvent("5c6cb264-5134-41a6-8549-46d3df1029d3", "idw attend how", "2023-01-01T00:00:00Z","2023-01-01T00:00:00Z", null, true));

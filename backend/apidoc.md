@@ -32,6 +32,8 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/admins/inviteGroupMembers](#post-adminsinvitegroupmembers)
 	- [/admins/makeAdmin](#put-adminsmakeadmin)
 	- [/admins/removeAdmin](#put-adminsremoveadmin)
+	- [/admins/updateGrpDesc](#patch-adminsupdategrpdesc)
+	- [/admins/updateGrpName](#patch-adminsupdategrpname)
 
 
 ---
@@ -778,6 +780,59 @@ note: no data is being returned, just a message
 
 ---
 
+### PATCH /admins/updateGrpDesc
+
+**Description**   
+Updates the group description
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group |
+| `new_desc`            | string | the new description, can be empty |
+
+
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+	"message": "Successfully updated group description!" 
+}
+```
+note: no data is being returned, just a message
+
+<br>
+
+---
+
+### PATCH /admins/updateGrpName
+
+**Description**   
+Updates the group ame
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group |
+| `new_name`            | string | the new name, cannot be empty |
+
+
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+	"message": "Successfully updated group name!" 
+}
+```
+note: no data is being returned, just a message
+
+<br>
+
+---
 
 
 
