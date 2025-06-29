@@ -14,9 +14,9 @@ function SelectedMember({
         className="mt-1 cursor-pointer hover:bg-slate-200"
         onClick={removeMember}
       />
-      <p className="overflow-ellipsis overflow-hidden whitespace-nowrap w-50">
+      <span className="overflow-ellipsis overflow-hidden whitespace-nowrap w-50">
         {email}
-      </p>
+      </span>
     </div>
   );
 }
@@ -30,7 +30,9 @@ export default function SelectedMembers({
 }) {
   return (
     <div className="flex flex-col p-1 border-2 border-slate-200 rounded-lg max-h-35 ">
-      <p className="text-sm font-light text-slate-700 pb-1">Selected Members</p>
+      <span className="text-sm font-light text-slate-700 pb-1">
+        Selected Members
+      </span>
       <div className="p-1 overflow-y-scroll">
         {selectedEmails.map((selectedEmail) => (
           <SelectedMember

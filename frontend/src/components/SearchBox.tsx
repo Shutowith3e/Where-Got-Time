@@ -8,13 +8,13 @@ function MemberSearch({
   onClick: () => void;
 }) {
   return (
-    <p
+    <div
       className="w-56 mx-auto overflow-ellipsis overflow-hidden whitespace-nowrap font-light cursor-pointer
 hover:bg-slate-100 "
       onClick={onClick}
     >
       {email}
-    </p>
+    </div>
   );
 }
 
