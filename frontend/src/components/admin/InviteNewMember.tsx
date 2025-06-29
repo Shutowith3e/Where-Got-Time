@@ -53,12 +53,7 @@ export default function InviteNewMember() {
 
   return (
     <Dialog>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-      >
+      <form>
         <DialogTrigger asChild>
           <Button
             className="max-w-fit rounded-2xl bg-white mx-auto px-4"
@@ -93,13 +88,14 @@ export default function InviteNewMember() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <input
+            <Button
               type="submit"
               onClick={onSubmit}
               disabled={inviteMembersMutation.isPending}
-              value="Invite Members"
-              className="rounded-2xl bg-violet-100 p-1 px-4 hover:bg-violet-200"
-            />
+              className="rounded-2xl bg-violet-100 p-1 px-4 hover:bg-violet-200 text-slate-500"
+            >
+              Invite Members
+            </Button>
             <DialogClose asChild>
               <button ref={closeRef} className="hidden" />
             </DialogClose>
