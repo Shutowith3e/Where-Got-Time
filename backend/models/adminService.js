@@ -52,13 +52,10 @@ const deleteEvent = async (eid) => {
 	return await supabase.from('event').delete().match({'eid':eid});
 } //tested, works 
 
-const updateGrpDesc = async(gid,new_desc)=>{
-	return await supabase.from('group').update({group_description:new_desc}).eq('gid',gid)
+const updateGrpDetail = async(gid,new_desc,new_name)=>{
+	return await supabase.from('group').update({group_description:new_desc,group_name:new_name}).eq('gid',gid)
 }
 
-const updateGrpName = async(gid,new_name)=>{
-	return await supabase.from('group').update({group_name:new_name}).eq('gid',gid)
-}
 
 /////////// DONE ////////////
 const getHighPriorityEvents = async(gid) => {
@@ -75,8 +72,8 @@ export {
 	createEvent,
 	deleteEvent,
 	getHighPriorityEvents,
-	updateGrpDesc,
-	updateGrpName
+	updateGrpDetail,
+
 
 }
 

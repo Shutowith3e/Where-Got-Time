@@ -780,7 +780,7 @@ note: no data is being returned, just a message
 
 ---
 
-### PATCH /admins/updateGrpDesc
+### PATCH /admins/updateGrpDetail
 
 **Description**   
 Updates the group description
@@ -791,32 +791,6 @@ Updates the group description
 |--------------------------|----------|-----------------------|
 | `gid`              | string | ID of the group |
 | `new_desc`            | string | the new description, can be empty |
-
-
-
-**If successful, returns status code `200` and a json response in the following format:**
-
-```json
-{
-	"message": "Successfully updated group description!" 
-}
-```
-note: no data is being returned, just a message
-
-<br>
-
----
-
-### PATCH /admins/updateGrpName
-
-**Description**   
-Updates the group ame
-
-**Supported attributes:**  
-
-| Attribute                | Type     | Description           |
-|--------------------------|----------|-----------------------|
-| `gid`              | string | ID of the group |
 | `new_name`            | string | the new name, cannot be empty |
 
 
@@ -825,7 +799,7 @@ Updates the group ame
 
 ```json
 {
-	"message": "Successfully updated group name!" 
+	"message": "Successfully updated group detail!" 
 }
 ```
 note: no data is being returned, just a message
@@ -833,12 +807,4 @@ note: no data is being returned, just a message
 <br>
 
 ---
-
-
-
-
-
-
-
-
 

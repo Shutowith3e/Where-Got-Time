@@ -140,27 +140,20 @@ const deleteEvent = async (req, res) => {
     }
  //tested, works
 
-const updateGrpDesc = async (req,res)=>{
-    const{gid, new_desc} = req.body;
+const updateGrpDetail = async (req,res)=>{
+    const{gid, new_desc,new_name} = req.body;
     //they can js have no desc i guess? so no need check if empty
-    const {error} = await service.updateGrpDesc(gid,new_desc);
-    if(error){
-        return res.status(500).json({message: "Error updating group description",error});
+    if(!new_name){
+        return res.status(400).json({ error: "Missing group name" });
     }
-    return res.status(200).json({message:"Successfully updated group description!"})
+    const {error} = await service.updateGrpDetail(gid,new_desc,new_name);
+    if(error){
+        return res.status(500).json({message: "Error updating group detail",error});
+    }
+    return res.status(200).json({message:"Successfully updated group detail!"})
 }
 
-const updateGrpName = async (req,res)=>{
-    const{gid, new_name} = req.body;
-    if(!new_name){
-        return res.status(400).json({message:"Missing new group name"})
-    }
-    const {error} = await service.updateGrpName(gid,new_name);
-    if(error){
-        return res.status(500).json({message: "Error updating group name",error});
-    }
-    return res.status(200).json({message:"Successfully updated group name!"})
-}
+
 
 ////////////// WIP /////////////////////
 const getHighPriorityEvents = async (req, res) => {
@@ -183,6 +176,5 @@ export {
 	deleteEvent,
 	createEvent,
 	getHighPriorityEvents,
-    updateGrpDesc,
-    updateGrpName
+    updateGrpDetail
 }
