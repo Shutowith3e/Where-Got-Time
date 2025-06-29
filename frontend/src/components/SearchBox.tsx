@@ -39,7 +39,11 @@ export default function SearchBox({
             email={email}
             onClick={() => {
               if (!selectedEmails.includes(email)) {
-                setSelectedEmails((prev_arr) => [...prev_arr, email]);
+                setSelectedEmails((prev_arr) => {
+                  return prev_arr.includes(email)
+                    ? prev_arr
+                    : [...prev_arr, email];
+                });
               }
             }}
           />
