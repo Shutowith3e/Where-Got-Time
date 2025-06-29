@@ -11,11 +11,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
-import { Button } from "./ui/button";
-import { IoMdCreate, IoMdRemove } from "react-icons/io";
+import { IoMdRemove } from "react-icons/io";
 import InviteNewMember from "./admin/InviteNewMember";
 import RemoveAdmin from "./admin/RemoveAdmin";
 import RemoveMember from "./admin/RemoveMember";
+import MakeAdmin from "./admin/MakeAdmin";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -65,12 +65,7 @@ export default function IndividualGroupDrawer() {
                       </span>
                       {isAdmin && (
                         <>
-                          <Button
-                            variant="outline"
-                            className=" rounded-full w-5 h-6"
-                          >
-                            <IoMdCreate />
-                          </Button>
+                          <MakeAdmin makememberAdmin={memberEmail} />
                           <RemoveMember memberToDelete={memberEmail} />
                         </>
                       )}
