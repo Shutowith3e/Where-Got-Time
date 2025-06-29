@@ -12,7 +12,8 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
 import { Button } from "./ui/button";
-import { IoIosClose, IoMdAdd, IoMdCreate, IoMdRemove } from "react-icons/io";
+import { IoIosClose, IoMdCreate, IoMdRemove } from "react-icons/io";
+import InviteNewMember from "./admin/InviteNewMember";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -25,10 +26,7 @@ export default function IndividualGroupDrawer() {
         <SidebarContent>
           {isAdmin && (
             <SidebarGroup>
-              <SidebarMenuButton className="max-w-fit rounded-2xl bg-white mx-auto px-4">
-                <IoMdAdd />
-                Invite New Members
-              </SidebarMenuButton>
+              <InviteNewMember />
             </SidebarGroup>
           )}
           <SidebarGroup>
@@ -38,9 +36,9 @@ export default function IndividualGroupDrawer() {
                 {groupAdmins.map((adminEmail) => (
                   <SidebarMenuItem key={adminEmail}>
                     <div className="w-[235px] flex flex-row gap-1">
-                      <p className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                      <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
                         {adminEmail}
-                      </p>
+                      </span>
                     </div>
                   </SidebarMenuItem>
                 ))}
@@ -54,9 +52,9 @@ export default function IndividualGroupDrawer() {
                 {groupMembers.map((memberEmail) => (
                   <SidebarMenuItem key={memberEmail}>
                     <div className="w-[235px] flex flex-row gap-1">
-                      <p className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                      <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
                         {memberEmail}
-                      </p>
+                      </span>
                       {isAdmin && (
                         <>
                           <Button
@@ -82,7 +80,7 @@ export default function IndividualGroupDrawer() {
         </SidebarContent>
         <SidebarFooter>
           {isAdmin && (
-            <SidebarMenuButton className="max-w-fit rounded-2xl bg-red-50 mx-auto px-4" >
+            <SidebarMenuButton className="max-w-fit rounded-2xl bg-red-50 mx-auto px-4">
               <IoMdRemove />
               Delete Group
             </SidebarMenuButton>
