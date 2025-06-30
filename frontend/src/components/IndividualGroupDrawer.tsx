@@ -15,11 +15,13 @@ import RemoveAdmin from "./admin/RemoveAdmin";
 import RemoveMember from "./admin/RemoveMember";
 import MakeAdmin from "./admin/MakeAdmin";
 import DeleteGroup from "./admin/DeleteGroup";
+import useAuth from "@/context/AuthContext";
 
 export default function IndividualGroupDrawer() {
   const {
     groupInfo: { isAdmin, groupAdmins, groupMembers },
   } = useGroup();
+  const { userEmail } = useAuth();
   return (
     <>
       <Sidebar side="left" variant="sidebar" className="mt-20 h-[87vh]">
@@ -40,7 +42,7 @@ export default function IndividualGroupDrawer() {
                       <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
                         {adminEmail}
                       </span>
-                      {isAdmin && (
+                      {isAdmin && adminEmail !== userEmail && (
                         <>
                           <RemoveAdmin adminToRemove={adminEmail} />
                           <RemoveMember memberToDelete={adminEmail} />
