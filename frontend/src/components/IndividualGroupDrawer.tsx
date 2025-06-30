@@ -8,14 +8,13 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
-import { IoMdRemove } from "react-icons/io";
 import InviteNewMember from "./admin/InviteNewMember";
 import RemoveAdmin from "./admin/RemoveAdmin";
 import RemoveMember from "./admin/RemoveMember";
 import MakeAdmin from "./admin/MakeAdmin";
+import DeleteGroup from "./admin/DeleteGroup";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -76,14 +75,7 @@ export default function IndividualGroupDrawer() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
-          {isAdmin && (
-            <SidebarMenuButton className="max-w-fit rounded-2xl bg-red-50 mx-auto px-4">
-              <IoMdRemove />
-              Delete Group
-            </SidebarMenuButton>
-          )}
-        </SidebarFooter>
+        <SidebarFooter>{isAdmin && <DeleteGroup />}</SidebarFooter>
       </Sidebar>
     </>
   );
