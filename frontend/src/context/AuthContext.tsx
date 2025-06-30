@@ -13,6 +13,7 @@ type AuthContextType = {
   isAuthenicating: boolean;
   loginError: AuthError | null;
   signOutError: AuthError | null;
+  userEmail: string;
   /**
    * Logs in the user
    * @param email
@@ -30,6 +31,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(true);
   const [loginError, setLoginError] = useState<AuthError | null>(null);
   const [signOutError, setSignOutError] = useState<AuthError | null>(null);
+  const [userEmail, setUserEmail] = useState("");
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -51,6 +53,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
         data: { session },
       } = await supabase.auth.getSession();
       console.log(session?.access_token);
+      setUserEmail(session?.user?.email ?? "");
       // const jwt = session?.access_token;
       // if (jwt) {
       //   const response = await fetch("http://localhost:8000/users/getGroups", {
@@ -92,6 +95,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
         login,
         signOutError,
         signOut,
+        userEmail
       }}
     >
       {children}
