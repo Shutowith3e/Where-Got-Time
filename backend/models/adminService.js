@@ -40,7 +40,8 @@ const createEvent = async (gid, event_name, start_datetime, end_datetime, rrule,
 	if(eventCreationError){
 		return {eventCreationError};
 	}
-	const eid = eidData[0].eid;
+	const event = eidData[0];
+	const eid = event.eid;
 	const insert_arr = email_arr.map(email => ({
 		eid:eid ,
 		email: email 
