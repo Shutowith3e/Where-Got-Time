@@ -10,7 +10,7 @@ import {
 } from "../ui/dialog";
 import { IoMdAdd } from "react-icons/io";
 import { Button } from "../ui/button";
-import { useRef, useState } from "react";
+import {useState } from "react";
 import SearchEmails from "../SearchEmails";
 import SelectedMembers from "../SelectedMembers";
 import { useMutation } from "@tanstack/react-query";
@@ -31,7 +31,7 @@ export default function InviteNewMember() {
 
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const inviteMembersMutation = useMutation({
     mutationFn: async (formData: any) => {
@@ -43,7 +43,7 @@ export default function InviteNewMember() {
     },
     onSuccess: () => {
       console.log("Members Invited");
-      closeRef.current?.click();
+      setIsOpen(false);
     },
     onError: (error) => {
       setErrorMessage(error?.message || "Something went wrong");
@@ -52,7 +52,7 @@ export default function InviteNewMember() {
   });
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <form>
         <DialogTrigger asChild>
           <Button
@@ -96,9 +96,6 @@ export default function InviteNewMember() {
             >
               Invite Members
             </Button>
-            <DialogClose asChild>
-              <button ref={closeRef} className="hidden" />
-            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </form>
