@@ -2,7 +2,7 @@ import supabase from "./connection.js";
 import { getHighPriorityEvents } from "./adminService.js";
 import pkg from 'rrule';
 const { datetime, RRule, RRuleSet, rrulestr } = pkg;
-import {isBefore,isAfter,isMonday,isTuesday,isWednesday,isThursday,isFriday,isSaturday,isSunday,lightFormat,getDate} from "date-fns";
+import {isBefore,isAfter,isMonday,isTuesday,isWednesday,isThursday,isFriday,isSaturday,isSunday,lightFormat,getDate, getMonth} from "date-fns";
 
 // helper to check if 2 events are clashing
 const isClashDateTime = (a_start, a_end,b_start,b_end) => {
@@ -13,7 +13,7 @@ const isClashDateTime = (a_start, a_end,b_start,b_end) => {
 // function to check clashes is called on update/insert/delete, call it this_event
 // gets all user's high priority events, might have to expand for recurring events or have a smarter way
 // compares each of them to this_event
-// if any clash, add the eid, gid, array(?) of affected students' emails to a row 
+// if any clash, add the eids to clashes 
 
 //4 cases
 //1. both event recurring
@@ -86,8 +86,8 @@ const checkClash = async (this_event,gid)=>{
 		}
 		//case 2 this_event is recurring, other is single
 		else if(this_event.rrule && !other_event.rrule){
-			other_startTimeStr = normaliseDateTime(other_event.start_datetime);
-			other_endTimeStr = normaliseDateTime(other_event.end_datetime);
+			const other_startTimeStr = normaliseDateTime(other_event.start_datetime);
+			const other_endTimeStr = normaliseDateTime(other_event.end_datetime);
 			const rule = new RRule.fromString(this_event.rrule);
 			//weekly
 			if(rule.options.freq==RRule.WEEKLY){
@@ -100,7 +100,7 @@ const checkClash = async (this_event,gid)=>{
 						if(weekDayCheckMap[day](other_event)){
 							if(isClashDateTime(this_startTimeStr,this_endTimeStr,other_startTimeStr,other_endTimeStr)){
 								clashesArr.push({eid1:eid1,eid2:eid2});
-								break //first occurance of clash, exit loop
+								break //first occurance of clash, exit this for loop
 							}
 						}
 					}
@@ -108,16 +108,42 @@ const checkClash = async (this_event,gid)=>{
 			}
 			//monthly
 			else if (rule.option.freq==RRule.MONTHLY){
-				//check if until exists, and if it does, check if other_event is outside of the bounds
-				//if it isnt, still check if it happens before the dtstart (first occurance)
+				//if event ends before first occurance, cannot be clash, skip
+				if(isBefore(other_event.end_datetime,rule.options.dtstart)){
+					continue
+				}
+				//if other_event happens after the last occurance of this_event, skip
+				if(rule.options.until && isAfter(rule.options.until,other_event.start_datetime)){
+					continue
+				}
+				//if the event on same day of month, check if same time, bymonthday is an array
+				if(rule.options.bymonthday.includes(getDate(other_event.start_datetime))){
+					if(isClashDateTime(this_startTimeStr,this_endTimeStr,other_startTimeStr,other_endTimeStr)){
+						clashesArr.push({eid1:eid1,eid2:eid2});
+					}
+				}
 			}
 			//annually
+			else if (rule.option.freq==RRule.YEARLY){
+				//if event ends before first occurance, cannot be clash, skip
+				if(isBefore(other_event.end_datetime,rule.options.dtstart)){
+					continue
+				}
+				//if an until exists and other_event happens after the last occurance of this_event, skip
+				if(rule.options.until && isAfter(rule.options.until,other_event.start_datetime)){
+					continue
+				}
+				//if same month, and same day
+				if(lightFormat(other_event.start_datetime,'MM-dd')==lightFormat(this_event.start_datetime,'MM-dd')){
+					clashesArr.push({eid1:eid1,eid2:eid2})
+				}
+			}
 
 		}
 		//case 3 case 2 but flipped
 		else if(!this_event.rrule && other_event.rrule){
-			other_startTimeStr = normaliseDateTime(other_event.start_datetime);
-			other_endTimeStr = normaliseDateTime(other_event.end_datetime);
+			const other_startTimeStr = normaliseDateTime(other_event.start_datetime);
+			const other_endTimeStr = normaliseDateTime(other_event.end_datetime);
 
 		}
 
@@ -140,4 +166,4 @@ const checkClash = async (this_event,gid)=>{
 // }
 
 
-console.log(isClashDateTime(a_start,a_end,b_start,b_end))
+// console.log(isClashDateTime(a_start,a_end,b_start,b_end))

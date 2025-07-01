@@ -110,7 +110,7 @@ const createEvent = async (req, res) => {
     const {gid, event_name, start_datetime, end_datetime, rrule, high_priority, email_arr} = req.body; 
     
     // check if everyth is entered correctly 
-    if (!gid || !event_name || !start_datetime || !end_datetime || !high_priority|| email_arr.length===0) {
+    if (!gid || !event_name || !start_datetime || !end_datetime || high_priority === null|| email_arr.length===0) {
         return res.status(400).json({ error: "Missing details" });
     }
 
