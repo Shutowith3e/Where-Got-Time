@@ -1,23 +1,13 @@
 import NavBar from "@/components/NavBar";
 import { useParams } from "react-router-dom";
 import IndividualCalendar from "@/components/IndividualCalendar";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import IndividualEventCard from "@/components/IndividualEventCard";
 import { getGroupInfo } from "@/services/groups/get-group-info";
 import { GroupContextProvider } from "@/context/GroupContext";
 import IndividualGroupLayout from "./IndividualGroupLayout";
+import EditGroup from "@/components/admin/EditGroup";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -81,26 +71,7 @@ export default function IndividualGroupPage() {
               </h1>
             </div>
             <div className="flex justify-center ">
-              {group?.isAdmin && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline">Edit Group</Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Edit Group Details</AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <div>
-                      <p>Group Name: {group.groupName}</p>
-                      <p>Group Description: {group.groupDescription}</p>
-                    </div>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Update</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
+              {group?.isAdmin && <EditGroup />}
             </div>
           </div>
           <p className="text-lg font-light mx-auto p-2">
