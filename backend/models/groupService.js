@@ -73,6 +73,10 @@ const acceptGroupInvite = async (email, gid) => {
 	return await supabase.from('group_members').update({ invite_accepted: true }).match({ email: email, gid: gid });
 } // tested, works 
 
+const leaveGroup = async (email,gid,personal_gid)=>{
+	return await supabase.from('group_members').delete().match({email:email,gid:gid}).neq('gid',personal_gid).select();
+}//returns data if u left the grp, returns nthg if u didnt
+
 const searchEmails = async (email,searchTerm) => {
 	return await supabase.from('user').select('email').neq('email',email).like('email', `%${searchTerm}%`).limit(10);
 }
@@ -108,6 +112,7 @@ export {
 	getGroupEvents,
 	acceptGroupInvite,
 	searchEmails,
+	leaveGroup
 };
 
 // const { data, error } = await supabase.auth.signInWithPassword({

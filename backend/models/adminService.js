@@ -35,13 +35,28 @@ const removeAdmin = async (email, gid) =>{
 	return await supabase.from('group_members').update({is_admin:false}).match({'email':email, 'gid':gid,'is_admin':true}).select();
 } //tested, works, updated to make sure person must be admin in the first place
 
-const createEvent = async (gid, event_name, start_datetime, end_datetime, rrule, high_priority) => {
-	return await supabase.from('event').insert({'gid': gid, 'event_name':event_name, 'start_datetime':start_datetime, 'end_datetime':end_datetime, 'rrule':rrule, high_priority:high_priority}).select();
+const createEvent = async (gid, event_name, start_datetime, end_datetime, rrule, high_priority,email_arr) => {
+	const {data:eidData,error:eventCreationError} = await supabase.from('event').insert({'gid': gid, 'event_name':event_name, 'start_datetime':start_datetime, 'end_datetime':end_datetime, 'rrule':rrule, high_priority:high_priority}).select('eid');
+	if(eventCreationError){
+		return {eventCreationError};
+	}
+	const event = eidData[0];
+	const eid = event.eid;
+	const insert_arr = email_arr.map(email => ({
+		eid:eid ,
+		email: email 
+	}));
+	return await supabase.from('event_participants').insert(insert_arr);
 } //tested, works 
 
 const deleteEvent = async (eid) => {
 	return await supabase.from('event').delete().match({'eid':eid});
 } //tested, works 
+
+const updateGrpDetail = async(gid,new_desc,new_name)=>{
+	return await supabase.from('group').update({group_description:new_desc,group_name:new_name}).eq('gid',gid)
+}
+
 
 /////////// DONE ////////////
 const getHighPriorityEvents = async(gid) => {
@@ -57,7 +72,10 @@ export {
 	removeAdmin,
 	createEvent,
 	deleteEvent,
-	getHighPriorityEvents
+	getHighPriorityEvents,
+	updateGrpDetail,
+
+
 }
 
 //console.log(await createEvent("5c6cb264-5134-41a6-8549-46d3df1029d3", "idw attend how", "2023-01-01T00:00:00Z","2023-01-01T00:00:00Z", null, true));

@@ -107,14 +107,14 @@ const deleteGroup = async (req, res) => {
 
 const createEvent = async (req, res) => {
     // get details frm fe
-    const {gid, event_name, start_datetime, end_datetime, rrule, high_priority} = req.body; 
+    const {gid, event_name, start_datetime, end_datetime, rrule, high_priority, email_arr} = req.body; 
     
     // check if everyth is entered correctly 
-    if (!gid || !event_name || !start_datetime || !end_datetime || !high_priority) {
+    if (!gid || !event_name || !start_datetime || !end_datetime || high_priority === null|| email_arr.length===0) {
         return res.status(400).json({ error: "Missing details" });
     }
 
-    const { data, error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority);
+    const {error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority,email_arr);
     if (error){
         return res.status(500).json({message: "Error creating event"});
     }
@@ -140,6 +140,21 @@ const deleteEvent = async (req, res) => {
     }
  //tested, works
 
+const updateGrpDetail = async (req,res)=>{
+    const{gid, new_desc,new_name} = req.body;
+    //they can js have no desc i guess? so no need check if empty
+    if(!new_name){
+        return res.status(400).json({ error: "Missing group name" });
+    }
+    const {error} = await service.updateGrpDetail(gid,new_desc,new_name);
+    if(error){
+        return res.status(500).json({message: "Error updating group detail",error});
+    }
+    return res.status(200).json({message:"Successfully updated group detail!"})
+}
+
+
+
 ////////////// WIP /////////////////////
 const getHighPriorityEvents = async (req, res) => {
     const {gid} = req.body;
@@ -160,5 +175,6 @@ export {
 	removeAdmin,
 	deleteEvent,
 	createEvent,
-	getHighPriorityEvents
+	getHighPriorityEvents,
+    updateGrpDetail
 }

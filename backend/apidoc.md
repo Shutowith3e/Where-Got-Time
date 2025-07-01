@@ -19,6 +19,7 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/groups/groupDetails](#post-groupsgroupdetails)
 	- [/groups/groupEvent](#post-groupsgroupevents)
 	- [/groups/groupMembers](#post-groupsgroupmembers)
+	- [/groups/leaveGroup](#delete-groupsleavegroup)
 	- [/groups/searchEmails](#get-groupssearchemails)
 - [/events](#events)
 	- [/events/getEventParticipants](#post-eventsgeteventparticipants)
@@ -31,6 +32,8 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/admins/inviteGroupMembers](#post-adminsinvitegroupmembers)
 	- [/admins/makeAdmin](#put-adminsmakeadmin)
 	- [/admins/removeAdmin](#put-adminsremoveadmin)
+	- [/admins/updateGrpDesc](#patch-adminsupdategrpdesc)
+	- [/admins/updateGrpName](#patch-adminsupdategrpname)
 
 
 ---
@@ -424,6 +427,33 @@ Returns an array containing all group members' emails, including admins
 
 ---
 
+### DELETE /groups/leaveGroup
+
+**Description**   
+Removes the user (self) from the group
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group |
+| `personal_gid`              | string | ID of the user's personal group |
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+	"message":"You have left the group!"
+}
+```
+note: does not return any data, only a message  
+note2: You will get an error if you try to leave a group you are not part of or if you try to leave your personal group
+
+<br>
+
+
+---
+
 ### GET /groups/searchEmails
 
 **Description**   
@@ -516,7 +546,7 @@ Creates an event for the group.
 | `start_datetime`              | string | string representing the start datetime of the event |
 | `end_datetime`              | string  | string representing the end datetime of the event |
 | `high_priority`              | boolean | boolean value representing the priority of the event. `true` for high, `false` for low |
-
+| `email_arr`              | array of strings | Array of emails of event participants |
 
 
 
@@ -750,12 +780,31 @@ note: no data is being returned, just a message
 
 ---
 
+### PATCH /admins/updateGrpDetail
+
+**Description**   
+Updates the group description
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group |
+| `new_desc`            | string | the new description, can be empty |
+| `new_name`            | string | the new name, cannot be empty |
 
 
 
+**If successful, returns status code `200` and a json response in the following format:**
 
+```json
+{
+	"message": "Successfully updated group detail!" 
+}
+```
+note: no data is being returned, just a message
 
+<br>
 
-
-
+---
 

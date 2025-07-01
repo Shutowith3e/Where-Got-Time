@@ -139,6 +139,22 @@ const acceptGroupInvite = async (req, res) => {
 
 }
 
+const leaveGroup = async (req,res)=> {
+    const email = req.email;
+    const {gid,personal_gid} = req.body;
+    if(!gid){
+        return res.status(400).son({message: "Missing gid"});
+    }
+    const {data,error} = await service.leaveGroup(email,gid,personal_gid);
+    if(error){
+        return res.status(500).json({message: "Error leaving group", error})
+    }
+    if(data.isArray() && data.length === 0){
+        return res.status(400).json({message: "Bad request", hint:"You either tried to leave a group you are not a part of or you tried to leave your personal calendar."})
+    }
+    return res.status(200).json({message: "You have left the group!"})
+}
+
 const searchEmails = async (req, res) => {
     // GET http://localhost:8000/group/searchEmails?searchTerm=blahblahblah
     const email = req.email;
@@ -165,4 +181,5 @@ export {
     getAdmins,
     acceptGroupInvite,
     searchEmails,
+    leaveGroup
 };
