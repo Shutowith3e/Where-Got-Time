@@ -32,7 +32,7 @@ const isClashDateTime = (a_start, a_end,b_start,b_end) => {
 //3.Annually bymonth & bymonthday
 
 //changes the datetime to be on 2000-01-01 so pure time comparison can be done
-function normaliseDateTime(datetimestr){
+const normaliseDateTime = (datetimestr)=>{
 	return '2000-01-01T' + lightFormat(datetimestr,'HH:mm:ss');
 }
 
@@ -42,6 +42,7 @@ const checkClash = async (this_event,gid)=>{
 	}
 	//declare constants
 	const clashesArr = [];
+	const resolved = false;
 	//cooking af
 	const weekDayCheckMap={
 		0 : isMonday,
@@ -52,10 +53,72 @@ const checkClash = async (this_event,gid)=>{
 		5 : isSaturday,
 		6 : isSunday
 	}
-	//get just the time part without the date
 	
-	const this_startTimeStr = normaliseDateTime(this_event.start_datetime);
-	const this_endTimeStr = normaliseDateTime(this_event.end_datetime);
+	
+	//declaring this function inside to access local scope constants
+	const checkSingleRecurClash = (event1,event2)=>{ // let event1 be the recurring one
+		//get just the time part without the date
+		const event1_startTimeStr = normaliseDateTime(event1.start_datetime);
+		const event1_endTimeStr = normaliseDateTime(event1.end_datetime);
+		const event2_startTimeStr = normaliseDateTime(event2.start_datetime);
+		const event2_endTimeStr = normaliseDateTime(event2.end_datetime);
+		const rule = new RRule.fromString(event1.rrule);
+
+		//weekly
+		if(rule.options.freq==RRule.WEEKLY){
+			//check if event2 is within dtstart and until
+			if(isClashDateTime(event2.start_datetime, event2.end_datetime, rule.options.dtstart, rule.options.until)){
+
+				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
+				for(day of rule.option.byweekday){
+					//checks if my event is on the same day
+					if(weekDayCheckMap[day](event2)){
+						if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+							clashesArr.push({eid1,eid2,resolved});
+							return //first occurance of clash, exit; only push once
+						}
+					}
+				}
+			}
+		}
+		//monthly
+		else if (rule.option.freq==RRule.MONTHLY){
+			//if event ends before first occurance, cannot be clash, skip
+			if(isBefore(event2.end_datetime,rule.options.dtstart)){
+				return
+			}
+			//if event2 happens after the last occurance of event1, skip
+			if(rule.options.until && isAfter(event2.start_datetime,rule.options.until)){
+				return
+			}
+			//if the event on same day of month, check if same time, bymonthday is an array
+			if(rule.options.bymonthday.includes(getDate(event2.start_datetime))){
+				if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+					clashesArr.push({eid1,eid2,resolved});
+					return
+				}
+			}
+		}
+		//annually
+		else if (rule.option.freq==RRule.YEARLY){
+			//if event ends before first occurance, cannot be clash, skip
+			if(isBefore(event2.end_datetime,rule.options.dtstart)){
+				return
+			}
+			//if an until exists and event2 happens after the last occurance of event1, skip
+			if(rule.options.until && isAfter(rule.options.until,event2.start_datetime)){
+				return
+			}
+			//if same month, and same day
+			if(lightFormat(event2.start_datetime,'MM-dd')==lightFormat(event1.start_datetime,'MM-dd')){
+				clashesArr.push({eid1,eid2,resolved})
+				return
+			}
+		}
+		//possibly add an else for error handling here if have time
+	}
+	///////////
+
 	const {data:high_prio_event_arr,error:eventRetrievalError} =  await getHighPriorityEvents(gid);
 	if(eventRetrievalError){
 		console.warn(`Clash check failed, recheck for clash and update database, gid: ${this_event.gid} name: ${this_event.event_name}`);
@@ -79,82 +142,31 @@ const checkClash = async (this_event,gid)=>{
 			if(isClashDateTime(this_event.start_datetime,this_event.end_datetime,other_event.start_datetime,other_event.end_datetime)){
 				
 				//put into array first, later bulk insert
-				clashesArr.push({eid1:eid1,eid2:eid2})
+				clashesArr.push({eid1,eid2,resolved})
 				continue
 			}
 			//no clash, do nothing
 		}
 		//case 2 this_event is recurring, other is single
 		else if(this_event.rrule && !other_event.rrule){
-			const other_startTimeStr = normaliseDateTime(other_event.start_datetime);
-			const other_endTimeStr = normaliseDateTime(other_event.end_datetime);
-			const rule = new RRule.fromString(this_event.rrule);
-			//weekly
-			if(rule.options.freq==RRule.WEEKLY){
-				//check if other_event is within dtstart and until
-				if(isClashDateTime(other_event.start_datetime, other_event.end_datetime, rule.options.dtstart, rule.options.until)){
-
-					//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
-					for(day of rule.option.byweekday){
-						//checks if my event is on the same day
-						if(weekDayCheckMap[day](other_event)){
-							if(isClashDateTime(this_startTimeStr,this_endTimeStr,other_startTimeStr,other_endTimeStr)){
-								clashesArr.push({eid1:eid1,eid2:eid2});
-								break //first occurance of clash, exit this for loop
-							}
-						}
-					}
-				}
-			}
-			//monthly
-			else if (rule.option.freq==RRule.MONTHLY){
-				//if event ends before first occurance, cannot be clash, skip
-				if(isBefore(other_event.end_datetime,rule.options.dtstart)){
-					continue
-				}
-				//if other_event happens after the last occurance of this_event, skip
-				if(rule.options.until && isAfter(rule.options.until,other_event.start_datetime)){
-					continue
-				}
-				//if the event on same day of month, check if same time, bymonthday is an array
-				if(rule.options.bymonthday.includes(getDate(other_event.start_datetime))){
-					if(isClashDateTime(this_startTimeStr,this_endTimeStr,other_startTimeStr,other_endTimeStr)){
-						clashesArr.push({eid1:eid1,eid2:eid2});
-					}
-				}
-			}
-			//annually
-			else if (rule.option.freq==RRule.YEARLY){
-				//if event ends before first occurance, cannot be clash, skip
-				if(isBefore(other_event.end_datetime,rule.options.dtstart)){
-					continue
-				}
-				//if an until exists and other_event happens after the last occurance of this_event, skip
-				if(rule.options.until && isAfter(rule.options.until,other_event.start_datetime)){
-					continue
-				}
-				//if same month, and same day
-				if(lightFormat(other_event.start_datetime,'MM-dd')==lightFormat(this_event.start_datetime,'MM-dd')){
-					clashesArr.push({eid1:eid1,eid2:eid2})
-				}
-			}
+			checkSingleRecurClash(this_event,other_event);//has no return value, simply pushes to clashesArr if there is any
 
 		}
 		//case 3 case 2 but flipped
 		else if(!this_event.rrule && other_event.rrule){
-			const other_startTimeStr = normaliseDateTime(other_event.start_datetime);
-			const other_endTimeStr = normaliseDateTime(other_event.end_datetime);
-
+			checkSingleRecurClash(other_event,this_event);
 		}
 
-		//case 4 both recurring
+		//case 4 both recurring TODO
 		else{
-
+			//git commit sewer slide gg
 		}
 
 	}
-	//insert logic here to bulk insert/upsert clashesArr, ignoring duplicates(important for checks on update)
-
+	//this is insert+update, i.e. if there is a conflict, say a row alr exists, it will simply update the value
+	//useful for say if the clash has been resolved before but someone update the event again and it clashes again
+	return await supabase.from('clash').upsert(clashesArr,{onConflict:'eid1, eid2'});
+	//can put a .select if need the return data for anything but i feel no need
 }
 
 
