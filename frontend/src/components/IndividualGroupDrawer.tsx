@@ -16,6 +16,7 @@ import RemoveMember from "./admin/RemoveMember";
 import MakeAdmin from "./admin/MakeAdmin";
 import DeleteGroup from "./admin/DeleteGroup";
 import useAuth from "@/context/AuthContext";
+import LeaveGroup from "./group/LeaveGroup";
 
 export default function IndividualGroupDrawer() {
   const {
@@ -79,7 +80,7 @@ export default function IndividualGroupDrawer() {
         </SidebarContent>
         <SidebarFooter>
           <>
-            {/* {isAdmin && <LeaveGroup />} */}
+            <LeaveGroup />
             {isAdmin && <DeleteGroup />}
           </>
         </SidebarFooter>
