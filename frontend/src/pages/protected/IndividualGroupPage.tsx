@@ -66,7 +66,7 @@ export default function IndividualGroupPage() {
         <div className="flex flex-col px-2">
           <div className="gap-y-2">
             <div className="flex flex-row justify-center">
-              <h1 className="text-3xl font-semibold text-center ">
+              <h1 className="text-3xl font-semibold text-center">
                 {group.groupName.toUpperCase()}'S CALENDAR
               </h1>
             </div>
