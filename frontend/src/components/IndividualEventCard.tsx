@@ -1,21 +1,10 @@
-import { IoIosClose, IoMdCreate } from "react-icons/io";
+import { IoMdCreate } from "react-icons/io";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import CreateEventModal from "./ui/event/CreateEvent";
 import UpdateEventModal from "./ui/event/UpdateEvent";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "./ui/alert-dialog";
-import axiosInstance from "@/lib/axios-instance";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useGroup from "@/context/GroupContext";
+import DeleteEvent from "./ui/event/DeleteEvent";
 
 type IndividualEvent = {
   eid: string;
@@ -36,41 +25,12 @@ export type EventCardProps = {
   getEventString?: (eventData: IndividualEvent) => string;
 };
 
-type DeleteEventProps = {
-  eid: string;
-  gid: string;
-};
-
-async function deleteEvent({ eid, gid }: DeleteEventProps) {
-  const {
-    data: { data },
-  } = await axiosInstance.delete("/admins/deleteEvent", {
-    data: {
-      gid,
-      eid,
-    },
-  });
-  return data;
-}
-
 function EventChip({ event: eventData, getEventString }: EventChipProps) {
   const {
     groupInfo: { gid, isAdmin, groupName },
   } = useGroup();
   const { eid, highPriority, date, eventName } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const queryClient = useQueryClient();
-  const deleteMutation = useMutation({
-    mutationFn: deleteEvent,
-    onSuccess: () => {
-      console.log("Successfully deleted");
-      return queryClient.invalidateQueries({
-        queryKey: ["user-group", gid],
-        // queryKey: ["user-group-events", gid],
-      });
-      // queryClient.refetchQueries({queryKey:["user-group-events"]});
-    },
-  });
 
   return (
     <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
@@ -101,38 +61,12 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
                 />
               )}
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" className="rounded-full w-5 h-6 ">
-                    <IoIosClose />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Delete Group Event for {groupName}
-                    </AlertDialogTitle>
-                  </AlertDialogHeader>
-                  <div>
-                    <p>
-                      Are you sure you want to delete{" "}
-                      <span className="font-bold">{eventName}</span> ?
-                    </p>
-                    <p></p>
-                  </div>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      variant="destructive"
-                      onClick={async () => {
-                        await deleteMutation.mutateAsync({ eid, gid });
-                      }}
-                    >
-                      Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <DeleteEvent
+                eid={eid}
+                gid={gid}
+                groupName={groupName}
+                eventName={eventName}
+              />
             </>
           )}
         </div>
