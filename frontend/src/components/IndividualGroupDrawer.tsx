@@ -77,7 +77,12 @@ export default function IndividualGroupDrawer() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>{isAdmin && <DeleteGroup />}</SidebarFooter>
+        <SidebarFooter>
+          <>
+            {/* {isAdmin && <LeaveGroup />} */}
+            {isAdmin && <DeleteGroup />}
+          </>
+        </SidebarFooter>
       </Sidebar>
     </>
   );
