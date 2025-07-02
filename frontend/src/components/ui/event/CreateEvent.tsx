@@ -22,7 +22,7 @@ export default function CreateEventModal({
       ...data,
       gid,
       // wip: take in an array of emails to join event
-      emailsArray: [...(groupMembers??[]), ...(groupAdmins??[])],
+      emailArr: [...(groupMembers ?? []), ...(groupAdmins ?? [])],
     };
 
     console.log("Submit to be: ", fullForm);
