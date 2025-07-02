@@ -1,6 +1,7 @@
 import supabase from "@/helper/supabaseClient";
 import axiosInstance from "@/lib/axios-instance";
 import { AuthError } from "@supabase/supabase-js";
+import { useQuery } from "@tanstack/react-query";
 import {
   createContext,
   useContext,
@@ -22,9 +23,16 @@ type AuthContextType = {
    * @returns True if login was successful
    */
   login: (email: string, password: string) => Promise<boolean>;
-  personalGroup: () => Promise<string>;
+  personalGroupId: string;
   signOut: () => Promise<boolean>;
 };
+
+async function getPersonalGroup() {
+  const {
+    data: { data },
+  } = await axiosInstance.post("/users/getUserPersonalGroup");
+  return data;
+}
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -34,6 +42,12 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
   const [loginError, setLoginError] = useState<AuthError | null>(null);
   const [signOutError, setSignOutError] = useState<AuthError | null>(null);
   const [userEmail, setUserEmail] = useState("");
+
+  const { data: personalGroupId } = useQuery({
+    queryKey: ["personal-group"],
+    queryFn: getPersonalGroup,
+    enabled: authenticated,
+  });
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -80,13 +94,6 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     getSession();
   }, []);
 
-  const personalGroup = async () => {
-    const {
-      data: { data },
-    } = await axiosInstance.post("/users/getUserPersonalGroup");
-    return data;
-  };
-
   const signOut = async () => {
     setIsLoading(true);
     const { error } = await supabase.auth.signOut();
@@ -108,7 +115,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
         signOutError,
         signOut,
         userEmail,
-        personalGroup,
+        personalGroupId,
       }}
     >
       {children}
