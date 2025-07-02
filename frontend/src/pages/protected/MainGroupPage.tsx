@@ -77,7 +77,14 @@ export default function MainGroupPage() {
   //to get user events
   const { data: groupEventList, isPending: isUserEventsPending } = useQuery({
     queryKey: ["user-events"],
-    queryFn: GetUserEvents,
+    queryFn: () =>
+      GetUserEvents().then((x) =>
+        x.filter(
+          ({ startDatetime, endDatetime }) =>
+            startDatetime.isBetween(dayjs(), dayjs().add(2, "weeks")) ||
+            endDatetime.isBetween(dayjs(), dayjs().add(2, "weeks"))
+        )
+      ),
   });
 
   //changes when u type into search bar

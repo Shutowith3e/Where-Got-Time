@@ -42,10 +42,5 @@ export async function GetUserEvents(): Promise<GroupEvent[]> {
         highPriority,
       })
     )
-    .filter(
-      ({ startDatetime, endDatetime }) =>
-        startDatetime.isBetween(dayjs(), dayjs().add(2, "weeks")) ||
-        endDatetime.isBetween(dayjs(), dayjs().add(2, "weeks"))
-    )
     .sort((a, b) => (a.startDatetime.isBefore(b.startDatetime) ? -1 : 1));
 }

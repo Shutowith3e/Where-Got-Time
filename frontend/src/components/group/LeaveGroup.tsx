@@ -23,7 +23,6 @@ async function leaveGroup({
   gid: string;
   personalGroup: string;
 }) {
-  
   const {
     data: { data },
   } = await axiosInstance.delete("/groups/leaveGroup", {
@@ -39,7 +38,7 @@ export default function LeaveGroup() {
   const {
     groupInfo: { gid, groupName },
   } = useGroup();
-  const { personalGroup } = useAuth();
+  const { personalGroupId } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -82,7 +81,7 @@ export default function LeaveGroup() {
             onClick={async () => {
               await leaveGroupMutation.mutateAsync({
                 gid,
-                personalGroup: await personalGroup(),
+                personalGroup: personalGroupId,
               });
             }}
             disabled={leaveGroupMutation.isPending}
