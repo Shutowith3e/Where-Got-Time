@@ -10,7 +10,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
 import { useForm } from "react-hook-form";
 
@@ -27,22 +27,27 @@ export default function EditGroup() {
   const onSubmit = (data: any) => {
     const fullForm = {
       gid,
-      ...data,
+      newDesc: data.group_description,
+      newName: data.group_name,
     };
     editGroupMutation.mutate(fullForm);
   };
 
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const queryClient = useQueryClient();
 
   const editGroupMutation = useMutation({
     mutationFn: async (formData: any) => {
-      const res = await axiosInstance.post("/admins/editGroup", formData);
+      const res = await axiosInstance.patch("/admins/updateGrpDesc", formData);
       return res.data;
     },
     onSuccess: () => {
       console.log("Group Edited Successfully");
       setIsOpen(false);
+      return queryClient.invalidateQueries({
+        queryKey: ["user-group", gid],
+      });
     },
     onError: (error) => {
       setErrorMessage(error?.message || "Something went wrong");
@@ -52,16 +57,16 @@ export default function EditGroup() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogTrigger asChild>
-          <Button
-            className="max-w-fit rounded-2xl bg-white mx-auto px-4"
-            variant={"outline"}
-          >
-            Edit Group
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+      <DialogTrigger asChild>
+        <Button
+          className="max-w-fit rounded-2xl bg-white mx-auto px-4"
+          variant={"outline"}
+        >
+          Edit Group
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSubmit(onSubmit)}>
           {errorMessage && (
             <p className="text-red-500 text-sm">{errorMessage}</p>
           )}
@@ -71,7 +76,7 @@ export default function EditGroup() {
             <div className="flex flex-col gap-2">
               Group Name:
               <input
-                value={groupName}
+                defaultValue={groupName}
                 {...register("group_name", { required: true })}
                 aria-invalid={errors.group_name ? "true" : "false"}
                 className="ml-2 rounded-full border-2 border-slate-100 px-2"
@@ -86,7 +91,7 @@ export default function EditGroup() {
                 {...register("group_description", { maxLength: 100 })}
                 aria-invalid={errors.group_description ? "true" : "false"}
                 className="border-2 border-slate-100 rounded-lg px-2"
-                value={groupDescription || ""}
+                defaultValue={groupDescription ?? ""}
               ></textarea>
               {errors?.group_description?.type === "maxLength" && (
                 <p role="alert" className="font-light text-sm text-red-600">
@@ -102,15 +107,14 @@ export default function EditGroup() {
             </DialogClose>
             <Button
               type="submit"
-              onClick={onSubmit}
               disabled={editGroupMutation.isPending}
-              className="rounded-2xl bg-violet-100 p-1 px-4 hover:bg-violet-200 text-slate-800"
+              className="rounded-2xl bg-violet-100 p-1 px-4 hover:bg-violet-200 text-black"
             >
               Update Group Details
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }
