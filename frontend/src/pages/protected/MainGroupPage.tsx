@@ -58,7 +58,7 @@ function GroupList({ filterSearch }: { filterSearch: string }) {
     );
   }
   return (
-    <ul className="grid grid-cols-2 gap-4 flex-wrap justify-center m-5 overflow-y-scroll max-h-[70vh]">
+    <ul className="grid grid-cols-2 gap-4 justify-center m-5 overflow-y-scroll max-h-[70vh] text-center">
       {(groupList ?? [])
         .filter((x) =>
           x.groupName.toUpperCase().includes(filterSearch.toUpperCase())
