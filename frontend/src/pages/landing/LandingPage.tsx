@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import NavBar from "../../components/NavBar";
-import { BackgroundGradientAnimation } from "../../components/ui/background-gradient-animation";
+
 import ReasonCard from "./ReasonCard";
-import { AnimatedTestimonials } from "../../components/ui/animated-testimonials";
+import { AnimatedTestimonials } from "../../components/ui/landing/animated-testimonials";
 import useAuth from "@/context/AuthContext";
+import { BackgroundGradientAnimation } from "@/components/ui/landing/background-gradient-animation";
 
 export default function LandingPage() {
   const { authenticated } = useAuth();

@@ -1,4 +1,5 @@
 import supabase from "@/helper/supabaseClient";
+import axiosInstance from "@/lib/axios-instance";
 import { AuthError } from "@supabase/supabase-js";
 import {
   createContext,
@@ -13,6 +14,7 @@ type AuthContextType = {
   isAuthenicating: boolean;
   loginError: AuthError | null;
   signOutError: AuthError | null;
+  userEmail: string;
   /**
    * Logs in the user
    * @param email
@@ -20,6 +22,7 @@ type AuthContextType = {
    * @returns True if login was successful
    */
   login: (email: string, password: string) => Promise<boolean>;
+  personalGroup: () => Promise<string>;
   signOut: () => Promise<boolean>;
 };
 
@@ -30,6 +33,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(true);
   const [loginError, setLoginError] = useState<AuthError | null>(null);
   const [signOutError, setSignOutError] = useState<AuthError | null>(null);
+  const [userEmail, setUserEmail] = useState("");
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -51,6 +55,10 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
         data: { session },
       } = await supabase.auth.getSession();
       console.log(session?.access_token);
+      setUserEmail(session?.user?.email ?? "");
+      // test
+      // const personalgroupid = await personalGroup();
+      // console.log(personalgroupid);
       // const jwt = session?.access_token;
       // if (jwt) {
       //   const response = await fetch("http://localhost:8000/users/getGroups", {
@@ -72,6 +80,13 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     getSession();
   }, []);
 
+  const personalGroup = async () => {
+    const {
+      data: { data },
+    } = await axiosInstance.post("/users/getUserPersonalGroup");
+    return data;
+  };
+
   const signOut = async () => {
     setIsLoading(true);
     const { error } = await supabase.auth.signOut();
@@ -92,6 +107,8 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
         login,
         signOutError,
         signOut,
+        userEmail,
+        personalGroup,
       }}
     >
       {children}

@@ -4,7 +4,7 @@
 
 // pages/contribute.tsx
 import React from 'react';
-import ContributeCard from '../../components/ContributeCard'; // adjust the path if needed
+import ContributeCard from '../../components/ui/landing/ContributeCard'; // adjust the path if needed
 
 const ContributePage: React.FC = () => {
   return <ContributeCard />;

@@ -1,40 +1,50 @@
+import useGroup from "@/context/GroupContext";
 import axiosInstance from "@/lib/axios-instance";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
-type UpdateEventModalProps = {
+type CreateEventModalProps = {
   onClose: () => void;
   gid: string;
-  eid: string;
 };
 
-export default function UpdateEventModal({
-  gid,
-  eid,
+export default function CreateEventModal({
   onClose,
-}: UpdateEventModalProps) {
+  gid,
+}: CreateEventModalProps) {
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     const fullForm = {
       ...data,
       gid,
-      eid,
+      // wip: take in an array of emails to join event
+      emailArr: [...(groupMembers ?? []), ...(groupAdmins ?? [])],
     };
-    updateEventMutation.mutate(fullForm);
-    console.log(fullForm);
-  };
 
-  const updateEventMutation = useMutation({
+    console.log("Submit to be: ", fullForm);
+
+    await createEventMutation.mutateAsync(fullForm);
+    onClose();
+  };
+  const {
+    groupInfo: { groupMembers, groupAdmins },
+  } = useGroup();
+
+  const queryClient = useQueryClient();
+  const createEventMutation = useMutation({
     mutationFn: async (formData: any) => {
-      const res = await axiosInstance.post("/admins/updateEvent", formData);
+      const res = await axiosInstance.post("/admins/createEvent", formData);
       return res.data;
     },
     onSuccess: () => {
       console.log("Event created");
+      return queryClient.invalidateQueries({
+        queryKey: ["user-group", gid],
+      });
     },
     onError: (error) => {
       console.error(error);
@@ -45,11 +55,11 @@ export default function UpdateEventModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 rounded-2xl">
       <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
         <h2 className="mb-4 text-center text-3xl font-bold text-black">
-          Update Event
+          Create Event
         </h2>
 
-        {/* Members Portion
-        <div className="mb-6 rounded-lg bg-purple-100 p-4">
+        {/* Members Portion */}
+        {/* <div className="mb-6 rounded-lg bg-purple-100 p-4">
           <div className="mb-2 flex items-center justify-between">
             <h3 className="font-semibold">Members</h3>
             <button className="rounded-full bg-gray-400 px-3 py-1 text-white">
@@ -71,10 +81,7 @@ export default function UpdateEventModal({
             className="flex flex-col gap-4"
           >
             <div className="gap-2">
-              <label className="font-bold block mt-2 mb-2">
-                {" "}
-                *Event Name:{" "}
-              </label>
+              <label className="font-bold block mb-2"> *Event Name: </label>
               <input
                 className="w-full rounded border border-purple-500 px-3 py-2"
                 placeholder="Learning Journey to SMU"
@@ -87,14 +94,17 @@ export default function UpdateEventModal({
                 </p>
               )}
 
-              {/* <label className="font-bold block mt-2 mb-2"> Event Description: </label>
-            <input 
-            className="w-full rounded border border-purple-500 px-3 py-2"
-            placeholder="Explore SCIS facilities"
-            {...register("eventDescription")} /> */}
+              {/* <label className="font-bold block mt-2 mb-2">
+                {" "}
+                Event Description:{" "}
+              </label>
+              <input
+                className="w-full rounded border border-purple-500 px-3 py-2"
+                placeholder="Explore SCIS facilities"
+                {...register("eventDescription")}
+              /> */}
 
               <label className="font-bold block mt-2 mb-2">
-                {" "}
                 *Event Start Date & Time:
               </label>
               <input
@@ -112,7 +122,6 @@ export default function UpdateEventModal({
               )}
 
               <label className="font-bold block mt-2 mb-2">
-                {" "}
                 *Event End Date & Time:
               </label>
               <input
@@ -137,11 +146,13 @@ export default function UpdateEventModal({
                 </p>
               )}
 
-              <label className="font-bold block mt-2 mb-2"> Recurring: </label>
-              <input
-                className="w-full rounded border border-purple-500 px-3 py-2"
-                {...register("rrule")}
-              />
+              <div>
+                <label className="font-bold block mt-2 mb-2">Recurring:</label>
+                <input
+                  className="w-full rounded border border-purple-500 px-3 py-2"
+                  {...register("rrule")}
+                />
+              </div>
 
               <div className=" flex items-center mt-2">
                 <input
@@ -163,8 +174,9 @@ export default function UpdateEventModal({
 
               <input
                 type="submit"
-                value="Update"
-                className="rounded-2xl bg-orange-100 hover:bg-orange-200 p-1 px-4 border"
+                value="Create"
+                className="rounded-2xl bg-green-100 p-1 px-4 border hover:bg-green-200"
+                disabled={createEventMutation.isPending}
               />
             </div>
           </form>
