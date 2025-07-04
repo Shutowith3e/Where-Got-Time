@@ -6,6 +6,7 @@ import axiosInstance from "@/lib/axios-instance";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateGroupPage() {
   const {
@@ -13,6 +14,8 @@ export default function CreateGroupPage() {
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const navigate = useNavigate();
   const onSubmit = (data: any) => {
     const fullForm = {
       ...data,
@@ -28,6 +31,7 @@ export default function CreateGroupPage() {
     },
     onSuccess: () => {
       console.log("Group created");
+      navigate("/mainGroup");
     },
     onError: (error) => {
       console.error(error);
