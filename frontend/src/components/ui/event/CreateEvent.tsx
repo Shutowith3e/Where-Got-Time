@@ -1,6 +1,8 @@
+import SelectedMembers from "@/components/SelectedMembers";
 import useGroup from "@/context/GroupContext";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 type CreateEventModalProps = {
@@ -22,7 +24,7 @@ export default function CreateEventModal({
       ...data,
       gid,
       // wip: take in an array of emails to join event
-      emailArr: [...(groupMembers ?? []), ...(groupAdmins ?? [])],
+      emailArr: selectedEmails,
     };
 
     console.log("Submit to be: ", fullForm);
@@ -33,6 +35,11 @@ export default function CreateEventModal({
   const {
     groupInfo: { groupMembers, groupAdmins },
   } = useGroup();
+
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([
+    ...groupMembers,
+    ...groupAdmins,
+  ]);
 
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
@@ -78,23 +85,42 @@ export default function CreateEventModal({
         <div className="mb-6 rounded-lg bg-white-100 p-4">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-3"
           >
-            <div className="gap-2">
-              <label className="font-bold block mb-2"> *Event Name: </label>
-              <input
-                className="w-full rounded border border-purple-500 px-3 py-2"
-                placeholder="Learning Journey to SMU"
-                {...register("eventName", { required: true })}
-                aria-invalid={errors.eventName ? "true" : "false"}
-              />
-              {errors.eventName?.type === "required" && (
-                <p role="alert" className="font-light text-sm text-red-600">
-                  *Event name is required
-                </p>
-              )}
+            <div className="flex flex-col items-center">
+              <div className="max-w-[16rem] flex">
+                <SelectedMembers
+                  selectedEmails={selectedEmails}
+                  setSelectedEmails={setSelectedEmails}
+                />
+              </div>
+              <div
+                onClick={() =>
+                  setSelectedEmails([
+                    ...(groupAdmins ?? []),
+                    ...(groupMembers ?? []),
+                  ])
+                }
+                className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
+              >
+                Reset
+              </div>
+            </div>
 
-              {/* <label className="font-bold block mt-2 mb-2">
+            <label className="font-bold block mb-2"> *Event Name: </label>
+            <input
+              className="w-full rounded border border-purple-500 px-3 py-2"
+              placeholder="Learning Journey to SMU"
+              {...register("eventName", { required: true })}
+              aria-invalid={errors.eventName ? "true" : "false"}
+            />
+            {errors.eventName?.type === "required" && (
+              <p role="alert" className="font-light text-sm text-red-600">
+                *Event name is required
+              </p>
+            )}
+
+            {/* <label className="font-bold block mt-2 mb-2">
                 {" "}
                 Event Description:{" "}
               </label>
@@ -104,64 +130,63 @@ export default function CreateEventModal({
                 {...register("eventDescription")}
               /> */}
 
-              <label className="font-bold block mt-2 mb-2">
-                *Event Start Date & Time:
-              </label>
+            <label className="font-bold block mt-2 mb-2">
+              *Event Start Date & Time:
+            </label>
+            <input
+              className="w-full rounded border border-purple-500 px-3 py-2"
+              type="datetime-local"
+              {...register("startDatetime", {
+                required: true,
+              })}
+              aria-invalid={errors.startDatetime ? "true" : "false"}
+            />
+            {errors.startDatetime?.type === "required" && (
+              <p role="alert" className="font-light text-sm text-red-600">
+                *Start Date & Time is required
+              </p>
+            )}
+
+            <label className="font-bold block mt-2 mb-2">
+              *Event End Date & Time:
+            </label>
+            <input
+              className="w-full rounded border border-purple-500 px-3 py-2"
+              type="datetime-local"
+              {...register("endDatetime", {
+                required: true,
+                validate: (value, formValues) => {
+                  const start = new Date(formValues.startDatetime).getTime();
+                  const end = new Date(value).getTime();
+                  return (
+                    end >= start ||
+                    "*End date/time must be after start date/time"
+                  );
+                },
+              })}
+              aria-invalid={errors.endDatetime ? "true" : "false"}
+            />
+            {errors.endDatetime && (
+              <p role="alert" className="font-light text-sm text-red-600">
+                {errors.endDatetime.message?.toString()}
+              </p>
+            )}
+
+            <div>
+              <label className="font-bold block mt-2 mb-2">Recurring:</label>
               <input
                 className="w-full rounded border border-purple-500 px-3 py-2"
-                type="datetime-local"
-                {...register("startDatetime", {
-                  required: true,
-                })}
-                aria-invalid={errors.startDatetime ? "true" : "false"}
+                {...register("rrule")}
               />
-              {errors.startDatetime?.type === "required" && (
-                <p role="alert" className="font-light text-sm text-red-600">
-                  *Start Date & Time is required
-                </p>
-              )}
+            </div>
 
-              <label className="font-bold block mt-2 mb-2">
-                *Event End Date & Time:
-              </label>
+            <div className=" flex items-center mt-2">
               <input
-                className="w-full rounded border border-purple-500 px-3 py-2"
-                type="datetime-local"
-                {...register("endDatetime", {
-                  required: true,
-                  validate: (value, formValues) => {
-                    const start = new Date(formValues.startDatetime).getTime();
-                    const end = new Date(value).getTime();
-                    return (
-                      end >= start ||
-                      "*End date/time must be after start date/time"
-                    );
-                  },
-                })}
-                aria-invalid={errors.endDatetime ? "true" : "false"}
+                type="checkbox"
+                {...register("highPriority")}
+                className="h-4 w-6"
               />
-              {errors.endDatetime && (
-                <p role="alert" className="font-light text-sm text-red-600">
-                  {errors.endDatetime.message?.toString()}
-                </p>
-              )}
-
-              <div>
-                <label className="font-bold block mt-2 mb-2">Recurring:</label>
-                <input
-                  className="w-full rounded border border-purple-500 px-3 py-2"
-                  {...register("rrule")}
-                />
-              </div>
-
-              <div className=" flex items-center mt-2">
-                <input
-                  type="checkbox"
-                  {...register("highPriority")}
-                  className="h-4 w-6"
-                />
-                <label className="font-bold">High Priority</label>
-              </div>
+              <label className="font-bold">High Priority</label>
             </div>
 
             <div className="flex justify-between">

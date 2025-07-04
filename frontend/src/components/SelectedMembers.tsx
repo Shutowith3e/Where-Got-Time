@@ -9,12 +9,12 @@ function SelectedMember({
   removeMember: () => void;
 }) {
   return (
-    <div className="flex flex-row items-center gap-1">
+    <div className="flex flex-row items-center gap-1 max-w-full">
       <IoIosCloseCircle
         className="mt-1 cursor-pointer hover:bg-slate-200"
         onClick={removeMember}
       />
-      <span className="overflow-ellipsis overflow-hidden whitespace-nowrap w-50">
+      <span className="overflow-ellipsis overflow-hidden truncate max-w-[12rem] whitespace-nowrap">
         {email}
       </span>
     </div>
