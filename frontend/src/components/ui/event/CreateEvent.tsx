@@ -95,7 +95,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
 
           <label className="font-bold block mb-2"> *Event Name: </label>
           <input
-            className="w-full rounded border border-purple-500 px-3 py-2"
+            className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             placeholder="Learning Journey to SMU"
             {...register("eventName", { required: true })}
             aria-invalid={errors.eventName ? "true" : "false"}
@@ -110,7 +110,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             *Event Start Date & Time:
           </label>
           <input
-            className="w-full rounded border border-purple-500 px-3 py-2"
+            className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             type="datetime-local"
             {...register("startDatetime", {
               required: true,
@@ -127,7 +127,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             *Event End Date & Time:
           </label>
           <input
-            className="w-full rounded border border-purple-500 px-3 py-2"
+            className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             type="datetime-local"
             {...register("endDatetime", {
               required: true,
@@ -147,21 +147,19 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             </p>
           )}
 
-          <div>
-            <label className="font-bold block mt-2 mb-2">Recurring:</label>
-            <input
-              className="w-full rounded border border-purple-500 px-3 py-2"
-              {...register("rrule")}
-            />
-          </div>
-
-          <div className=" flex items-center mt-2">
+          <div className="flex items-center mt-2 gap-1">
             <input
               type="checkbox"
               {...register("highPriority")}
               className="h-4 w-6"
             />
             <label className="font-bold">High Priority</label>
+          </div>
+
+
+          <div className="flex items-center m-auto gap-1 mt-2">
+            <input type="checkbox" className="h-4 w-6"{...register("rrule")} />
+            <label className="font-bold block"> Recurring Event</label>
           </div>
 
           <DialogFooter>
