@@ -76,7 +76,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center">
-            <div className="max-w-[16rem] flex">
+            <div className="min-w-[16rem]">
               <SelectedMembers
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
@@ -89,7 +89,10 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                 aria-invalid={errors.emailArr ? "true" : "false"}
               />
               {errors.emailArr && (
-                <p role="alert" className="font-light text-sm text-red-600">
+                <p
+                  role="alert"
+                  className="font-light text-sm text-red-600 flex flex-row"
+                >
                   {errors.emailArr.message?.toString()}
                 </p>
               )}
