@@ -29,7 +29,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     const fullForm = {
       ...data,
       gid,
-      emailArr: selectedEmails,
+      // emailArr: selectedEmails,
     };
 
     await createEventMutation.mutateAsync(fullForm);
@@ -69,7 +69,9 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Event</DialogTitle>
+          <DialogTitle className="text-center font-bold">
+            Create Event
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,7 +80,19 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
               <SelectedMembers
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
+                {...register("emailArr", {
+                  validate: () =>
+                    selectedEmails.length > 0
+                      ? true
+                      : "*Selected Members cannot be empty",
+                })}
+                aria-invalid={errors.emailArr ? "true" : "false"}
               />
+              {errors.emailArr && (
+                <p role="alert" className="font-light text-sm text-red-600">
+                  {errors.emailArr.message?.toString()}
+                </p>
+              )}
             </div>
             <div
               onClick={() =>
@@ -93,7 +107,10 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             </div>
           </div>
 
-          <label className="font-bold block mb-2"> *Event Name: </label>
+          <label className="font-semibold block mb-2 text-slate-700">
+            {" "}
+            *Event Name:{" "}
+          </label>
           <input
             className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             placeholder="Learning Journey to SMU"
@@ -106,7 +123,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             </p>
           )}
 
-          <label className="font-bold block mt-2 mb-2">
+          <label className="font-semibold block mt-2 mb-2 text-slate-700">
             *Event Start Date & Time:
           </label>
           <input
@@ -123,7 +140,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             </p>
           )}
 
-          <label className="font-bold block mt-2 mb-2">
+          <label className="font-semibold block mt-2 mb-2 text-slate-700">
             *Event End Date & Time:
           </label>
           <input
@@ -147,19 +164,18 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             </p>
           )}
 
-          <div className="flex items-center mt-2 gap-1">
+          <div className="flex items-center mt-5 gap-1 text-slate-700">
             <input
               type="checkbox"
               {...register("highPriority")}
               className="h-4 w-6"
             />
-            <label className="font-bold">High Priority</label>
+            <label className="font-semibold">High Priority</label>
           </div>
 
-
-          <div className="flex items-center m-auto gap-1 mt-2">
-            <input type="checkbox" className="h-4 w-6"{...register("rrule")} />
-            <label className="font-bold block"> Recurring Event</label>
+          <div className="flex items-center m-auto gap-1 mt-2 text-slate-700">
+            <input type="checkbox" className="h-4 w-6" {...register("rrule")} />
+            <label className="font-semibold block"> Recurring Event</label>
           </div>
 
           <DialogFooter>
@@ -169,7 +185,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                 await createEventMutation.mutateAsync({ gid });
               }}
             >
-              Delete
+              Create Event
             </Button>
           </DialogFooter>
         </form>
