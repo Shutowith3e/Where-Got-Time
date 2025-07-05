@@ -44,6 +44,8 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     ...groupAdmins,
   ]);
 
+  const [recurring, setRecurring] = useState(false);
+
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
     mutationFn: async (formData: any) => {
@@ -60,11 +62,13 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
       console.error(error);
     },
   });
+
   useEffect(() => {
     if (selectedEmails.length > 0) {
       clearErrors("emailArr");
     }
   }, [selectedEmails, clearErrors]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -182,8 +186,32 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
           </div>
 
           <div className="flex items-center m-auto gap-1 mt-2 text-slate-700">
-            <input type="checkbox" className="h-4 w-6" {...register("rrule")} />
-            <label className="font-semibold block"> Recurring Event</label>
+            <input
+              type="checkbox"
+              className="h-4 w-6"
+              {...register("rrule")}
+              onChange={() => setRecurring(!recurring)}
+            />
+            <label className="font-semibold block">Recurring Event</label>
+          </div>
+
+          <div className="flex items-center m-auto gap-1 mt-2 text-slate-700">
+            {recurring && (
+              <div className="flex flex-col">
+                <div>
+                  <label className="font-semibold">Repeat Frequency: </label>
+                  <input {...register("freq")} placeholder="Repeat every..." />
+                </div>
+                <div>
+                  <label className="font-semibold">Repeat Until: </label>
+                  <input {...register("until")} type="datetime-local" />
+                </div>
+                <div>
+                  <label className="font-semibold">Timezone: </label>
+                  <input {...register("tzid")} value="Asia/Singapore" />
+                </div>
+              </div>
+            )}
           </div>
 
           <DialogFooter>
