@@ -4,16 +4,22 @@ import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "../button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../dialog";
 
 type CreateEventModalProps = {
-  onClose: () => void;
   gid: string;
 };
 
-export default function CreateEventModal({
-  onClose,
-  gid,
-}: CreateEventModalProps) {
+export default function CreateEventModal({ gid }: CreateEventModalProps) {
   const {
     register,
     formState: { errors },
@@ -23,14 +29,10 @@ export default function CreateEventModal({
     const fullForm = {
       ...data,
       gid,
-      // wip: take in an array of emails to join event
       emailArr: selectedEmails,
     };
 
-    console.log("Submit to be: ", fullForm);
-
     await createEventMutation.mutateAsync(fullForm);
-    onClose();
   };
   const {
     groupInfo: { groupMembers, groupAdmins },
@@ -59,154 +61,121 @@ export default function CreateEventModal({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 rounded-2xl">
-      <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="mb-4 text-center text-3xl font-bold text-black">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="rounded-full ">
           Create Event
-        </h2>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create Event</DialogTitle>
+        </DialogHeader>
 
-        {/* Members Portion */}
-        {/* <div className="mb-6 rounded-lg bg-purple-100 p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <h3 className="font-semibold">Members</h3>
-            <button className="rounded-full bg-gray-400 px-3 py-1 text-white">
-              Select Members
-            </button>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-col items-center">
+            <div className="max-w-[16rem] flex">
+              <SelectedMembers
+                selectedEmails={selectedEmails}
+                setSelectedEmails={setSelectedEmails}
+              />
+            </div>
+            <div
+              onClick={() =>
+                setSelectedEmails([
+                  ...(groupAdmins ?? []),
+                  ...(groupMembers ?? []),
+                ])
+              }
+              className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
+            >
+              Reset
+            </div>
           </div>
-          <div className="flex gap-2">
-            <div className="h-8 w-8 rounded-full bg-gray-300"></div>
-            <div className="h-8 w-8 rounded-full bg-gray-300"></div>
-            <div className="h-8 w-8 rounded-full bg-gray-300"></div>
-            <p className="text-sm text-gray-500">+5 more</p>
+
+          <label className="font-bold block mb-2"> *Event Name: </label>
+          <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            placeholder="Learning Journey to SMU"
+            {...register("eventName", { required: true })}
+            aria-invalid={errors.eventName ? "true" : "false"}
+          />
+          {errors.eventName?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              *Event name is required
+            </p>
+          )}
+
+          <label className="font-bold block mt-2 mb-2">
+            *Event Start Date & Time:
+          </label>
+          <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            type="datetime-local"
+            {...register("startDatetime", {
+              required: true,
+            })}
+            aria-invalid={errors.startDatetime ? "true" : "false"}
+          />
+          {errors.startDatetime?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              *Start Date & Time is required
+            </p>
+          )}
+
+          <label className="font-bold block mt-2 mb-2">
+            *Event End Date & Time:
+          </label>
+          <input
+            className="w-full rounded border border-purple-500 px-3 py-2"
+            type="datetime-local"
+            {...register("endDatetime", {
+              required: true,
+              validate: (value, formValues) => {
+                const start = new Date(formValues.startDatetime).getTime();
+                const end = new Date(value).getTime();
+                return (
+                  end >= start || "*End date/time must be after start date/time"
+                );
+              },
+            })}
+            aria-invalid={errors.endDatetime ? "true" : "false"}
+          />
+          {errors.endDatetime && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              {errors.endDatetime.message?.toString()}
+            </p>
+          )}
+
+          <div>
+            <label className="font-bold block mt-2 mb-2">Recurring:</label>
+            <input
+              className="w-full rounded border border-purple-500 px-3 py-2"
+              {...register("rrule")}
+            />
           </div>
-        </div> */}
 
-        {/* Form Portion */}
-        <div className="mb-6 rounded-lg bg-white-100 p-4">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-3"
-          >
-            <div className="flex flex-col items-center">
-              <div className="max-w-[16rem] flex">
-                <SelectedMembers
-                  selectedEmails={selectedEmails}
-                  setSelectedEmails={setSelectedEmails}
-                />
-              </div>
-              <div
-                onClick={() =>
-                  setSelectedEmails([
-                    ...(groupAdmins ?? []),
-                    ...(groupMembers ?? []),
-                  ])
-                }
-                className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
-              >
-                Reset
-              </div>
-            </div>
-
-            <label className="font-bold block mb-2"> *Event Name: </label>
+          <div className=" flex items-center mt-2">
             <input
-              className="w-full rounded border border-purple-500 px-3 py-2"
-              placeholder="Learning Journey to SMU"
-              {...register("eventName", { required: true })}
-              aria-invalid={errors.eventName ? "true" : "false"}
+              type="checkbox"
+              {...register("highPriority")}
+              className="h-4 w-6"
             />
-            {errors.eventName?.type === "required" && (
-              <p role="alert" className="font-light text-sm text-red-600">
-                *Event name is required
-              </p>
-            )}
+            <label className="font-bold">High Priority</label>
+          </div>
 
-            {/* <label className="font-bold block mt-2 mb-2">
-                {" "}
-                Event Description:{" "}
-              </label>
-              <input
-                className="w-full rounded border border-purple-500 px-3 py-2"
-                placeholder="Explore SCIS facilities"
-                {...register("eventDescription")}
-              /> */}
-
-            <label className="font-bold block mt-2 mb-2">
-              *Event Start Date & Time:
-            </label>
-            <input
-              className="w-full rounded border border-purple-500 px-3 py-2"
-              type="datetime-local"
-              {...register("startDatetime", {
-                required: true,
-              })}
-              aria-invalid={errors.startDatetime ? "true" : "false"}
-            />
-            {errors.startDatetime?.type === "required" && (
-              <p role="alert" className="font-light text-sm text-red-600">
-                *Start Date & Time is required
-              </p>
-            )}
-
-            <label className="font-bold block mt-2 mb-2">
-              *Event End Date & Time:
-            </label>
-            <input
-              className="w-full rounded border border-purple-500 px-3 py-2"
-              type="datetime-local"
-              {...register("endDatetime", {
-                required: true,
-                validate: (value, formValues) => {
-                  const start = new Date(formValues.startDatetime).getTime();
-                  const end = new Date(value).getTime();
-                  return (
-                    end >= start ||
-                    "*End date/time must be after start date/time"
-                  );
-                },
-              })}
-              aria-invalid={errors.endDatetime ? "true" : "false"}
-            />
-            {errors.endDatetime && (
-              <p role="alert" className="font-light text-sm text-red-600">
-                {errors.endDatetime.message?.toString()}
-              </p>
-            )}
-
-            <div>
-              <label className="font-bold block mt-2 mb-2">Recurring:</label>
-              <input
-                className="w-full rounded border border-purple-500 px-3 py-2"
-                {...register("rrule")}
-              />
-            </div>
-
-            <div className=" flex items-center mt-2">
-              <input
-                type="checkbox"
-                {...register("highPriority")}
-                className="h-4 w-6"
-              />
-              <label className="font-bold">High Priority</label>
-            </div>
-
-            <div className="flex justify-between">
-              <button
-                onClick={onClose}
-                className="rounded-2xl bg-white p-1 px-4 border"
-              >
-                Back
-              </button>
-
-              <input
-                type="submit"
-                value="Create"
-                className="rounded-2xl bg-green-100 p-1 px-4 border hover:bg-green-200"
-                disabled={createEventMutation.isPending}
-              />
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+          <DialogFooter>
+            <DialogClose>Cancel</DialogClose>
+            <Button
+              onClick={async () => {
+                await createEventMutation.mutateAsync({ gid });
+              }}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
