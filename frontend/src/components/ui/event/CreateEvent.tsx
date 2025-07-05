@@ -2,7 +2,7 @@ import SelectedMembers from "@/components/SelectedMembers";
 import useGroup from "@/context/GroupContext";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../button";
 import {
@@ -24,6 +24,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     register,
     formState: { errors },
     handleSubmit,
+    clearErrors,
   } = useForm();
   const onSubmit = async (data: any) => {
     const fullForm = {
@@ -59,7 +60,11 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
       console.error(error);
     },
   });
-
+  useEffect(() => {
+    if (selectedEmails.length > 0) {
+      clearErrors("emailArr");
+    }
+  }, [selectedEmails, clearErrors]);
   return (
     <Dialog>
       <DialogTrigger asChild>
