@@ -30,7 +30,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     const fullForm = {
       ...data,
       gid,
-      rrule: recurring || null, 
+      rrule: recurring || null,
       emailArr: selectedEmails,
     };
 
@@ -162,11 +162,17 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             {...register("endDatetime", {
               required: true,
               validate: (value, formValues) => {
+                // make sure start time < end time
                 const start = new Date(formValues.startDatetime).getTime();
                 const end = new Date(value).getTime();
-                return (
-                  end >= start || "*End date/time must be after start date/time"
-                );
+                const startDate = new Date(formValues.startDatetime).getDate();
+                const endDate = new Date(value).getDate();
+                if (end <= start) {
+                  return "*End date/time must be after start date/time";
+                }
+                if (startDate != endDate) {
+                  return "*Event must start and end on the same day";
+                }
               },
             })}
             aria-invalid={errors.endDatetime ? "true" : "false"}
@@ -201,7 +207,20 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
               <div className="flex flex-col">
                 <div>
                   <label className="font-semibold">Repeat Frequency: </label>
-                  <input {...register("freq")} placeholder="Repeat every..." />
+                  <select {...register("freq")}>
+                    <option value="DAILY" className="text-sm">
+                      Daily
+                    </option>
+                    <option value="WEEKLY" className="text-sm">
+                      Weekly
+                    </option>
+                    <option value="MONTHLY" className="text-sm">
+                      Monthly
+                    </option>
+                    <option value="YEARLY" className="text-sm">
+                      Yearly
+                    </option>
+                  </select>
                 </div>
                 <div>
                   <label className="font-semibold">Repeat Until: </label>
@@ -217,11 +236,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
 
           <DialogFooter>
             <DialogClose>Cancel</DialogClose>
-            <Button
-              type = "submit"
-            >
-              Create Event
-            </Button>
+            <Button type="submit">Create Event</Button>
           </DialogFooter>
         </form>
       </DialogContent>
