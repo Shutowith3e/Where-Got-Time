@@ -248,13 +248,50 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                     Yearly
                   </label>
                 </div>
+                {errors.freq && (
+                  <p className="text-red-500 text-sm">
+                    {errors.freq?.message?.toString()}
+                  </p>
+                )}
+
+                <div className="flex flex-col gap-2 ">
+                  <div className="flex flex-row items-center gap-2">
+                    <label className="font-semibold">Every</label>
+                    <input
+                      type="number"
+                      className="w-8"
+                      {...register("interval", {
+                        required: "*Please select a valid repeat interval",
+                        min: {
+                          value: 1,
+                          message: "*Interval must be at least 1",
+                        },
+                        max: {
+                          value: 365,
+                          message: "*Interval cannot be more than 365",
+                        },
+                      })}
+                    />
+                    <span>days</span>
+                  </div>
+                  {errors.interval && (
+                    <p className="text-red-500 text-sm">
+                      {errors.interval?.message?.toString()}
+                    </p>
+                  )}
+                </div>
+
                 <div>
                   <label className="font-semibold">Repeat Until: </label>
                   <input {...register("until")} type="datetime-local" />
                 </div>
                 <div>
                   <label className="font-semibold">Timezone: </label>
-                  <input {...register("tzid")} value="Asia/Singapore" />
+                  <input
+                    {...register("tzid")}
+                    defaultValue="Asia/Singapore"
+                    readOnly
+                  />{" "}
                 </div>
               </div>
             )}
