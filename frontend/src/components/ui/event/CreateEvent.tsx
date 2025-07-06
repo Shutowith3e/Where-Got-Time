@@ -25,6 +25,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     formState: { errors },
     handleSubmit,
     clearErrors,
+    watch,
   } = useForm();
   const onSubmit = async (data: any) => {
     const fullForm = {
@@ -46,6 +47,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
   ]);
 
   const [recurring, setRecurring] = useState(false);
+  const freq = watch("freq");
 
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
@@ -244,6 +246,89 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                   </p>
                 )}
 
+                {/* Allow user to choose the days of the weeks to recur on if its WEEKLY */}
+                {/* count starts from 0. E.g. => mon=0, tues=1 */}
+
+                {freq === "WEEKLY" && (
+                  <div className="flex flex-row gap-2">
+                    <label className="font-semibold">Recur on: </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        {...register("byweekday", {
+                          required: "Please select at least 1 day",
+                        })}
+                        value="0"
+                      />
+                      Monday
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        {...register("byweekday", {
+                          required: "Please select at least 1 day",
+                        })}
+                        value="1"
+                      />
+                      Tuesday
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        {...register("byweekday", {
+                          required: "Please select at least 1 day",
+                        })}
+                        value="2"
+                      />
+                      Wednesday
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        {...register("byweekday", {
+                          required: "Please select at least 1 day",
+                        })}
+                        value="3"
+                      />
+                      Thrusday
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        {...register("byweekday", {
+                          required: "Please select at least 1 day",
+                        })}
+                        value="4"
+                      />
+                      Friday
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        {...register("byweekday", {
+                          required: "Please select at least 1 day",
+                        })}
+                        value="5"
+                      />
+                      Saturday
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        {...register("byweekday", {
+                          required: "Please select at least 1 day",
+                        })}
+                        value="6"
+                      />
+                      Sunday
+                    </label>
+                  </div>
+                )}
+                {errors.byweekday && (
+                  <p className="text-red-500 text-sm">
+                    {errors.byweekday?.message?.toString()}
+                  </p>
+                )}
 
                 <div>
                   <label className="font-semibold">Repeat Until: </label>
