@@ -30,7 +30,8 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     const fullForm = {
       ...data,
       gid,
-      // emailArr: selectedEmails,
+      rrule: recurring || null, 
+      emailArr: selectedEmails,
     };
 
     await createEventMutation.mutateAsync(fullForm);
@@ -217,9 +218,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
           <DialogFooter>
             <DialogClose>Cancel</DialogClose>
             <Button
-              onClick={async () => {
-                await createEventMutation.mutateAsync({ gid });
-              }}
+              type = "submit"
             >
               Create Event
             </Button>
