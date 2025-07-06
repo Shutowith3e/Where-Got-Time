@@ -205,22 +205,24 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
           <div className="flex items-center m-auto gap-1 mt-2 text-slate-700">
             {recurring && (
               <div className="flex flex-col">
-                <div>
+                <div className="flex flex-row gap-2">
                   <label className="font-semibold">Repeat Frequency: </label>
-                  <select {...register("freq")}>
-                    <option value="DAILY" className="text-sm">
-                      Daily
-                    </option>
-                    <option value="WEEKLY" className="text-sm">
-                      Weekly
-                    </option>
-                    <option value="MONTHLY" className="text-sm">
-                      Monthly
-                    </option>
-                    <option value="YEARLY" className="text-sm">
-                      Yearly
-                    </option>
-                  </select>
+                  <label>
+                    <input type="radio" {...register("freq")} value="DAILY" />
+                    Daily
+                  </label>
+                  <label>
+                    <input type="radio" {...register("freq")} value="WEEKLY" />
+                    Weekly
+                  </label>
+                  <label>
+                    <input type="radio" {...register("freq")} value="MONTHLY" />
+                    Monthly
+                  </label>
+                  <label>
+                    <input type="radio" {...register("freq")} value="YEARLY" />
+                    Yearly
+                  </label>
                 </div>
                 <div>
                   <label className="font-semibold">Repeat Until: </label>
