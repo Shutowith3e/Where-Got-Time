@@ -208,19 +208,43 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                 <div className="flex flex-row gap-2">
                   <label className="font-semibold">Repeat Frequency: </label>
                   <label>
-                    <input type="radio" {...register("freq")} value="DAILY" />
+                    <input
+                      type="radio"
+                      {...register("freq", {
+                        required: "Please select a repeat frequency",
+                      })}
+                      value="DAILY"
+                    />
                     Daily
                   </label>
                   <label>
-                    <input type="radio" {...register("freq")} value="WEEKLY" />
+                    <input
+                      type="radio"
+                      {...register("freq", {
+                        required: "Please select a repeat frequency",
+                      })}
+                      value="WEEKLY"
+                    />
                     Weekly
                   </label>
                   <label>
-                    <input type="radio" {...register("freq")} value="MONTHLY" />
+                    <input
+                      type="radio"
+                      {...register("freq", {
+                        required: "Please select a repeat frequency",
+                      })}
+                      value="MONTHLY"
+                    />
                     Monthly
                   </label>
                   <label>
-                    <input type="radio" {...register("freq")} value="YEARLY" />
+                    <input
+                      type="radio"
+                      {...register("freq", {
+                        required: "Please select a repeat frequency",
+                      })}
+                      value="YEARLY"
+                    />
                     Yearly
                   </label>
                 </div>
