@@ -372,6 +372,9 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                         if (endDatetime >= endEventtime) {
                           return "*End date/time must be after start date/time";
                         }
+                        if (values.freq === "WEEKLY" && !value) {
+                          return "Please input an end datetime";
+                        }
                       },
                     })}
                     type="datetime-local"
@@ -385,6 +388,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                 <div>
                   <label className="font-semibold">Timezone: </label>
                   <input
+                    className="outline-none"
                     {...register("tzid")}
                     defaultValue="Asia/Singapore"
                     readOnly
