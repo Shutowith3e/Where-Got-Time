@@ -251,77 +251,95 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
 
                 {freq === "WEEKLY" && (
                   <div className="flex flex-row gap-2">
-                    <label className="font-semibold">Recur on: </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        {...register("byweekday", {
-                          required: "Please select at least 1 day",
-                        })}
-                        value="0"
-                      />
-                      Monday
+                    <label className="font-semibold flex flex-row">
+                      Recur on:{" "}
                     </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        {...register("byweekday", {
-                          required: "Please select at least 1 day",
-                        })}
-                        value="1"
-                      />
-                      Tuesday
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        {...register("byweekday", {
-                          required: "Please select at least 1 day",
-                        })}
-                        value="2"
-                      />
-                      Wednesday
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        {...register("byweekday", {
-                          required: "Please select at least 1 day",
-                        })}
-                        value="3"
-                      />
-                      Thrusday
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        {...register("byweekday", {
-                          required: "Please select at least 1 day",
-                        })}
-                        value="4"
-                      />
-                      Friday
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        {...register("byweekday", {
-                          required: "Please select at least 1 day",
-                        })}
-                        value="5"
-                      />
-                      Saturday
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        {...register("byweekday", {
-                          required: "Please select at least 1 day",
-                        })}
-                        value="6"
-                      />
-                      Sunday
-                    </label>
+                    <div className="flex flex-wrap gap-x-3.5">
+                      <div className="flex flex-row ">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="0"
+                          />
+                          Monday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="1"
+                          />
+                          Tuesday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="2"
+                          />
+                          Wednesday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="3"
+                          />
+                          Thrusday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="4"
+                          />
+                          Friday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="5"
+                          />
+                          Saturday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="6"
+                          />
+                          Sunday
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 )}
                 {errors.byweekday && (
