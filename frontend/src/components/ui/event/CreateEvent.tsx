@@ -47,7 +47,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
   ]);
 
   const [recurring, setRecurring] = useState(false);
-  const freq = watch("freq");
+  const values = watch();
 
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
@@ -249,7 +249,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                 {/* Allow user to choose the days of the weeks to recur on if its WEEKLY */}
                 {/* count starts from 0. E.g. => mon=0, tues=1 */}
 
-                {freq === "WEEKLY" && (
+                {values.freq === "WEEKLY" && (
                   <div className="flex flex-row gap-2">
                     <label className="font-semibold flex flex-row">
                       Recur on:{" "}
@@ -300,7 +300,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                             })}
                             value="3"
                           />
-                          Thrusday
+                          Thursday
                         </label>
                       </div>
                       <div className="flex flex-row">
@@ -347,10 +347,40 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                     {errors.byweekday?.message?.toString()}
                   </p>
                 )}
+                {/* <div>
+                  <label className="font-semibold">
+                    Event Start Date & Time:{" "}
+                  </label>
+                  <input
+                    {...register("dtstart")}
+                    value={startDatetime}
+                    readOnly
+                  />{" "}
+                </div> */}
 
                 <div>
                   <label className="font-semibold">Repeat Until: </label>
-                  <input {...register("until")} type="datetime-local" />
+                  <input
+                    {...register("until", {
+                      validate: (value, formValues) => {
+                        // make sure end time < end event time
+                        const endDatetime = new Date(
+                          formValues.endDatetime
+                        ).getTime();
+                        const endEventtime = new Date(value).getTime();
+
+                        if (endDatetime >= endEventtime) {
+                          return "*End date/time must be after start date/time";
+                        }
+                      },
+                    })}
+                    type="datetime-local"
+                  />
+                  {errors.until && (
+                    <p className="text-red-500 text-sm">
+                      {errors.until?.message?.toString()}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="font-semibold">Timezone: </label>
