@@ -14,10 +14,49 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../dialog";
+import { RRule } from "rrule";
 
 type CreateEventModalProps = {
   gid: string;
 };
+
+type FormData = {
+  emailArr: string[];
+  eventName: string;
+  startDatetime: string;
+  endDatetime: string;
+  recurring: boolean;
+  highPriority: boolean;
+  freq?: (typeof RRule.FREQUENCIES)[number];
+  byweekday?: number;
+  recurrsUntil?: string;
+};
+
+function createRrule({
+  recurring,
+  freq,
+  byweekday,
+  recurrsUntil,
+  startDatetime,
+}: FormData) {
+  if (!recurring) return null;
+  if (!freq) return null;
+
+  if (freq === "WEEKLY") {
+    return new RRule({
+      freq: RRule.WEEKLY,
+      byweekday: byweekday!,
+      tzid: "Asia/Singapore",
+      until: new Date(recurrsUntil!),
+      dtstart: new Date(startDatetime),
+    });
+  }
+
+  return new RRule({
+    freq: freq === "MONTHLY" ? RRule.MONTHLY : RRule.YEARLY,
+    tzid: "Asia/Singapore",
+  });
+}
 
 export default function CreateEventModal({ gid }: CreateEventModalProps) {
   const {
@@ -26,12 +65,13 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     handleSubmit,
     clearErrors,
     watch,
-  } = useForm();
-  const onSubmit = async (data: any) => {
+  } = useForm<FormData>();
+  const onSubmit = async (data: FormData) => {
+    const { recurring, ...rest } = data;
     const fullForm = {
-      ...data,
+      ...rest,
       gid,
-      rrule: recurring || null,
+      rrule: createRrule(data)?.toString() ?? null,
       emailArr: selectedEmails,
     };
 
@@ -46,7 +86,6 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     ...groupAdmins,
   ]);
 
-  const [recurring, setRecurring] = useState(false);
   const values = watch();
 
   const queryClient = useQueryClient();
@@ -198,14 +237,13 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
             <input
               type="checkbox"
               className="h-4 w-6"
-              {...register("rrule")}
-              onChange={() => setRecurring(!recurring)}
+              {...register("recurring")}
             />
             <label className="font-semibold block">Recurring Event</label>
           </div>
 
           <div className="flex items-center m-auto gap-1 mt-2 text-slate-700">
-            {recurring && (
+            {values.recurring && (
               <div className="flex flex-col">
                 <div className="flex flex-row gap-2">
                   <label className="font-semibold">Repeat Frequency: </label>
@@ -347,22 +385,14 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                     {errors.byweekday?.message?.toString()}
                   </p>
                 )}
-                {/* <div>
-                  <label className="font-semibold">
-                    Event Start Date & Time:{" "}
-                  </label>
-                  <input
-                    {...register("dtstart")}
-                    value={startDatetime}
-                    readOnly
-                  />{" "}
-                </div> */}
 
                 <div>
                   <label className="font-semibold">Repeat Until: </label>
                   <input
-                    {...register("until", {
+                    {...register("recurrsUntil", {
                       validate: (value, formValues) => {
+                        if (!value) return;
+
                         // make sure end time < end event time
                         const endDatetime = new Date(
                           formValues.endDatetime
@@ -379,20 +409,11 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
                     })}
                     type="datetime-local"
                   />
-                  {errors.until && (
+                  {errors.recurrsUntil && (
                     <p className="text-red-500 text-sm">
-                      {errors.until?.message?.toString()}
+                      {errors.recurrsUntil?.message?.toString()}
                     </p>
                   )}
-                </div>
-                <div>
-                  <label className="font-semibold">Timezone: </label>
-                  <input
-                    className="outline-none"
-                    {...register("tzid")}
-                    defaultValue="Asia/Singapore"
-                    readOnly
-                  />{" "}
                 </div>
               </div>
             )}
