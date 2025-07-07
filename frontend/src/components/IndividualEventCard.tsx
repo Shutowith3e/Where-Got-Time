@@ -84,15 +84,18 @@ export default function IndividualEventCard({
   const {
     groupInfo: { gid, isAdmin },
   } = useGroup();
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
     <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 z-50">
       <div className="flex flex-row justify-center gap-5">
         <h3 className="text-xl font-bold px-4 mb-4 ml-15">{title}</h3>
         {isAdmin && (
-          <>
-            <CreateEventModal gid={gid} />
-          </>
+          <CreateEventModal
+            isOpen={showCreateModal}
+            setIsOpen={setShowCreateModal}
+            gid={gid}
+          />
         )}
       </div>
       {events

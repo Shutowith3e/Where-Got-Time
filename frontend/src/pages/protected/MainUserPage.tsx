@@ -80,7 +80,8 @@ export default function MainUserPage() {
                     </button>
                     {showCreateModal && (
                       <CreateEventModal
-                        onClose={() => setShowCreateModal(false)}
+                        isOpen={showCreateModal}
+                        setIsOpen={setShowCreateModal}
                         gid={personalGroupId}
                       />
                     )}

@@ -2,7 +2,7 @@ import SelectedMembers from "@/components/SelectedMembers";
 import useGroup from "@/context/GroupContext";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../button";
 import {
@@ -18,6 +18,8 @@ import { RRule } from "rrule";
 
 type CreateEventModalProps = {
   gid: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 type FormData = {
@@ -58,7 +60,11 @@ function createRrule({
   });
 }
 
-export default function CreateEventModal({ gid }: CreateEventModalProps) {
+export default function CreateEventModal({
+  gid,
+  isOpen,
+  setIsOpen,
+}: CreateEventModalProps) {
   const {
     register,
     formState: { errors },
@@ -112,7 +118,7 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
   }, [selectedEmails, clearErrors]);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-full ">
           Create Event
