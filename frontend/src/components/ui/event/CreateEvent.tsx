@@ -67,12 +67,12 @@ export default function CreateEventModal({ gid }: CreateEventModalProps) {
     watch,
   } = useForm<FormData>();
   const onSubmit = async (data: FormData) => {
-    const { recurring, ...rest } = data;
+    const { recurring, byweekday, freq, recurrsUntil, ...rest } = data;
     const fullForm = {
       ...rest,
       gid,
-      rrule: createRrule(data)?.toString() ?? null,
       emailArr: selectedEmails,
+      rrule: createRrule(data)?.toString() ?? null,
     };
 
     await createEventMutation.mutateAsync(fullForm);
