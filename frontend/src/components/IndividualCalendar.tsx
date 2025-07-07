@@ -62,7 +62,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
 
   return (
     <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
-      <p className="flex-grow h-full items-center justify-center font-bold text-gray-400">
+      <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
         <FullCalendar
           plugins={[
             timeGridPlugin,
@@ -78,7 +78,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           events={events}
           eventDataTransform={dataTransformer}
         />
-      </p>
+      </div>
     </div>
   );
 };
