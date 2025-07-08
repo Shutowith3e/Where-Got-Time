@@ -44,3 +44,18 @@ export async function GetUserEvents(): Promise<GroupEvent[]> {
     )
     .sort((a, b) => (a.startDatetime.isBefore(b.startDatetime) ? -1 : 1));
 }
+
+export function getUserEventsInRange(
+  value: number,
+  unit?: dayjs.ManipulateType
+) {
+  return GetUserEvents().then((x) =>
+    x.filter(
+      ({ startDatetime, endDatetime }) =>
+        startDatetime.isBetween(dayjs(), dayjs().add(value, unit)) ||
+        endDatetime.isBetween(dayjs(), dayjs().add(value, unit))
+    )
+  );
+}
+
+
