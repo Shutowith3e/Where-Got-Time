@@ -11,7 +11,8 @@ import {
     getAdmins,
     acceptGroupInvite,
     searchEmails,
-    leaveGroup
+    leaveGroup,
+    getPendingGroups
 } from '../controllers/groupController.js';
 
 
@@ -27,6 +28,7 @@ router.post("/groupEvents", getGroupEvents);
 router.post("/groupMembers", getGroupMembers);
 router.delete("/leaveGroup",leaveGroup)
 router.get("/searchEmails", searchEmails);
+router.post("/getPendingGroups", getPendingGroups);
 
 
 

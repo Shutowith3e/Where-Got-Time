@@ -486,6 +486,52 @@ Literally js an array
 ---
 <br>
 
+---
+
+### GET /groups/getPendingGroups
+
+**Description**   
+Returns an array containing all groups which the user has yet to accept invites for
+
+**Supported attributes:**  
+None.  
+Email will be retrieved directly from jwt.
+
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+  "data": [
+	{
+		"gid": "gid1",
+		"group_name": "grp_name1",
+		"group_description": "grp_desc1"
+	}, 
+
+	{
+		"gid": "gid2",
+		"group_name": "grp_name2",
+		"group_description": "grp_desc2"
+	}, 
+}
+```
+**Response body**  
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `data`              | Array | An array of objects containing `gid`, `group_name`, and `group_description` 
+--- 
+<br>
+
+**`data` object** 
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | String | The `gid` of the group the user has yet to accept. |
+| `group_name`              | String | The `group_name` of the group the user has yet to accept. |
+| `group_description`              | String | The `group_description` of the group the user has yet to accept. |
+<br>
+---
+
 
 
 ## /events

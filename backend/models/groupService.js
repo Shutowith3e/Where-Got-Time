@@ -81,6 +81,15 @@ const searchEmails = async (email,searchTerm) => {
 	return await supabase.from('user').select('email').neq('email',email).like('email', `%${searchTerm}%`).limit(10);
 }
 
+const getPendingGroups = async (email_inp)=>{
+	const { data, error } = await supabase.rpc('get_pending_group_invites', {email: email_inp});
+	
+	if(error){
+		return {error};
+	}
+	return {data};
+}
+// tested, works 
 
 
 
@@ -103,6 +112,8 @@ const testuid = '244b4c5a-6578-4af9-9a87-6f4aada352ea';
 //export model funcs
 //console.log(await getGroupMembers("74cf7e70-1c97-405e-9957-0858f3968176"));
 //console.log(await getGroupMembersEmails("74cf7e70-1c97-405e-9957-0858f3968176"));
+//console.log(await getPendingGroups("clarice.lim.2024@computing.smu.edu.sg"))
+
 export {
 	checkAdmin,
 	getGroupDetails,
@@ -112,7 +123,8 @@ export {
 	getGroupEvents,
 	acceptGroupInvite,
 	searchEmails,
-	leaveGroup
+	leaveGroup,
+	getPendingGroups
 };
 
 // const { data, error } = await supabase.auth.signInWithPassword({

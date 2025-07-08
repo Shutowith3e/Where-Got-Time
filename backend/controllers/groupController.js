@@ -171,6 +171,17 @@ const searchEmails = async (req, res) => {
     return res.status(200).json(data.map(({ email }) => email));
 }
 
+const getPendingGroups = async (req, res) => {
+    const email = req.email;
+    
+    const { data, error } = await service.getPendingGroups(email); 
+    if (error){
+        res.status(500).json({message: 'Error retrieving pending groups'})
+    }
+
+    return res.status(200).json(data); 
+}
+
 // export controller functions
 export {
     checkAdmin,
@@ -181,5 +192,6 @@ export {
     getAdmins,
     acceptGroupInvite,
     searchEmails,
-    leaveGroup
+    leaveGroup,
+    getPendingGroups
 };
