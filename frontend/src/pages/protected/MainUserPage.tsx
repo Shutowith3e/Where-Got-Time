@@ -59,20 +59,11 @@ export default function MainUserPage() {
                   <h2 className="text-lg font-semibold">Personal Group</h2>
 
                   <div className="flex gap-3">
-                    {/* Create Event Button */}
-                    <button
-                      onClick={() => setShowCreateModal(true)}
-                      className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-                    >
-                      Create Event
-                    </button>
-                    {showCreateModal && (
-                      <CreateEventModal
-                        isOpen={showCreateModal}
-                        setIsOpen={setShowCreateModal}
-                        gid={personalGroupId}
-                      />
-                    )}
+                    <CreateEventModal
+                      isOpen={showCreateModal}
+                      setIsOpen={setShowCreateModal}
+                      gid={personalGroupId}
+                    />
                   </div>
                 </div>
 
