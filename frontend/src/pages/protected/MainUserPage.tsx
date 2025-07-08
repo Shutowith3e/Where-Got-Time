@@ -12,11 +12,11 @@ import {
   GetUserEvents,
   getUserEventsInRange,
 } from "@/services/events/get-user-events-data";
-import EventCard from "@/components/ui/event/EventCard";
 import useAuth from "@/context/AuthContext";
 import { GroupContextProvider } from "@/context/GroupContext";
 import { getGroupInfo } from "@/services/groups/get-group-info";
 import IndividualCalendar from "@/components/IndividualCalendar";
+import IndividualEventCard from "@/components/IndividualEventCard";
 
 export default function MainUserPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -68,22 +68,19 @@ export default function MainUserPage() {
                 </div>
 
                 <div className="rounded-xl bg-purple-100 px-4 py-2 text-sm shadow-inner">
-                  <EventCard
+                  <IndividualEventCard
                     title={"Upcoming Events"}
-                    events={(groupEventList ?? []).map(
-                      ({
-                        groupName,
+                    events={(groupEventList??[]).map(
+                      ({ eid, eventName, startDatetime, highPriority }) => ({
+                        eid,
                         eventName,
-                        startDatetime,
-                        highPriority,
-                      }) => ({
-                        group: groupName,
-                        eventName: eventName,
-                        date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
+                        group: "",
+                        date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
                         highPriority,
                       })
                     )}
-                  ></EventCard>
+                    getEventString={({ eventName: event }) => event}
+                  ></IndividualEventCard>
                 </div>
               </div>
             </div>
