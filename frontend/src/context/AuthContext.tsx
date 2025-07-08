@@ -1,7 +1,6 @@
 import supabase from "@/helper/supabaseClient";
 import axiosInstance from "@/lib/axios-instance";
 import { AuthError } from "@supabase/supabase-js";
-import { useQuery } from "@tanstack/react-query";
 import {
   createContext,
   useContext,

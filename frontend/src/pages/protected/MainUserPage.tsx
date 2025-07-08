@@ -31,7 +31,7 @@ export default function MainUserPage() {
     queryFn: () => getGroupInfo(personalGroupId!),
   });
 
-  if (!group) return <p>Loading...</p>;
+  if (!group || isGroupsPending) return <p>Loading...</p>;
 
   return (
     <GroupContextProvider groupInfo={group}>
