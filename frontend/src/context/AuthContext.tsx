@@ -42,12 +42,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
   const [loginError, setLoginError] = useState<AuthError | null>(null);
   const [signOutError, setSignOutError] = useState<AuthError | null>(null);
   const [userEmail, setUserEmail] = useState("");
-
-  const { data: personalGroupId } = useQuery({
-    queryKey: ["personal-group"],
-    queryFn: getPersonalGroup,
-    enabled: authenticated,
-  });
+  const [personalGroupId, setPersonalGroupId] = useState("");
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -70,6 +65,9 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
       } = await supabase.auth.getSession();
       console.log(session?.access_token);
       setUserEmail(session?.user?.email ?? "");
+
+      const personalGid = await getPersonalGroup();
+      setPersonalGroupId(personalGid);
       // test
       // const personalgroupid = await personalGroup();
       // console.log(personalgroupid);
