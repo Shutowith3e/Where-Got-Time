@@ -8,11 +8,15 @@ import {
 } from "@/components/ui/sidebar/sidebar";
 import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
-import { getUserEventsInRange } from "@/services/events/get-user-events-data";
+import {
+  GetUserEvents,
+  getUserEventsInRange,
+} from "@/services/events/get-user-events-data";
 import EventCard from "@/components/ui/event/EventCard";
 import useAuth from "@/context/AuthContext";
 import { GroupContextProvider } from "@/context/GroupContext";
 import { getGroupInfo } from "@/services/groups/get-group-info";
+import IndividualCalendar from "@/components/IndividualCalendar";
 
 export default function MainUserPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -47,23 +51,7 @@ export default function MainUserPage() {
             </div>
 
             <div className="flex-1 px-3 py-6">
-              {/* Week Navigation */}
-              <div className="mb-5 flex items-center justify-center gap-5">
-                <button className="rounded bg-gray-400 px-4 py-2 text-white">
-                  ◀
-                </button>
-                <span className="font-semibold">Week</span>
-                <button className="rounded bg-gray-400 px-4 py-2 text-white">
-                  ▶
-                </button>
-              </div>
-
-              {/* Calendar Placeholder */}
-              <div className="mb-6 h-96 w-full rounded-lg bg-white shadow">
-                <p className="flex h-full items-center justify-center font-bold text-gray-400">
-                  CALENDAR (FULL HEIGHT)
-                </p>
-              </div>
+              <IndividualCalendar fetchEvents={() => GetUserEvents()} />
 
               {/* Your Events */}
               <div className="rounded-lg bg-white p-6">
