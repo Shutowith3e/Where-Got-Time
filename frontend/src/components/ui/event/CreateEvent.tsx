@@ -2,35 +2,87 @@ import SelectedMembers from "@/components/SelectedMembers";
 import useGroup from "@/context/GroupContext";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "../button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../dialog";
+import { RRule } from "rrule";
+import useAuth from "@/context/AuthContext";
 
 type CreateEventModalProps = {
-  onClose: () => void;
   gid: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
+type FormData = {
+  emailArr: string[];
+  eventName: string;
+  startDatetime: string;
+  endDatetime: string;
+  recurring: boolean;
+  highPriority: boolean;
+  freq?: (typeof RRule.FREQUENCIES)[number];
+  byweekday?: number;
+  recurrsUntil?: string;
+};
+
+function createRrule({
+  recurring,
+  freq,
+  byweekday,
+  recurrsUntil,
+  startDatetime,
+}: FormData) {
+  if (!recurring) return null;
+  if (!freq) return null;
+
+  if (freq === "WEEKLY") {
+    return new RRule({
+      freq: RRule.WEEKLY,
+      byweekday: byweekday!,
+      tzid: "Asia/Singapore",
+      until: new Date(recurrsUntil!),
+      dtstart: new Date(startDatetime),
+    });
+  }
+
+  return new RRule({
+    freq: freq === "MONTHLY" ? RRule.MONTHLY : RRule.YEARLY,
+    tzid: "Asia/Singapore",
+  });
+}
+
 export default function CreateEventModal({
-  onClose,
   gid,
+  isOpen,
+  setIsOpen,
 }: CreateEventModalProps) {
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
-  const onSubmit = async (data: any) => {
+    clearErrors,
+    watch,
+  } = useForm<FormData>();
+  const onSubmit = async (data: FormData) => {
+    const { recurring, byweekday, freq, recurrsUntil, ...rest } = data;
     const fullForm = {
-      ...data,
+      ...rest,
       gid,
-      // wip: take in an array of emails to join event
       emailArr: selectedEmails,
+      rrule: createRrule(data)?.toString() ?? null,
     };
 
-    console.log("Submit to be: ", fullForm);
-
     await createEventMutation.mutateAsync(fullForm);
-    onClose();
   };
   const {
     groupInfo: { groupMembers, groupAdmins },
@@ -40,6 +92,9 @@ export default function CreateEventModal({
     ...groupMembers,
     ...groupAdmins,
   ]);
+
+  const values = watch();
+  const { personalGroupId } = useAuth();
 
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
@@ -58,155 +113,330 @@ export default function CreateEventModal({
     },
   });
 
+  useEffect(() => {
+    if (selectedEmails.length > 0) {
+      clearErrors("emailArr");
+    }
+  }, [selectedEmails, clearErrors]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 rounded-2xl">
-      <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="mb-4 text-center text-3xl font-bold text-black">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="rounded-full ">
           Create Event
-        </h2>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-center font-bold">
+            Create Event
+          </DialogTitle>
+        </DialogHeader>
 
-        {/* Members Portion */}
-        {/* <div className="mb-6 rounded-lg bg-purple-100 p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <h3 className="font-semibold">Members</h3>
-            <button className="rounded-full bg-gray-400 px-3 py-1 text-white">
-              Select Members
-            </button>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-col items-center">
+            {gid !== personalGroupId && (
+              <>
+                <div className="min-w-[16rem]">
+                  <SelectedMembers
+                    selectedEmails={selectedEmails}
+                    setSelectedEmails={setSelectedEmails}
+                    {...register("emailArr", {
+                      validate: () =>
+                        selectedEmails.length > 0
+                          ? true
+                          : "*Selected Members cannot be empty",
+                    })}
+                    aria-invalid={errors.emailArr ? "true" : "false"}
+                  />
+                  {errors.emailArr && (
+                    <p
+                      role="alert"
+                      className="font-light text-sm text-red-600 flex flex-row"
+                    >
+                      {errors.emailArr.message?.toString()}
+                    </p>
+                  )}
+                </div>
+                <div
+                  onClick={() =>
+                    setSelectedEmails([
+                      ...(groupAdmins ?? []),
+                      ...(groupMembers ?? []),
+                    ])
+                  }
+                  className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
+                >
+                  Reset
+                </div>
+              </>
+            )}
           </div>
-          <div className="flex gap-2">
-            <div className="h-8 w-8 rounded-full bg-gray-300"></div>
-            <div className="h-8 w-8 rounded-full bg-gray-300"></div>
-            <div className="h-8 w-8 rounded-full bg-gray-300"></div>
-            <p className="text-sm text-gray-500">+5 more</p>
-          </div>
-        </div> */}
 
-        {/* Form Portion */}
-        <div className="mb-6 rounded-lg bg-white-100 p-4">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-3"
-          >
-            <div className="flex flex-col items-center">
-              <div className="max-w-[16rem] flex">
-                <SelectedMembers
-                  selectedEmails={selectedEmails}
-                  setSelectedEmails={setSelectedEmails}
-                />
-              </div>
-              <div
-                onClick={() =>
-                  setSelectedEmails([
-                    ...(groupAdmins ?? []),
-                    ...(groupMembers ?? []),
-                  ])
+          <label className="font-semibold block mb-2 text-slate-700">
+            {" "}
+            *Event Name:{" "}
+          </label>
+          <input
+            className="w-full rounded-2xl border border-purple-200 px-2 py-1"
+            placeholder="Learning Journey to SMU"
+            {...register("eventName", { required: true })}
+            aria-invalid={errors.eventName ? "true" : "false"}
+          />
+          {errors.eventName?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              *Event name is required
+            </p>
+          )}
+
+          <label className="font-semibold block mt-2 mb-2 text-slate-700">
+            *Event Start Date & Time:
+          </label>
+          <input
+            className="w-full rounded-2xl border border-purple-200 px-2 py-1"
+            type="datetime-local"
+            {...register("startDatetime", {
+              required: true,
+            })}
+            aria-invalid={errors.startDatetime ? "true" : "false"}
+          />
+          {errors.startDatetime?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              *Start Date & Time is required
+            </p>
+          )}
+
+          <label className="font-semibold block mt-2 mb-2 text-slate-700">
+            *Event End Date & Time:
+          </label>
+          <input
+            className="w-full rounded-2xl border border-purple-200 px-2 py-1"
+            type="datetime-local"
+            {...register("endDatetime", {
+              required: true,
+              validate: (value, formValues) => {
+                // make sure start time < end time
+                const start = new Date(formValues.startDatetime).getTime();
+                const end = new Date(value).getTime();
+                const startDate = new Date(formValues.startDatetime).getDate();
+                const endDate = new Date(value).getDate();
+                if (end <= start) {
+                  return "*End date/time must be after start date/time";
                 }
-                className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
-              >
-                Reset
+                if (startDate != endDate) {
+                  return "*Event must start and end on the same day";
+                }
+              },
+            })}
+            aria-invalid={errors.endDatetime ? "true" : "false"}
+          />
+          {errors.endDatetime && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              {errors.endDatetime.message?.toString()}
+            </p>
+          )}
+
+          <div className="flex items-center mt-5 gap-1 text-slate-700">
+            <input
+              type="checkbox"
+              {...register("highPriority")}
+              className="h-4 w-6"
+            />
+            <label className="font-semibold">High Priority</label>
+          </div>
+
+          <div className="flex items-center m-auto gap-1 mt-2 text-slate-700">
+            <input
+              type="checkbox"
+              className="h-4 w-6"
+              {...register("recurring")}
+            />
+            <label className="font-semibold block">Recurring Event</label>
+          </div>
+
+          <div className="flex items-center m-auto gap-1 mt-2 text-slate-700">
+            {values.recurring && (
+              <div className="flex flex-col">
+                <div className="flex flex-row gap-2">
+                  <label className="font-semibold">Repeat Frequency: </label>
+                  <label>
+                    <input
+                      type="radio"
+                      {...register("freq", {
+                        required: "Please select a repeat frequency",
+                      })}
+                      value="WEEKLY"
+                    />
+                    Weekly
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      {...register("freq", {
+                        required: "Please select a repeat frequency",
+                      })}
+                      value="MONTHLY"
+                    />
+                    Monthly
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      {...register("freq", {
+                        required: "Please select a repeat frequency",
+                      })}
+                      value="YEARLY"
+                    />
+                    Yearly
+                  </label>
+                </div>
+                {errors.freq && (
+                  <p className="text-red-500 text-sm">
+                    {errors.freq?.message?.toString()}
+                  </p>
+                )}
+
+                {/* Allow user to choose the days of the weeks to recur on if its WEEKLY */}
+                {/* count starts from 0. E.g. => mon=0, tues=1 */}
+
+                {values.freq === "WEEKLY" && (
+                  <div className="flex flex-row gap-2">
+                    <label className="font-semibold flex flex-row">
+                      Recur on:{" "}
+                    </label>
+                    <div className="flex flex-wrap gap-x-3.5">
+                      <div className="flex flex-row ">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="0"
+                          />
+                          Monday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="1"
+                          />
+                          Tuesday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="2"
+                          />
+                          Wednesday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="3"
+                          />
+                          Thursday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="4"
+                          />
+                          Friday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="5"
+                          />
+                          Saturday
+                        </label>
+                      </div>
+                      <div className="flex flex-row">
+                        <label>
+                          <input
+                            type="checkbox"
+                            {...register("byweekday", {
+                              required: "Please select at least 1 day",
+                            })}
+                            value="6"
+                          />
+                          Sunday
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {errors.byweekday && (
+                  <p className="text-red-500 text-sm">
+                    {errors.byweekday?.message?.toString()}
+                  </p>
+                )}
+
+                <div>
+                  <label className="font-semibold">Repeat Until: </label>
+                  <input
+                    {...register("recurrsUntil", {
+                      validate: (value, formValues) => {
+                        if (!value) return;
+
+                        // make sure end time < end event time
+                        const endDatetime = new Date(
+                          formValues.endDatetime
+                        ).getTime();
+                        const endEventtime = new Date(value).getTime();
+
+                        if (endDatetime >= endEventtime) {
+                          return "*End date/time must be after start date/time";
+                        }
+                        if (values.freq === "WEEKLY" && !value) {
+                          return "Please input an end datetime";
+                        }
+                      },
+                    })}
+                    type="datetime-local"
+                  />
+                  {errors.recurrsUntil && (
+                    <p className="text-red-500 text-sm">
+                      {errors.recurrsUntil?.message?.toString()}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-
-            <label className="font-bold block mb-2"> *Event Name: </label>
-            <input
-              className="w-full rounded border border-purple-500 px-3 py-2"
-              placeholder="Learning Journey to SMU"
-              {...register("eventName", { required: true })}
-              aria-invalid={errors.eventName ? "true" : "false"}
-            />
-            {errors.eventName?.type === "required" && (
-              <p role="alert" className="font-light text-sm text-red-600">
-                *Event name is required
-              </p>
             )}
+          </div>
 
-            {/* <label className="font-bold block mt-2 mb-2">
-                {" "}
-                Event Description:{" "}
-              </label>
-              <input
-                className="w-full rounded border border-purple-500 px-3 py-2"
-                placeholder="Explore SCIS facilities"
-                {...register("eventDescription")}
-              /> */}
-
-            <label className="font-bold block mt-2 mb-2">
-              *Event Start Date & Time:
-            </label>
-            <input
-              className="w-full rounded border border-purple-500 px-3 py-2"
-              type="datetime-local"
-              {...register("startDatetime", {
-                required: true,
-              })}
-              aria-invalid={errors.startDatetime ? "true" : "false"}
-            />
-            {errors.startDatetime?.type === "required" && (
-              <p role="alert" className="font-light text-sm text-red-600">
-                *Start Date & Time is required
-              </p>
-            )}
-
-            <label className="font-bold block mt-2 mb-2">
-              *Event End Date & Time:
-            </label>
-            <input
-              className="w-full rounded border border-purple-500 px-3 py-2"
-              type="datetime-local"
-              {...register("endDatetime", {
-                required: true,
-                validate: (value, formValues) => {
-                  const start = new Date(formValues.startDatetime).getTime();
-                  const end = new Date(value).getTime();
-                  return (
-                    end >= start ||
-                    "*End date/time must be after start date/time"
-                  );
-                },
-              })}
-              aria-invalid={errors.endDatetime ? "true" : "false"}
-            />
-            {errors.endDatetime && (
-              <p role="alert" className="font-light text-sm text-red-600">
-                {errors.endDatetime.message?.toString()}
-              </p>
-            )}
-
-            <div>
-              <label className="font-bold block mt-2 mb-2">Recurring:</label>
-              <input
-                className="w-full rounded border border-purple-500 px-3 py-2"
-                {...register("rrule")}
-              />
-            </div>
-
-            <div className=" flex items-center mt-2">
-              <input
-                type="checkbox"
-                {...register("highPriority")}
-                className="h-4 w-6"
-              />
-              <label className="font-bold">High Priority</label>
-            </div>
-
-            <div className="flex justify-between">
-              <button
-                onClick={onClose}
-                className="rounded-2xl bg-white p-1 px-4 border"
-              >
-                Back
-              </button>
-
-              <input
-                type="submit"
-                value="Create"
-                className="rounded-2xl bg-green-100 p-1 px-4 border hover:bg-green-200"
-                disabled={createEventMutation.isPending}
-              />
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+          <DialogFooter>
+            <DialogClose>Cancel</DialogClose>
+            <Button type="submit">Create Event</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

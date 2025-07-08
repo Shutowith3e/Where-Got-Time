@@ -1,16 +1,16 @@
-import FullCalendar from '@fullcalendar/react';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import rrulePlugin from '@fullcalendar/rrule';
-import  { useEffect, useState } from 'react';
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import rrulePlugin from "@fullcalendar/rrule";
+import { useEffect, useState } from "react";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
-          start:'',
-          center: 'title',
-          right: 'today timeGridWeek,dayGridMonth prev,next'
-    }
+  start: "",
+  center: "title",
+  right: "today timeGridWeek,dayGridMonth prev,next",
+};
 // const event2=  [{
 // 		"eid": "68f9d513-9d12-4f9d-9b95-acc799d6f103",
 // 		"gid": "21924b54-03cd-40bb-92b6-fac4a0d68e6f",
@@ -26,7 +26,7 @@ const headerToolbar = {
 // const events = await GetUserEvents();
 // console.log(events);
 
-const IndividualCalendar = ({fetchEvents})=>{
+const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -43,41 +43,43 @@ const IndividualCalendar = ({fetchEvents})=>{
     loadEvents();
   }, [fetchEvents]);
 
-  const dataTransformer = (eventData:any)=>{
+  const dataTransformer = (eventData: any) => {
+    return {
+      id: eventData.eid,
+      title: eventData.eventName,
+      start: eventData.startDatetime.toISOString(),
+      end: eventData.endDatetime.toISOString(),
+      rrule: eventData.rrule ? eventData.rrule : null,
+      duration: {
+        seconds: eventData.duration,
+      },
+      extendedProps: {
+        high_priority: eventData.highPriority,
+        group_name: eventData.groupName ?? null,
+      },
+    };
+  };
 
-      return{
-        id: eventData.eid,
-        title: eventData.eventName,
-        start: eventData.startDatetime,
-        end: eventData.endDatetime,
-        rrule: eventData.rrule?eventData.rrule:null,
-        duration:{
-          seconds:eventData.duration
-        },
-        extendedProps:{
-          high_priority: eventData.highPriority,
-          group_name:eventData.groupName??null
-          }
-      }
-    
-    
-
-  }
   return (
-      <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
-      <p className="flex-grow h-full items-center justify-center font-bold text-gray-400">
-      <FullCalendar
-        plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin,rrulePlugin ]}
-        initialView="timeGridWeek"
-        height={'100%'}
-        expandRows={true}
-        allDaySlot={false}
-        headerToolbar ={headerToolbar}
-        events={events}
-        eventDataTransform={dataTransformer}
-
-      />
-      </p></div>
-    )
-}
+    <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
+      <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
+        <FullCalendar
+          plugins={[
+            timeGridPlugin,
+            dayGridPlugin,
+            interactionPlugin,
+            rrulePlugin,
+          ]}
+          initialView="timeGridWeek"
+          height={"100%"}
+          expandRows={true}
+          allDaySlot={false}
+          headerToolbar={headerToolbar}
+          events={events}
+          eventDataTransform={dataTransformer}
+        />
+      </div>
+    </div>
+  );
+};
 export default IndividualCalendar;
