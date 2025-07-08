@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "../dialog";
 import { RRule } from "rrule";
+import useAuth from "@/context/AuthContext";
 
 type CreateEventModalProps = {
   gid: string;
@@ -93,6 +94,7 @@ export default function CreateEventModal({
   ]);
 
   const values = watch();
+  const { personalGroupId } = useAuth();
 
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
@@ -133,38 +135,42 @@ export default function CreateEventModal({
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center">
-            <div className="min-w-[16rem]">
-              <SelectedMembers
-                selectedEmails={selectedEmails}
-                setSelectedEmails={setSelectedEmails}
-                {...register("emailArr", {
-                  validate: () =>
-                    selectedEmails.length > 0
-                      ? true
-                      : "*Selected Members cannot be empty",
-                })}
-                aria-invalid={errors.emailArr ? "true" : "false"}
-              />
-              {errors.emailArr && (
-                <p
-                  role="alert"
-                  className="font-light text-sm text-red-600 flex flex-row"
+            {gid !== personalGroupId && (
+              <>
+                <div className="min-w-[16rem]">
+                  <SelectedMembers
+                    selectedEmails={selectedEmails}
+                    setSelectedEmails={setSelectedEmails}
+                    {...register("emailArr", {
+                      validate: () =>
+                        selectedEmails.length > 0
+                          ? true
+                          : "*Selected Members cannot be empty",
+                    })}
+                    aria-invalid={errors.emailArr ? "true" : "false"}
+                  />
+                  {errors.emailArr && (
+                    <p
+                      role="alert"
+                      className="font-light text-sm text-red-600 flex flex-row"
+                    >
+                      {errors.emailArr.message?.toString()}
+                    </p>
+                  )}
+                </div>
+                <div
+                  onClick={() =>
+                    setSelectedEmails([
+                      ...(groupAdmins ?? []),
+                      ...(groupMembers ?? []),
+                    ])
+                  }
+                  className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
                 >
-                  {errors.emailArr.message?.toString()}
-                </p>
-              )}
-            </div>
-            <div
-              onClick={() =>
-                setSelectedEmails([
-                  ...(groupAdmins ?? []),
-                  ...(groupMembers ?? []),
-                ])
-              }
-              className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
-            >
-              Reset
-            </div>
+                  Reset
+                </div>
+              </>
+            )}
           </div>
 
           <label className="font-semibold block mb-2 text-slate-700">
