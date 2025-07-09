@@ -47,5 +47,5 @@ import mCheckAdmin from './middleware/checkAdminMiddleware.js';
 
 app.use('/admins', mCheckAdmin, adminRoutes)
 // check if server is running
-app.listen(8000, () => console.log('Server running on port 8000'));
+//app.listen(8000, () => console.log('Server running on port 8000'));
 export const handler = serverless(app);
