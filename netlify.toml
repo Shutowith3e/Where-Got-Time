@@ -1,7 +1,7 @@
 [build]
   base = "frontend"
   command = "npm install && npm run build"
-  publish = "dist"
+  publish = "build"
   functions = "../backend/functions"  # path from build base
 
 [functions]
@@ -10,6 +10,6 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/api/:splat"
+  to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
