@@ -13,6 +13,7 @@ app.use(express.json());
 
 // this allows all origins, replace it before deployment
 app.use(cors());
+app.options("*",cors());
 
 // replace it with this! 
 // app.use(cors({
