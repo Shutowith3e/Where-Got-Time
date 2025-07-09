@@ -93,7 +93,7 @@ export default function CreateEventModal({
 }: CreateEventModalProps) {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isLoading },
     handleSubmit,
     clearErrors,
     watch,
@@ -475,7 +475,9 @@ export default function CreateEventModal({
 
           <DialogFooter>
             <DialogClose>Cancel</DialogClose>
-            <Button type="submit">Create Event</Button>
+            <Button type="submit" disabled={isLoading}>
+              Create Event
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
