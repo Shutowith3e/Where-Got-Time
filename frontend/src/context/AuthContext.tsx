@@ -52,6 +52,8 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     setIsLoading(false);
     setLoginError(error);
     setAuthenticated(!error);
+    const personalGid = await getPersonalGroup();
+    setPersonalGroupId(personalGid);
 
     return !error;
   };
@@ -64,9 +66,11 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
       } = await supabase.auth.getSession();
       console.log(session?.access_token);
       setUserEmail(session?.user?.email ?? "");
+      if (session) {
+        const personalGid = await getPersonalGroup();
+        setPersonalGroupId(personalGid);
+      }
 
-      const personalGid = await getPersonalGroup();
-      setPersonalGroupId(personalGid);
       // test
       // const personalgroupid = await personalGroup();
       // console.log(personalgroupid);
