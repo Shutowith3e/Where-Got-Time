@@ -2,7 +2,7 @@
   base = "frontend"
   command = "npm install && npm run build"
   publish = "dist"
-  functions = "../backend/functions"  # path from build base
+  functions = "../backend"  # path from build base
 
 [functions]
   node_bundler = "esbuild"
