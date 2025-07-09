@@ -25,25 +25,25 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // import middleware for auth
-import authJWT from '../middleware/auth.js';
+import authJWT from './middleware/auth.js';
 app.use(authJWT); // all routes after this needs a jwt in the auth header to work
 
 // import and use exported routes from groupRouter 
-import groupRoutes from '../routers/groupRouter.js';
-import eventRoutes from '../routers/eventRouter.js';
-import userRoutes from '../routers/userRouter.js';
-import adminRoutes from '../routers/adminRouter.js';
+import groupRoutes from './routers/groupRouter.js';
+import eventRoutes from './routers/eventRouter.js';
+import userRoutes from './routers/userRouter.js';
+import adminRoutes from './routers/adminRouter.js';
 
 app.use('/groups', groupRoutes);
 app.use('/events', eventRoutes);
 app.use('/users', userRoutes);
 
 //auth test route, delete later
-import authrouter from '../authtest.js';
+import authrouter from './authtest.js';
 app.use('/test', authrouter);
 
 //import middleware for admin verification
-import mCheckAdmin from '../middleware/checkAdminMiddleware.js';
+import mCheckAdmin from './middleware/checkAdminMiddleware.js';
 
 app.use('/admins', mCheckAdmin, adminRoutes)
 // check if server is running
