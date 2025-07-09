@@ -6,14 +6,7 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = [
-    "express",
-    "cors",
-    "dotenv",
-    "serverless-http",
-    "jsonwebtoken",
-    "@supabase/supabase-js"
-  ]
+  external_node_modules = ["express"]
 
 [[redirects]]
   from = "/api/*"
