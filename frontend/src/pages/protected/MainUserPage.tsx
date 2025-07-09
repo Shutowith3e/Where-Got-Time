@@ -4,7 +4,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar/sidebar";
-import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
 import {
   GetUserEvents,
@@ -60,7 +59,7 @@ export default function MainUserPage() {
                         eid,
                         eventName,
                         group: "",
-                        date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
+                        date: startDatetime,
                         highPriority,
                       })
                     )}

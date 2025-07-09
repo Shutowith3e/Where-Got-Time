@@ -5,13 +5,14 @@ import CreateEventModal from "./ui/event/CreateEvent";
 import UpdateEventModal from "./ui/event/UpdateEvent";
 import useGroup from "@/context/GroupContext";
 import DeleteEvent from "./ui/event/DeleteEvent";
+import dayjs, { Dayjs } from "dayjs";
 
 type IndividualEvent = {
   eid: string;
   highPriority: boolean;
   group: string;
   eventName: string;
-  date: string;
+  date: Dayjs;
 };
 
 type EventChipProps = {
@@ -36,7 +37,9 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
     <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
       <div className="flex flex-row gap-8">
         <div className="flex flex-row gap-4.5">
-          <div className="text-sm font-light m-auto">{date}</div>
+          <div className="text-sm font-light m-auto">
+            {date.format("DD MMM (hh:mm A)")}
+          </div>
           {getEventString(eventData)}
           {highPriority && (
             <div className="text-sm font-light m-auto ">High Priority</div>
@@ -99,7 +102,10 @@ export default function IndividualEventCard({
         )}
       </div>
       {events
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .sort((a, b) => a.date.isBefore(b.date) ? -1 : 1)
+        .filter((a) =>
+          a.date.isBetween(dayjs(), dayjs().add(2, "weeks"), null, "[]")
+        )
         .map((x, i) => (
           <EventChip key={i} event={x} getEventString={getEventString} />
         ))}

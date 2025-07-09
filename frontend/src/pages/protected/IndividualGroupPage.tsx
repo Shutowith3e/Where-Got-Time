@@ -2,7 +2,6 @@ import NavBar from "@/components/NavBar";
 import { useParams } from "react-router-dom";
 import IndividualCalendar from "@/components/IndividualCalendar";
 import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
 import IndividualEventCard from "@/components/IndividualEventCard";
 import { getGroupInfo } from "@/services/groups/get-group-info";
 import { GroupContextProvider } from "@/context/GroupContext";
@@ -87,7 +86,8 @@ export default function IndividualGroupPage() {
                 eid,
                 eventName,
                 group: "",
-                date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
+                date: startDatetime,
+                // date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
                 highPriority,
               })
             )}
