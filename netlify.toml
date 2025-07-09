@@ -1,7 +1,7 @@
 [build]
   base = "frontend"
   command = "npm install && npm run build"
-  publish = "build"
+  publish = "dist"
   functions = "../backend/functions"  # path from build base
 
 [functions]
