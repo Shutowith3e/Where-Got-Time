@@ -1,8 +1,7 @@
 [build]
-  base = "frontend"
-  command = "npm install && npm run build"
-  publish = "dist"
-  functions = "../backend/functions"  # path from build base
+  base = "backend"
+  command = "npm install && cd ../frontend && npm install && npm run build"
+  publish = "../frontend/dist" 
 
 [functions]
   node_bundler = "esbuild"
@@ -10,6 +9,6 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/api/:splat"
+  to = "/.netlify/:splat"
   status = 200
   force = true
