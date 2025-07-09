@@ -1,0 +1,15 @@
+[build]
+  base = "frontend"
+  command = "npm install && npm run build"
+  publish = "build"
+  functions = "../backend/functions"  # path from build base
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["express"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
