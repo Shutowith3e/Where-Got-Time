@@ -20,6 +20,7 @@ export type GroupEventData = {
   endDatetime: string;
   highPriority: boolean;
   rrule: null | string;
+  duration: BigInt
 };
 
 export type GetGroupEventDto = {
