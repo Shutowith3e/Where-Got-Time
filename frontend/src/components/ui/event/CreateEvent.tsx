@@ -26,8 +26,10 @@ type CreateEventModalProps = {
 type FormData = {
   emailArr: string[];
   eventName: string;
-  startDatetime: string;
-  endDatetime: string;
+  startDate: string;
+  startTime: string;
+  endTime: string;
+
   recurring: boolean;
   highPriority: boolean;
   freq?: (typeof RRule.FREQUENCIES)[number];
@@ -40,10 +42,12 @@ function createRrule({
   freq,
   byweekday,
   recurrsUntil,
-  startDatetime,
+  startDate,
+  startTime
 }: FormData) {
   if (!recurring) return null;
   if (!freq) return null;
+  let startDatetime = startDate + 'T' + startTime;
   const startlocaltime = new Date(startDatetime);
   if(recurrsUntil){
     recurrsUntil += 'Z';
@@ -96,9 +100,11 @@ export default function CreateEventModal({
     reset,
   } = useForm<FormData>();
   const onSubmit = async (data: FormData) => {
-    const { recurring, byweekday, freq, recurrsUntil, ...rest } = data;
+    const { recurring, byweekday, freq, recurrsUntil, startDate, startTime, endTime, ...rest } = data;
     const fullForm = {
       ...rest,
+      startDatetime: startDate + 'T' + startTime,
+      endDatetime: startDate + 'T' + endTime,
       gid,
       emailArr: selectedEmails,
       rrule: createRrule(data)?.toString() ?? null,
@@ -214,49 +220,62 @@ export default function CreateEventModal({
           )}
 
           <label className="font-semibold block mt-2 mb-2 text-slate-700">
-            *Event Start Date & Time:
+            *Event Start Date:
           </label>
           <input
             className="w-full rounded-2xl border border-purple-200 px-2 py-1"
-            type="datetime-local"
-            {...register("startDatetime", {
+            type="date"
+            {...register("startDate", {
               required: true,
             })}
-            aria-invalid={errors.startDatetime ? "true" : "false"}
+            aria-invalid={errors.startDate ? "true" : "false"}
           />
-          {errors.startDatetime?.type === "required" && (
+          {errors.startDate?.type === "required" && (
             <p role="alert" className="font-light text-sm text-red-600">
               *Start Date & Time is required
             </p>
           )}
 
           <label className="font-semibold block mt-2 mb-2 text-slate-700">
-            *Event End Date & Time:
+            *Event Start Time:
           </label>
           <input
             className="w-full rounded-2xl border border-purple-200 px-2 py-1"
-            type="datetime-local"
-            {...register("endDatetime", {
+            type="time"
+            {...register("startTime", {
+              required: true,
+            })}
+            aria-invalid={errors.startTime ? "true" : "false"}
+          />
+          {errors.startTime?.type === "required" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              *Start Date & Time is required
+            </p>
+          )}
+
+          <label className="font-semibold block mt-2 mb-2 text-slate-700">
+            *Event End Time:
+          </label>
+          <input
+            className="w-full rounded-2xl border border-purple-200 px-2 py-1"
+            type="time"
+            {...register("endTime", {
               required: true,
               validate: (value, formValues) => {
                 // make sure start time < end time
-                const start = new Date(formValues.startDatetime).getTime();
-                const end = new Date(value).getTime();
-                const startDate = new Date(formValues.startDatetime).getDate();
-                const endDate = new Date(value).getDate();
-                if (end <= start) {
+
+                console.log(value,formValues.startTime)
+                if (value <= formValues.startTime) {
                   return "*End date/time must be after start date/time";
                 }
-                if (startDate != endDate) {
-                  return "*Event must start and end on the same day";
-                }
+                
               },
             })}
-            aria-invalid={errors.endDatetime ? "true" : "false"}
+            aria-invalid={errors.endTime ? "true" : "false"}
           />
-          {errors.endDatetime && (
+          {errors.endTime && (
             <p role="alert" className="font-light text-sm text-red-600">
-              {errors.endDatetime.message?.toString()}
+              {errors.endTime.message?.toString()}
             </p>
           )}
 
@@ -427,20 +446,19 @@ export default function CreateEventModal({
                   <input
                     {...register("recurrsUntil", {
                       validate: (value, formValues) => {
-                        if (!value) return;
+                        if (!value) {
+                          return "Please input an end datetime";
+                        } // all must have an until
 
                         // make sure end time < end event time
                         const endDatetime = new Date(
-                          formValues.endDatetime
-                        ).getTime();
-                        const endEventtime = new Date(value).getTime();
-
+                          formValues.startDate + 'T' + formValues.endTime
+                        );
+                        const endEventtime = new Date(value);
                         if (endDatetime >= endEventtime) {
-                          return "*End date/time must be after start date/time";
+                          return "*Chosen datetime must be after end of first occurance";
                         }
-                        if (values.freq === "WEEKLY" && !value) {
-                          return "Please input an end datetime";
-                        }
+                        
                       },
                     })}
                     type="datetime-local"
