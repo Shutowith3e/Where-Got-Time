@@ -9,12 +9,7 @@
   external_node_modules = ["express"]
 
 [[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/api/:splat"
+  from = "/api/*"
+  to = "/.netlify/:splat"
   status = 200
   force = true
-
-[[redirects]]
-  from = "/*"
-  to = "/"
-  status = 200

@@ -38,7 +38,7 @@ allRoutes.use('/users', userRoutes);
 //import middleware for admin verification
 allRoutes.use('/admins', mCheckAdmin, adminRoutes)
 
-app.use('/', allRoutes)
+app.use('/api', allRoutes)
 // check if server is running
 //app.listen(8000, () => console.log('Server running on port 8000'));
 export const handler = serverless(app, {
