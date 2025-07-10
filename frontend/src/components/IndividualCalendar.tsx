@@ -78,6 +78,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           events={events}
           eventDataTransform={dataTransformer}
           slotEventOverlap={false}
+          slotMinTime={"08:00:00"}
         />
       </div>
     </div>
