@@ -8,6 +8,7 @@ import { getGroupInfo } from "@/services/groups/get-group-info";
 import { GroupContextProvider } from "@/context/GroupContext";
 import IndividualGroupLayout from "./IndividualGroupLayout";
 import EditGroup from "@/components/admin/EditGroup";
+import { getIndividualGroupEvent } from "@/services/events/get-group-events-data";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -77,7 +78,7 @@ export default function IndividualGroupPage() {
           <p className="text-lg font-light mx-auto p-2">
             {group.groupDescription}
           </p>
-          <IndividualCalendar></IndividualCalendar>
+          <IndividualCalendar fetchEvents={() => getIndividualGroupEvent(id)} />
 
           <IndividualEventCard
             title={"All Group Events"}
@@ -86,7 +87,7 @@ export default function IndividualGroupPage() {
                 eid,
                 eventName,
                 group: "",
-                date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
+                date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
                 highPriority,
               })
             )}

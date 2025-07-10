@@ -9,7 +9,9 @@ import {
   type GroupItem,
 } from "@/services/groups/get-user-group-data";
 import { useQuery } from "@tanstack/react-query";
-import { GetUserEvents } from "@/services/events/get-user-events-data";
+import {
+  getUserEventsInRange,
+} from "@/services/events/get-user-events-data";
 import dayjs from "dayjs";
 
 function FilteredGroup({
@@ -77,14 +79,7 @@ export default function MainGroupPage() {
   //to get user events
   const { data: groupEventList, isPending: isUserEventsPending } = useQuery({
     queryKey: ["user-events"],
-    queryFn: () =>
-      GetUserEvents().then((x) =>
-        x.filter(
-          ({ startDatetime, endDatetime }) =>
-            startDatetime.isBetween(dayjs(), dayjs().add(2, "weeks")) ||
-            endDatetime.isBetween(dayjs(), dayjs().add(2, "weeks"))
-        )
-      ),
+    queryFn: () => getUserEventsInRange(2, "weeks"),
   });
 
   //changes when u type into search bar
