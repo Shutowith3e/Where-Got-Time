@@ -102,7 +102,7 @@ export default function IndividualEventCard({
         )}
       </div>
       {events
-        .sort((a, b) => a.date.isBefore(b.date) ? -1 : 1)
+        .sort((a, b) => (a.date.isBefore(b.date) ? -1 : 1))
         .filter((a) =>
           a.date.isBetween(dayjs(), dayjs().add(2, "weeks"), null, "[]")
         )
