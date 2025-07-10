@@ -26,6 +26,14 @@ const isClashDateTime = (a_start, a_end,b_start,b_end) => {
 // compare against this_event
 // inner function: (this_event, that_event)
 
+// CASE 1 SCENARIOS: 
+//1. weekly, weekly -> check if first and last occurences for both (range) overlaps, then check if fall on same days, then check time 
+//2. weekly, monthly -> check if range got overlap, then check if monthly falls on same DAY as weekly, then check time 
+//3. weekly, yearly -> check if range got overlap, then check if yearly falls on same day as weekly, then check time
+//4. monthly, monthly -> check if range got overlap, then check if they fall on same monthdays, then check time
+//5. monthly, yearly -> check if range got overlap, then check if yearly has the same monthday, then check time
+//6. yearly, yearly -> check if range got overlap, check if is same date + month, then check time 
+
 //recurring events have 3 types:
 //1.weekly byday e.g. every monday and friday ...
 //2.Monthly bymonthday e.g the 3rd of every month
@@ -70,7 +78,7 @@ const checkClash = async (this_event,gid)=>{
 			if(isClashDateTime(event2.start_datetime, event2.end_datetime, rule.options.dtstart, rule.options.until)){
 
 				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
-				for(day of rule.option.byweekday){
+				for(const day of rule.options.byweekday){
 					//checks if my event is on the same day
 					if(weekDayCheckMap[day](event2)){
 						if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
@@ -82,7 +90,7 @@ const checkClash = async (this_event,gid)=>{
 			}
 		}
 		//monthly
-		else if (rule.option.freq==RRule.MONTHLY){
+		else if (rule.options.freq==RRule.MONTHLY){
 			//if event ends before first occurance, cannot be clash, skip
 			if(isBefore(event2.end_datetime,rule.options.dtstart)){
 				return
@@ -100,7 +108,7 @@ const checkClash = async (this_event,gid)=>{
 			}
 		}
 		//annually
-		else if (rule.option.freq==RRule.YEARLY){
+		else if (rule.options.freq==RRule.YEARLY){
 			//if event ends before first occurance, cannot be clash, skip
 			if(isBefore(event2.end_datetime,rule.options.dtstart)){
 				return
@@ -119,13 +127,131 @@ const checkClash = async (this_event,gid)=>{
 	}
 	///////////
 
+	const checkDoubleRecurClash = (event1, event2)=>{
+		// SCENARIOS: 
+		const event1_startTimeStr = normaliseDateTime(event1.start_datetime);
+		const event1_endTimeStr = normaliseDateTime(event1.end_datetime);
+		const event2_startTimeStr = normaliseDateTime(event2.start_datetime);
+		const event2_endTimeStr = normaliseDateTime(event2.end_datetime);
+
+		const rule1 = new RRule.fromString(event1.rrule);
+		const rule2 = new RRule.fromString(event2.rrule);
+		//1. weekly, weekly -> check if first and last occurences for both (range) overlaps, then check if fall on same days, then check time 
+		//check if they fall on same day 
+		if(rule1.options.freq==RRule.WEEKLY && rule2.options.freq==RRule.WEEKLY){
+			//check if it falls within same range
+			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule2.options.until)){
+				//get days recurred for each event respectively 
+				const days1 = new Set(rule1.options.byweekday); // output shld be Set(2) {0, 2} for mon and wed
+				const days2 = new Set(rule2.options.byweekday);
+				
+				//check if the timing got overlap
+				if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+					//check if got any overlap between the two sets (ie same days) and create a new array for all overlapping days
+					const clashingDays = [...days1].filter(day => days2.has(day));
+					
+					if (clashingDays.length > 0) {
+						clashesArr.push({eid1, eid2, resolved}); //eg [0, 1] for mon and tues
+						return
+					}
+				}
+		}
+	}
+		
+		//2. weekly, monthly -> check if range got overlap, then check if monthly falls on same DAY as weekly, then check time 
+		if((rule1.options.freq==RRule.WEEKLY && rule2.options.freq==RRule.MONTHLY) || (rule2.options.freq==RRule.WEEKLY && rule1.options.freq==RRule.MONTHLY)){
+			//swap to ensure that event1 is always weekly and event2 is always monthly 
+			if (rule1.options.freq === RRule.MONTHLY) {
+			[rule1, rule2] = [rule2, rule1]; 
+			[event1, event2] = [event2, event1]; //swap events to match
+			}
+
+			//check if it falls within same range
+			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule1.options.until)){ //used weekly's until bc monthly until might be infinite 
+    			const monthlyDates = rule2.all(); //get array of datetimes of all monthly recurrences 
+
+				// comb thru all monthly dates
+				for (const date of monthlyDates) {
+					for(day of rule1.option.byweekday){
+						//checks if monthly event is on the same day as any of the weekly reccurences 
+						if(weekDayCheckMap[day](date)){
+							if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+								clashesArr.push({eid1,eid2,resolved});
+								return //first occurance of clash, exit; only push once
+							}
+						}
+					}
+				}
+			}
+		}
+			
+		//3. weekly, yearly -> check if range got overlap, then check if yearly falls on same day as weekly, then check time
+		if((rule1.options.freq==RRule.WEEKLY && rule2.options.freq==RRule.YEARLY) || (rule2.options.freq==RRule.WEEKLY && rule1.options.freq==RRule.YEARLY)){
+			//swap to ensure that event1 is always weekly and event2 is always yearly 
+			if (rule1.options.freq === RRule.YEARLY) {
+			[rule1, rule2] = [rule2, rule1]; 
+			[event1, event2] = [event2, event1]; //swap events to match
+			}
+
+			//check if it falls within same range
+			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule1.options.until)){ //used weekly's until bc yearly until might be infinite 
+				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
+				for(day of rule1.option.byweekday){
+					//checks if my event is on the same day
+					if(weekDayCheckMap[day](event2)){
+						if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+							clashesArr.push({eid1,eid2,resolved});
+							return //first occurance of clash, exit; only push once
+						}
+					}
+				}
+			}
+
+		}
+
+		//4. monthly, monthly -> check if range got overlap, then check if they fall on same monthday, then check time
+		//5. monthly, yearly -> check if range got overlap, then check if yearly has the same monthday, then check time
+		if(rule1.options.freq==RRule.MONTHLY && rule2.options.freq==RRule.MONTHLY || ((rule1.options.freq==RRule.MONTHLY && rule2.options.freq==RRule.YEARLY) || (rule2.options.freq==RRule.MONTHLY && rule1.options.freq==RRule.YEARLY))){
+			//if its scenario 5, swap to ensure that event1 is always monthly and event2 is always yearly 
+			if (rule1.options.freq === RRule.YEARLY) {
+			[rule1, rule2] = [rule2, rule1]; 
+			[event1, event2] = [event2, event1]; //swap events to match
+			}
+
+			//check if range overlaps 
+			const day1 = rule1.options.bymonthday?.[0]; //get monthday for event1 
+			const day2 = rule2.options.bymonthday?.[0]; //get monthday for event2 
+			//check if both fall on same monthdays 
+			if(day1 !== undefined && day2 !== undefined && day1 === day2){
+				if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+					clashesArr.push({eid1,eid2,resolved});
+					return 
+				}
+			}
+		}
+		
+		//6. yearly, yearly -> check if range got overlap, check if is same date + month, then check time 
+		if(rule1.options.freq==RRule.YEARLY && rule2.options.freq==RRule.YEARLY){
+			const month1 = rule1.options.bymonth?.[0]; // get month for event1 
+			const month2 = rule2.options.bymonth?.[0]; // get month for event2 
+			const monthDay1 = rule1.options.bymonthday?.[0]; //get monthday for event1 
+			const monthDay2 = rule2.options.bymonthday?.[0]; //get monthday for event2 
+
+			return (month1 === month2) && (monthDay1 === monthDay2); 
+		}
+		
+	}
+		
+
+
 	const {data:high_prio_event_arr,error:eventRetrievalError} =  await getHighPriorityEvents(gid);
+	//console.log(high_prio_event_arr); 
 	if(eventRetrievalError){
 		console.warn(`Clash check failed, recheck for clash and update database, gid: ${this_event.gid} name: ${this_event.event_name}`);
 		return {eventRetrievalError};
 	}
 	// for each high prio event
-	for(other_event of high_prio_event_arr){
+	for(const other_event of high_prio_event_arr){
 		//at this point this event is also inside the arr so we wna skip 
 		if(other_event.eid == this_event.eid){
 			continue
@@ -157,9 +283,10 @@ const checkClash = async (this_event,gid)=>{
 			checkSingleRecurClash(other_event,this_event);
 		}
 
-		//case 4 both recurring TODO
+		//case 4 both recurring 
 		else{
 			//git commit sewer slide gg
+			checkDoubleRecurClash(this_event, other_event);
 		}
 
 	}
@@ -170,6 +297,8 @@ const checkClash = async (this_event,gid)=>{
 }
 
 
+export{checkClash}; 
+
 // const {a_start,a_end,b_start,b_end} = {
 // 	a_start:"2025-06-21T10:50:10",
 // 	a_end:"2025-06-21T10:50:17",
@@ -178,4 +307,34 @@ const checkClash = async (this_event,gid)=>{
 // }
 
 
-// console.log(isClashDateTime(a_start,a_end,b_start,b_end))
+//console.log(isClashDateTime(a_start,a_end,b_start,b_end))
+// const rruleStr = "FREQ=WEEKLY;BYDAY=MO,WE;UNTIL=20250818T111800";
+// const rule2 = RRule.fromString(rruleStr);
+
+// const days2 = new Set(rule2.options.byweekday);
+// console.log(rule2);
+//console.log(days2)
+
+// const yearly1str = "RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=7;UNTIL=20270207T000000"
+// const yearly1 = RRule.fromString(yearly1str);
+
+// const yearly2str = "RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=7;UNTIL=20270207T000000"
+// const yearly2 = RRule.fromString(yearly2str);
+
+// const month1 = yearly1.options.bymonth?.[0]; // get month for event1 
+// const month2 = yearly2.options.bymonth?.[0]; // get month for event2 
+// const monthDay1 = yearly1.options.bymonthday?.[0]; //get monthday for event1 
+// const monthDay2 = yearly2.options.bymonthday?.[0]; //get monthday for event2 
+
+// console.log((month1 === month2) && (monthDay1 === monthDay2))
+//const days1 = new Set(rule1.options.byweekday);
+//console.log(RRule.YEARLY)
+
+// const rruleMonthStr = "RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=08"; 
+// const rule1 = RRule.fromString(rruleMonthStr);
+// //console.log(monthrule.all());
+
+// const rruleMonthStr2 = "RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=08"; 
+// const rule2 = RRule.fromString(rruleMonthStr);
+
+
