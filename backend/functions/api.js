@@ -14,7 +14,6 @@ env.config();
 
 const app = express();
 
-
 // for parsing JSON bodies
 app.use(express.json());
 
