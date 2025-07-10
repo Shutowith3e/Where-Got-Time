@@ -44,7 +44,8 @@ function createRrule({
 }: FormData) {
   if (!recurring) return null;
   if (!freq) return null;
-
+  recurrsUntil += 'Z';
+  startDatetime +='Z';
   if (freq === "WEEKLY") {
     return new RRule({
       freq: RRule.WEEKLY,
@@ -58,6 +59,8 @@ function createRrule({
   return new RRule({
     freq: freq === "MONTHLY" ? RRule.MONTHLY : RRule.YEARLY,
     tzid: "Asia/Singapore",
+    dtstart: new Date(startDatetime)
+    // need to split probs, monthly has bymonthday only, yearly has bymonth and by monthday
   });
 }
 
