@@ -44,21 +44,42 @@ function createRrule({
 }: FormData) {
   if (!recurring) return null;
   if (!freq) return null;
-
-  if (freq === "WEEKLY") {
-    return new RRule({
+  const startlocaltime = new Date(startDatetime);
+  if(recurrsUntil){
+    recurrsUntil += 'Z';
+  } 
+  startDatetime +='Z';
+  const startdtObj = new Date(startDatetime);
+  switch (freq){
+    case "WEEKLY":
+      return new RRule({
       freq: RRule.WEEKLY,
       byweekday: byweekday!,
       tzid: "Asia/Singapore",
       until: new Date(recurrsUntil!),
-      dtstart: new Date(startDatetime),
+      dtstart: startdtObj
     });
-  }
+    case "MONTHLY":
+      return new RRule({
+      freq: RRule.MONTHLY,
+      bymonthday: startlocaltime.getDate(),
+      tzid: "Asia/Singapore",
+      until: recurrsUntil ? new Date(recurrsUntil) : null,
+      dtstart: startdtObj
+    });
+    case "YEARLY":
+      return new RRule({
+      freq: RRule.YEARLY,
+      bymonthday: startlocaltime.getDate(),
+      bymonth: startlocaltime.getMonth() + 1,
+      tzid: "Asia/Singapore",
+      until: recurrsUntil ? new Date(recurrsUntil) : null,
+      dtstart: startdtObj
+    });
 
-  return new RRule({
-    freq: freq === "MONTHLY" ? RRule.MONTHLY : RRule.YEARLY,
-    tzid: "Asia/Singapore",
-  });
+  }
+  
+  
 }
 
 export default function CreateEventModal({
@@ -72,6 +93,7 @@ export default function CreateEventModal({
     handleSubmit,
     clearErrors,
     watch,
+    reset,
   } = useForm<FormData>();
   const onSubmit = async (data: FormData) => {
     const { recurring, byweekday, freq, recurrsUntil, ...rest } = data;
@@ -83,6 +105,8 @@ export default function CreateEventModal({
     };
 
     await createEventMutation.mutateAsync(fullForm);
+    setIsOpen(false);
+    reset();
   };
   const {
     groupInfo: { groupMembers, groupAdmins },

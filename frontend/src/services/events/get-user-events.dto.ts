@@ -27,6 +27,7 @@ type EventData = {
   startDatetime: string;
   endDatetime: string;
   highPriority: boolean;
+  duration: BigInt
 };
 
 export type GetUserEventsDto = {

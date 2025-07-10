@@ -12,6 +12,7 @@ export type GroupEvent = {
   startDatetime: Dayjs;
   endDatetime: Dayjs;
   highPriority: boolean;
+  duration: BigInt;
 };
 
 export async function GetUserEvents(): Promise<GroupEvent[]> {
@@ -30,6 +31,7 @@ export async function GetUserEvents(): Promise<GroupEvent[]> {
         endDatetime,
         highPriority,
         startDatetime,
+        duration
       }) => ({
         eid,
         gid,
@@ -40,6 +42,7 @@ export async function GetUserEvents(): Promise<GroupEvent[]> {
         startDatetime: dayjs(startDatetime),
         endDatetime: dayjs(endDatetime),
         highPriority,
+        duration
       })
     )
     .sort((a, b) => (a.startDatetime.isBefore(b.startDatetime) ? -1 : 1));
