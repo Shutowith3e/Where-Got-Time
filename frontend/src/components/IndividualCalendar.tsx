@@ -77,6 +77,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           headerToolbar={headerToolbar}
           events={events}
           eventDataTransform={dataTransformer}
+          slotEventOverlap={false}
         />
       </div>
     </div>
