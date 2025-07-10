@@ -112,6 +112,7 @@ export default function CreateEventModal({
 
     await createEventMutation.mutateAsync(fullForm);
     setIsOpen(false);
+    queryClient.invalidateQueries({ queryKey: ['user-group', gid] });
     reset();
   };
   const {
