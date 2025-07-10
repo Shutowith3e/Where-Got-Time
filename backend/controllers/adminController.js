@@ -120,8 +120,26 @@ const createEvent = async (req, res) => {
     }
 
     return res.status(201).json({message: "Event successfully created!"});
+} // tested, works
+
+
+const updateEvent = async (req, res) => {
+    //get details from fe 
+    const {eid, gid, event_name, start_datetime, end_datetime, rrule, high_priority, old_email_arr, new_email_arr} = req.body; 
+
+    // check if everytg is entered correctly
+    if (!eid || !gid || !event_name || !start_datetime || !end_datetime || high_priority === null|| old_email_arr.length===0 || new_email_arr.length===0) {
+        return res.status(400).json({ error: "Missing details" });
     }
-// tested, works 
+
+    const {error} = await service.updateEvent(eid, gid, event_name, start_datetime, end_datetime, rrule, high_priority, old_email_arr, new_email_arr); 
+
+    if (error){
+        return res.status(500).json({message: "Error creating event"});
+    }
+
+    return res.status(201).json({message: "Event successfully updated!"});
+} // tested, works
 
 const deleteEvent = async (req, res) => {
         const {eid} = req.body; // either get frm fe or call anth func in be to get 
@@ -176,5 +194,6 @@ export {
 	deleteEvent,
 	createEvent,
 	getHighPriorityEvents,
-    updateGrpDetail
+    updateGrpDetail,
+    updateEvent
 }

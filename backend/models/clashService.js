@@ -78,7 +78,7 @@ const checkClash = async (this_event,gid)=>{
 			if(isClashDateTime(event2.start_datetime, event2.end_datetime, rule.options.dtstart, rule.options.until)){
 
 				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
-				for(day of rule.option.byweekday){
+				for(const day of rule.options.byweekday){
 					//checks if my event is on the same day
 					if(weekDayCheckMap[day](event2)){
 						if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
@@ -90,7 +90,7 @@ const checkClash = async (this_event,gid)=>{
 			}
 		}
 		//monthly
-		else if (rule.option.freq==RRule.MONTHLY){
+		else if (rule.options.freq==RRule.MONTHLY){
 			//if event ends before first occurance, cannot be clash, skip
 			if(isBefore(event2.end_datetime,rule.options.dtstart)){
 				return
@@ -108,7 +108,7 @@ const checkClash = async (this_event,gid)=>{
 			}
 		}
 		//annually
-		else if (rule.option.freq==RRule.YEARLY){
+		else if (rule.options.freq==RRule.YEARLY){
 			//if event ends before first occurance, cannot be clash, skip
 			if(isBefore(event2.end_datetime,rule.options.dtstart)){
 				return
@@ -245,12 +245,13 @@ const checkClash = async (this_event,gid)=>{
 
 
 	const {data:high_prio_event_arr,error:eventRetrievalError} =  await getHighPriorityEvents(gid);
+	//console.log(high_prio_event_arr); 
 	if(eventRetrievalError){
 		console.warn(`Clash check failed, recheck for clash and update database, gid: ${this_event.gid} name: ${this_event.event_name}`);
 		return {eventRetrievalError};
 	}
 	// for each high prio event
-	for(other_event of high_prio_event_arr){
+	for(const other_event of high_prio_event_arr){
 		//at this point this event is also inside the arr so we wna skip 
 		if(other_event.eid == this_event.eid){
 			continue
@@ -296,6 +297,7 @@ const checkClash = async (this_event,gid)=>{
 }
 
 
+export{checkClash}; 
 
 // const {a_start,a_end,b_start,b_end} = {
 // 	a_start:"2025-06-21T10:50:10",
@@ -305,13 +307,13 @@ const checkClash = async (this_event,gid)=>{
 // }
 
 
-// console.log(isClashDateTime(a_start,a_end,b_start,b_end))
+//console.log(isClashDateTime(a_start,a_end,b_start,b_end))
 // const rruleStr = "FREQ=WEEKLY;BYDAY=MO,WE;UNTIL=20250818T111800";
 // const rule2 = RRule.fromString(rruleStr);
 
 // const days2 = new Set(rule2.options.byweekday);
 // console.log(rule2);
-// console.log(days2)
+//console.log(days2)
 
 // const yearly1str = "RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=7;UNTIL=20270207T000000"
 // const yearly1 = RRule.fromString(yearly1str);

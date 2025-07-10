@@ -9,7 +9,8 @@ import {
 	createEvent,
     deleteEvent,
 	getHighPriorityEvents,
-    updateGrpDetail
+    updateGrpDetail,
+    updateEvent,
 } from '../controllers/adminController.js';
 
 router.post("/createEvent", createEvent);
@@ -21,5 +22,6 @@ router.delete("/deleteGroup", deleteGroup);
 router.put("/makeAdmin", makeAdmin);
 router.post("/getHighPriorityEvents",getHighPriorityEvents)
 router.patch("/updateGrpDesc",updateGrpDetail);
+router.patch("/updateEvent", updateEvent);
 
 export default router;
