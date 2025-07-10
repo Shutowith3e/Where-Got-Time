@@ -43,11 +43,11 @@ export default function DeleteEvent({
     mutationFn: deleteEvent,
     onSuccess: () => {
       console.log("Successfully deleted");
-      return queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
-        // queryKey: ["user-group-events", gid],
       });
-      // queryClient.refetchQueries({queryKey:["user-group-events"]});
+
+      queryClient.invalidateQueries({ queryKey: ["user-events"] });
     },
   });
 
