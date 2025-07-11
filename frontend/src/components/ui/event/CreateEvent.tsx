@@ -216,12 +216,17 @@ export default function CreateEventModal({
           <input
             className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             placeholder="Learning Journey to SMU"
-            {...register("eventName", { required: true })}
+            {...register("eventName", { required: true, maxLength: 20 })}
             aria-invalid={errors.eventName ? "true" : "false"}
           />
           {errors.eventName?.type === "required" && (
             <p role="alert" className="font-light text-sm text-red-600">
               *Event name is required
+            </p>
+          )}
+          {errors?.eventName?.type === "maxLength" && (
+            <p role="alert" className="font-light text-sm text-red-600">
+              Event Name is too long!
             </p>
           )}
 
