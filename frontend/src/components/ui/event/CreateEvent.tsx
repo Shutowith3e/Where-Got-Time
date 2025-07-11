@@ -43,47 +43,44 @@ function createRrule({
   byweekday,
   recurrsUntil,
   startDate,
-  startTime
+  startTime,
 }: FormData) {
   if (!recurring) return null;
   if (!freq) return null;
-  let startDatetime = startDate + 'T' + startTime;
+  let startDatetime = startDate + "T" + startTime;
   const startlocaltime = new Date(startDatetime);
-  if(recurrsUntil){
-    recurrsUntil += 'Z';
-  } 
-  startDatetime +='Z';
+  if (recurrsUntil) {
+    recurrsUntil += "Z";
+  }
+  startDatetime += "Z";
   const startdtObj = new Date(startDatetime);
-  switch (freq){
+  switch (freq) {
     case "WEEKLY":
       return new RRule({
-      freq: RRule.WEEKLY,
-      byweekday: byweekday!,
-      tzid: "Asia/Singapore",
-      until: new Date(recurrsUntil!),
-      dtstart: startdtObj
-    });
+        freq: RRule.WEEKLY,
+        byweekday: byweekday!,
+        tzid: "Asia/Singapore",
+        until: new Date(recurrsUntil!),
+        dtstart: startdtObj,
+      });
     case "MONTHLY":
       return new RRule({
-      freq: RRule.MONTHLY,
-      bymonthday: startlocaltime.getDate(),
-      tzid: "Asia/Singapore",
-      until: recurrsUntil ? new Date(recurrsUntil) : null,
-      dtstart: startdtObj
-    });
+        freq: RRule.MONTHLY,
+        bymonthday: startlocaltime.getDate(),
+        tzid: "Asia/Singapore",
+        until: recurrsUntil ? new Date(recurrsUntil) : null,
+        dtstart: startdtObj,
+      });
     case "YEARLY":
       return new RRule({
-      freq: RRule.YEARLY,
-      bymonthday: startlocaltime.getDate(),
-      bymonth: startlocaltime.getMonth() + 1,
-      tzid: "Asia/Singapore",
-      until: recurrsUntil ? new Date(recurrsUntil) : null,
-      dtstart: startdtObj
-    });
-
+        freq: RRule.YEARLY,
+        bymonthday: startlocaltime.getDate(),
+        bymonth: startlocaltime.getMonth() + 1,
+        tzid: "Asia/Singapore",
+        until: recurrsUntil ? new Date(recurrsUntil) : null,
+        dtstart: startdtObj,
+      });
   }
-  
-  
 }
 
 export default function CreateEventModal({
@@ -93,18 +90,27 @@ export default function CreateEventModal({
 }: CreateEventModalProps) {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isLoading },
     handleSubmit,
     clearErrors,
     watch,
     reset,
   } = useForm<FormData>();
   const onSubmit = async (data: FormData) => {
-    const { recurring, byweekday, freq, recurrsUntil, startDate, startTime, endTime, ...rest } = data;
+    const {
+      recurring,
+      byweekday,
+      freq,
+      recurrsUntil,
+      startDate,
+      startTime,
+      endTime,
+      ...rest
+    } = data;
     const fullForm = {
       ...rest,
-      startDatetime: startDate + 'T' + startTime,
-      endDatetime: startDate + 'T' + endTime,
+      startDatetime: startDate + "T" + startTime,
+      endDatetime: startDate + "T" + endTime,
       gid,
       emailArr: selectedEmails,
       rrule: createRrule(data)?.toString() ?? null,
@@ -112,6 +118,7 @@ export default function CreateEventModal({
 
     await createEventMutation.mutateAsync(fullForm);
     setIsOpen(false);
+    queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
     reset();
   };
   const {
@@ -134,9 +141,8 @@ export default function CreateEventModal({
     },
     onSuccess: () => {
       console.log("Event created");
-      return queryClient.invalidateQueries({
-        queryKey: ["user-group", gid],
-      });
+      queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
+      queryClient.invalidateQueries({ queryKey: ["user-events"] });
     },
     onError: (error) => {
       console.error(error);
@@ -264,11 +270,10 @@ export default function CreateEventModal({
               validate: (value, formValues) => {
                 // make sure start time < end time
 
-                console.log(value,formValues.startTime)
+                console.log(value, formValues.startTime);
                 if (value <= formValues.startTime) {
                   return "*End date/time must be after start date/time";
                 }
-                
               },
             })}
             aria-invalid={errors.endTime ? "true" : "false"}
@@ -452,13 +457,12 @@ export default function CreateEventModal({
 
                         // make sure end time < end event time
                         const endDatetime = new Date(
-                          formValues.startDate + 'T' + formValues.endTime
+                          formValues.startDate + "T" + formValues.endTime
                         );
                         const endEventtime = new Date(value);
                         if (endDatetime >= endEventtime) {
                           return "*Chosen datetime must be after end of first occurance";
                         }
-                        
                       },
                     })}
                     type="datetime-local"
@@ -475,7 +479,9 @@ export default function CreateEventModal({
 
           <DialogFooter>
             <DialogClose>Cancel</DialogClose>
-            <Button type="submit">Create Event</Button>
+            <Button type="submit" disabled={isLoading}>
+              Create Event
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1,12 +1,9 @@
 import NavBar from "@/components/NavBar";
-import { useState } from "react";
-import CreateEventModal from "@/components/ui/event/CreateEvent";
 import MainUserDrawer from "@/components/MainUserPageDrawer";
 import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar/sidebar";
-import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
 import {
   GetUserEvents,
@@ -19,7 +16,6 @@ import IndividualCalendar from "@/components/IndividualCalendar";
 import IndividualEventCard from "@/components/IndividualEventCard";
 
 export default function MainUserPage() {
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const { personalGroupId } = useAuth();
 
   const { data: groupEventList } = useQuery({
@@ -51,31 +47,19 @@ export default function MainUserPage() {
             </div>
 
             <div className="flex-1 px-3 py-6">
-              <IndividualCalendar fetchEvents={() => GetUserEvents()} />
+              <IndividualCalendar fetchEvents={GetUserEvents} />
 
-              {/* Your Events */}
+              {/* Personal Group Events */}
               <div className="rounded-lg bg-white p-6">
-                <div className="mb-4 flex flex-wrap items-center justify-between">
-                  <h2 className="text-lg font-semibold">Personal Group</h2>
-
-                  <div className="flex gap-3">
-                    <CreateEventModal
-                      isOpen={showCreateModal}
-                      setIsOpen={setShowCreateModal}
-                      gid={personalGroupId}
-                    />
-                  </div>
-                </div>
-
                 <div className="rounded-xl bg-purple-100 px-4 py-2 text-sm shadow-inner">
                   <IndividualEventCard
-                    title={"Upcoming Events"}
-                    events={(groupEventList??[]).map(
+                    title={"Personal Group"}
+                    events={(groupEventList ?? []).map(
                       ({ eid, eventName, startDatetime, highPriority }) => ({
                         eid,
                         eventName,
                         group: "",
-                        date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
+                        date: startDatetime,
                         highPriority,
                       })
                     )}
