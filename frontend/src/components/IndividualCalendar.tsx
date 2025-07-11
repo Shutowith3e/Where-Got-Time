@@ -4,6 +4,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
 import { useEffect, useState } from "react";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
@@ -44,12 +46,11 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
   }, [fetchEvents]);
 
   const dataTransformer = (eventData: any) => {
-    let colour = '';
-    if(eventData.highPriority == true){
-      colour = 'orange';
-    }
-    else{
-      colour = 'mediumorchid';
+    let colour = "";
+    if (eventData.highPriority == true) {
+      colour = "orange";
+    } else {
+      colour = "mediumorchid";
     }
     return {
       id: eventData.eid,
@@ -64,10 +65,10 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
         high_priority: eventData.highPriority,
         group_name: eventData.groupName ?? null,
       },
-      backgroundColor: colour
+      backgroundColor: colour,
     };
   };
-    
+
   return (
     <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
       <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
@@ -89,11 +90,26 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           slotMinTime={"08:00:00"}
           displayEventEnd={true}
           eventTimeFormat={{
-            hour: 'numeric',
-            minute: '2-digit',
-            meridiem: 'short'
+            hour: "numeric",
+            minute: "2-digit",
+            meridiem: "short",
           }}
-          
+          eventDidMount={(info) => {
+            const { title, start, end, extendedProps } = info.event;
+            const groupName = extendedProps.group_name ?? "No Group";
+
+            const tooltipContent = `
+    <strong>${title}</strong><br/>
+    ${start?.toLocaleString()} - ${end?.toLocaleString()}<br/>
+    Group: ${groupName}
+  `;
+
+            tippy(info.el, {
+              content: tooltipContent,
+              allowHTML: true,
+              theme: "light",
+            });
+          }}
         />
       </div>
     </div>
