@@ -62,7 +62,7 @@ export default function CreateGroupPage() {
               />
               Group Name:
               <input
-                {...register("group_name", { required: true })}
+                {...register("group_name", { required: true, maxLength: 30 })}
                 aria-invalid={errors.group_name ? "true" : "false"}
                 className="ml-2 rounded-full border-2 border-slate-100 px-2"
               />
@@ -71,6 +71,12 @@ export default function CreateGroupPage() {
                   Group name is required
                 </p>
               )}
+              {errors.group_name?.type === "maxLength" && (
+                <p role="alert" className="font-light text-sm text-red-600">
+                  Group name is too long
+                </p>
+              )}
+
             </div>
             <div className="flex flex-col">
               Group Description:

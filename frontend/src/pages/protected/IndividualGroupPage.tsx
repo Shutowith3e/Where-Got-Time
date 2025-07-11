@@ -8,6 +8,9 @@ import { GroupContextProvider } from "@/context/GroupContext";
 import IndividualGroupLayout from "./IndividualGroupLayout";
 import EditGroup from "@/components/admin/EditGroup";
 import { getIndividualGroupEvent } from "@/services/events/get-group-events-data";
+import { useState } from "react";
+import { MagicCard } from "@/components/magicui/magic-card";
+import { IoMdSearch } from "react-icons/io";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -22,10 +25,15 @@ export default function IndividualGroupPage() {
     queryFn: () => getGroupInfo(id!),
   });
 
-  // const { data: groupEvent, isPending: isEventPending } = useQuery({
-  //   queryKey: ["user-group-events", id],
-  //   queryFn: () => getIndividualGroupEvent(id!),
-  // });
+  const { data: groupEvent, isPending: isEventPending } = useQuery({
+    queryKey: ["user-group-events", id],
+    queryFn: () => getIndividualGroupEvent(id!),
+  });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredEvents = (groupEvent ?? []).filter((event) =>
+    event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (!id) {
     return <p>Invalid Group ID!</p>;
@@ -42,6 +50,9 @@ export default function IndividualGroupPage() {
         </div>
       </div>
     );
+  }
+  if (isEventPending) {
+    return <p>Loading...</p>;
   }
 
   // if (isEventPending) {
@@ -79,9 +90,25 @@ export default function IndividualGroupPage() {
           </p>
           <IndividualCalendar fetchEvents={() => getIndividualGroupEvent(id)} />
 
+          <MagicCard
+            gradientColor="262626"
+            className="mx-auto rounded-2xl py-1.5 px-30 flex flex-row justify-center"
+          >
+            <div className="text-slate-500 flex gap-2">
+              <IoMdSearch className="flex m-auto" />
+              <input
+                type="text"
+                placeholder="Search For Events ..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="outline-none"
+              />
+            </div>
+          </MagicCard>
+
           <IndividualEventCard
             title={"All Group Events"}
-            events={group.events.map(
+            events={filteredEvents.map(
               ({ eid, eventName, startDatetime, highPriority }) => ({
                 eid,
                 eventName,

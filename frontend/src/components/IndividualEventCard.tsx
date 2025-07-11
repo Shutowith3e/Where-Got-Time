@@ -5,7 +5,7 @@ import CreateEventModal from "./ui/event/CreateEvent";
 import UpdateEventModal from "./ui/event/UpdateEvent";
 import useGroup from "@/context/GroupContext";
 import DeleteEvent from "./ui/event/DeleteEvent";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 type IndividualEvent = {
   eid: string;
@@ -90,7 +90,7 @@ export default function IndividualEventCard({
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
-    <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 z-50">
+    <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-2xl drop-shadow-violet-900/20 z-10">
       <div className="flex flex-row justify-center gap-5">
         <h3 className="text-xl font-bold px-4 mb-4 ml-15">{title}</h3>
         {isAdmin && (
@@ -103,9 +103,6 @@ export default function IndividualEventCard({
       </div>
       {events
         .sort((a, b) => (a.date.isBefore(b.date) ? -1 : 1))
-        .filter((a) =>
-          a.date.isBetween(dayjs(), dayjs().add(2, "weeks"), null, "[]")
-        )
         .map((x, i) => (
           <EventChip key={i} event={x} getEventString={getEventString} />
         ))}

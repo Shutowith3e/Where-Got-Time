@@ -5,15 +5,15 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar/sidebar";
 import { useQuery } from "@tanstack/react-query";
-import {
-  GetUserEvents,
-  getUserEventsInRange,
-} from "@/services/events/get-user-events-data";
+import { GetUserEvents } from "@/services/events/get-user-events-data";
 import useAuth from "@/context/AuthContext";
 import { GroupContextProvider } from "@/context/GroupContext";
 import { getGroupInfo } from "@/services/groups/get-group-info";
 import IndividualCalendar from "@/components/IndividualCalendar";
 import IndividualEventCard from "@/components/IndividualEventCard";
+import { useState } from "react";
+import { MagicCard } from "@/components/magicui/magic-card";
+import { IoMdSearch } from "react-icons/io";
 
 export default function MainUserPage() {
   const { personalGroupId } = useAuth();
@@ -21,15 +21,18 @@ export default function MainUserPage() {
   const { data: groupEventList } = useQuery({
     queryKey: ["user-events"],
     queryFn: () =>
-      getUserEventsInRange(2, "weeks").then((x) =>
-        x.filter((x) => x.gid === personalGroupId)
-      ),
+      GetUserEvents().then((x) => x.filter((x) => x.gid === personalGroupId)),
   });
 
   const { data: group, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-group", personalGroupId],
     queryFn: () => getGroupInfo(personalGroupId!),
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredEvents = (groupEventList ?? []).filter((event) =>
+    event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (!group || isGroupsPending) return <p>Loading...</p>;
 
@@ -49,12 +52,28 @@ export default function MainUserPage() {
             <div className="flex-1 px-3 py-6">
               <IndividualCalendar fetchEvents={GetUserEvents} />
 
+              <MagicCard
+                gradientColor="262626"
+                className="mx-auto rounded-2xl py-1.5 px-30 flex flex-row justify-center"
+              >
+                <div className="text-slate-500 flex gap-2">
+                  <IoMdSearch className="flex m-auto" />
+                  <input
+                    type="text"
+                    placeholder="Search For Events ..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="outline-none"
+                  />
+                </div>
+              </MagicCard>
+
               {/* Personal Group Events */}
               <div className="rounded-lg bg-white p-6">
                 <div className="rounded-xl bg-purple-100 px-4 py-2 text-sm shadow-inner">
                   <IndividualEventCard
                     title={"Personal Group"}
-                    events={(groupEventList ?? []).map(
+                    events={(filteredEvents ?? []).map(
                       ({ eid, eventName, startDatetime, highPriority }) => ({
                         eid,
                         eventName,
