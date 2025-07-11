@@ -98,11 +98,10 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
             const groupName = extendedProps.group_name;
             // bro this tippy expects it as a string
             const tooltipContent = `
-              <div class = "text-sm p-2 bg-black rounded shadow text-white flex text-center flex-col">
+              <div class = "text-sm p-2 bg-black rounded-xl text-white flex text-center flex-col">
                 <strong>${title}</strong>
                 <p>Group: ${groupName}</p>
                 <p>${start?.toLocaleString()} - ${end?.toLocaleString()}</p>
-                
               </div>`;
             tippy(info.el, {
               content: tooltipContent,
