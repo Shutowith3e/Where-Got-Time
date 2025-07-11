@@ -5,7 +5,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
 import { useEffect, useState } from "react";
 import tippy from "tippy.js";
-import "tippy.js/dist/tippy.css";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
@@ -96,18 +95,22 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           }}
           eventDidMount={(info) => {
             const { title, start, end, extendedProps } = info.event;
-            const groupName = extendedProps.group_name ?? "No Group";
-
+            const groupName = extendedProps.group_name;
+            // bro this tippy expects it as a string
             const tooltipContent = `
-    <strong>${title}</strong><br/>
-    ${start?.toLocaleString()} - ${end?.toLocaleString()}<br/>
-    Group: ${groupName}
-  `;
-
+              <div class = "text-sm p-2 bg-black rounded shadow text-white flex text-center flex-col">
+                <strong>${title}</strong>
+                <p>Group: ${groupName}</p>
+                <p>${start?.toLocaleString()} - ${end?.toLocaleString()}</p>
+                
+              </div>`;
             tippy(info.el, {
               content: tooltipContent,
               allowHTML: true,
               theme: "light",
+              placement: "bottom",
+              followCursor: "horizontal",
+              inertia: true,
             });
           }}
         />
