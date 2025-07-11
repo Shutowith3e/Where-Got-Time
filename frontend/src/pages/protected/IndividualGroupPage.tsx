@@ -31,9 +31,9 @@ export default function IndividualGroupPage() {
   });
 
   const [searchTerm, setSearchTerm] = useState("");
-const filteredEvents = (groupEvent ?? []).filter((event) =>
-  event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const filteredEvents = (groupEvent ?? []).filter((event) =>
+    event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (!id) {
     return <p>Invalid Group ID!</p>;
