@@ -5,10 +5,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar/sidebar";
 import { useQuery } from "@tanstack/react-query";
-import {
-  GetUserEvents,
-  getUserEventsInRange,
-} from "@/services/events/get-user-events-data";
+import { GetUserEvents } from "@/services/events/get-user-events-data";
 import useAuth from "@/context/AuthContext";
 import { GroupContextProvider } from "@/context/GroupContext";
 import { getGroupInfo } from "@/services/groups/get-group-info";
@@ -21,9 +18,7 @@ export default function MainUserPage() {
   const { data: groupEventList } = useQuery({
     queryKey: ["user-events"],
     queryFn: () =>
-      getUserEventsInRange(2, "weeks").then((x) =>
-        x.filter((x) => x.gid === personalGroupId)
-      ),
+      GetUserEvents().then((x) => x.filter((x) => x.gid === personalGroupId)),
   });
 
   const { data: group, isPending: isGroupsPending } = useQuery({
