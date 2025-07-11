@@ -44,6 +44,13 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
   }, [fetchEvents]);
 
   const dataTransformer = (eventData: any) => {
+    let colour = '';
+    if(eventData.highPriority == true){
+      colour = 'orange';
+    }
+    else{
+      colour = 'mediumorchid';
+    }
     return {
       id: eventData.eid,
       title: eventData.eventName,
@@ -57,9 +64,10 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
         high_priority: eventData.highPriority,
         group_name: eventData.groupName ?? null,
       },
+      backgroundColor: colour
     };
   };
-
+    
   return (
     <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
       <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
@@ -79,6 +87,13 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           eventDataTransform={dataTransformer}
           slotEventOverlap={false}
           slotMinTime={"08:00:00"}
+          displayEventEnd={true}
+          eventTimeFormat={{
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: 'short'
+          }}
+          
         />
       </div>
     </div>

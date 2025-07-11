@@ -683,6 +683,7 @@ Gets the high priority events that members of the group is a participant of.
   {
     "eid": "23e4e4ba-3a0a-458a-992a-cbcaf571a991",
     "gid": "62af6a4a-e77c-4124-8c13-93c08644e49a",
+	"group_name": "group_name",
     "rrule": null,
     "duration": "7 days",
     "event_name": "idw attend",
@@ -696,6 +697,7 @@ Gets the high priority events that members of the group is a participant of.
   {
     "eid": "68f9d513-9d12-4f9d-9b95-acc799d6f103",
     "gid": "21924b54-03cd-40bb-92b6-fac4a0d68e6f",
+	"group_name": "group_name",
     "rrule": null,
     "duration": "1 day 00:00:02",
     "event_name": "simi event bro",
