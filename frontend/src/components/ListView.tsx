@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
-  start: "",
+  start: "listWeek,listMonth",
   center: "title",
   right: "prev,next",
+  
 };
 
 
@@ -83,7 +84,10 @@ const ListView = ({ fetchEvents = () => {} }: any) => {
 			meridiem: false
 		  }}
 		  locale='en-gb'
-		//   eventContent={eventload}
+		  buttonText={{
+			listWeek:'week',
+			listMonth:'Month'
+		  }}
 		/>
 	  </div>
 	</div>
