@@ -5,6 +5,9 @@ import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
 import { useEffect, useState } from "react";
 import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/shift-away.css";
+import dayjs from "dayjs";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
@@ -47,9 +50,9 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
   const dataTransformer = (eventData: any) => {
     let colour = "";
     if (eventData.highPriority == true) {
-      colour = "orange";
+      colour = "#ffd6a5";
     } else {
-      colour = "mediumorchid";
+      colour = "#d0bfff";
     }
     return {
       id: eventData.eid,
@@ -69,8 +72,8 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
   };
 
   return (
-    <div className="mb-6 h-128 w-full rounded-lg bg-white shadow ">
-      <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
+    <div className="mb-6 h-128 w-full rounded-lg bg-white shadow border border-white/30">
+      <div className="flex-grow h-full items-center justify-center font-bold text-black">
         <FullCalendar
           plugins={[
             timeGridPlugin,
@@ -93,28 +96,44 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
             minute: "2-digit",
             meridiem: "short",
           }}
+          locale="en-gb"
+          dayHeaderFormat={{
+            weekday: "short",
+            day: "2-digit",
+            month: "2-digit",
+          }}
+          eventTextColor="black"
+          eventClassNames={
+            "text-center border-none px-1 flex font-semibold font-stretch-expanded"
+          }
+          eventBorderColor="white"
           eventDidMount={(info) => {
             const { title, start, end, extendedProps } = info.event;
+
             const groupName = extendedProps.group_name;
             // bro this tippy expects it as a string
             // in the data transformation step i didnt take in grp name for indiv grp so it becomes null
             const tooltipContent = `
-              <div class = "text-sm p-2 bg-black rounded text-white flex text-center flex-col">
+              <div class = "text-sm p-2 rounded text-white flex text-center flex-col">
                 <strong class = "text-base">${title}</strong>
                 ${
                   groupName !== null
                     ? `<p class = "font-light">${groupName}</p>`
                     : ""
                 }
-                <p>${start?.toLocaleString()} - ${end?.toLocaleTimeString()}</p>
+                <p>${dayjs(start).format("DD MMM YYYY, hh:mm A")} - ${dayjs(
+              end
+            ).format("hh:mm A")}</p>
               </div>`;
             tippy(info.el, {
               content: tooltipContent,
               allowHTML: true,
-              theme: "light",
+              theme: "dark",
               placement: "bottom",
               followCursor: "vertical",
+              arrow: true,
               inertia: true,
+              appendTo: document.body,
             });
           }}
         />
