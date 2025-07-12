@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import SearchEmails from "@/components/SearchEmails";
 import SelectedMembers from "@/components/SelectedMembers";
 import axiosInstance from "@/lib/axios-instance";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -13,13 +13,14 @@ export default function CreateGroupPage() {
     register,
     formState: { errors },
     handleSubmit,
+    clearErrors,
   } = useForm();
 
   const navigate = useNavigate();
   const onSubmit = (data: any) => {
     const fullForm = {
       ...data,
-      emails_to_invite: selectedEmails,
+      emailsToInvite: selectedEmails,
     };
     createGroupMutation.mutate(fullForm);
   };
@@ -38,6 +39,11 @@ export default function CreateGroupPage() {
     },
   });
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  useEffect(() => {
+    if (selectedEmails.length > 0) {
+      clearErrors("emailsToInvite");
+    }
+  }, [selectedEmails, clearErrors]);
 
   return (
     <>
@@ -59,7 +65,26 @@ export default function CreateGroupPage() {
               <SelectedMembers
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
+                {...register("emailsToInvite", {
+                  validate: () => {
+                    if (selectedEmails.length === 0) {
+                      return "Selected Members cannot be empty";
+                    }
+                    if (selectedEmails.length >= 50) {
+                      return "Too Many Members Added";
+                    }
+                  },
+                })}
+                aria-invalid={errors.emailsToInvite ? "true" : "false"}
               />
+              {errors.emailsToInvite && (
+                <p
+                  role="alert"
+                  className="font-light text-sm text-red-600 flex flex-row"
+                >
+                  {errors.emailsToInvite.message?.toString()}
+                </p>
+              )}
               Group Name:
               <input
                 {...register("group_name", { required: true, maxLength: 30 })}
@@ -76,7 +101,6 @@ export default function CreateGroupPage() {
                   Group name is too long
                 </p>
               )}
-
             </div>
             <div className="flex flex-col">
               Group Description:
