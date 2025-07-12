@@ -40,8 +40,8 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
   return (
     <div
       className={cn(
-        "flex flex-row bg-violet-50 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45",
-        highPriority && "bg-orange-50"
+        "flex flex-row bg-violet-800/8 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45",
+        highPriority && "bg-orange-600/10"
       )}
     >
       <div className="flex flex-row gap-8">
