@@ -69,7 +69,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
   };
 
   return (
-    <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
+    <div className="mb-6 h-128 w-full rounded-lg bg-white shadow ">
       <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
         <FullCalendar
           plugins={[
@@ -100,9 +100,13 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
             // in the data transformation step i didnt take in grp name for indiv grp so it becomes null
             const tooltipContent = `
               <div class = "text-sm p-2 bg-black rounded text-white flex text-center flex-col">
-                <strong>${title}</strong>
-                ${groupName !== null ? `<p>Group: ${groupName}</p>` : ""}
-                <p>${start?.toLocaleString()} - ${end?.toLocaleString()}</p>
+                <strong class = "text-base">${title}</strong>
+                ${
+                  groupName !== null
+                    ? `<p class = "font-light">${groupName}</p>`
+                    : ""
+                }
+                <p>${start?.toLocaleString()} - ${end?.toLocaleTimeString()}</p>
               </div>`;
             tippy(info.el, {
               content: tooltipContent,
