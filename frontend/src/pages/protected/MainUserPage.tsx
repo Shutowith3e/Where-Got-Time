@@ -35,10 +35,10 @@ export default function MainUserPage() {
   );
 
   if (!group || isGroupsPending) return <p>Loading...</p>;
-
+  // kiv css "bg-gradient-to-b from-rose-900/5 to-violet-900/10"
   return (
     <GroupContextProvider groupInfo={group}>
-      <div className="flex min-h-dvh flex-col bg-gradient-to-b from-rose-900/30 ">
+      <div className="flex min-h-dvh flex-col ">
         <NavBar />
 
         <div className="flex flex-1 flex-row">
@@ -54,7 +54,7 @@ export default function MainUserPage() {
 
               <MagicCard
                 gradientColor="262626"
-                className="mx-auto rounded-2xl py-1.5 px-30 flex flex-row justify-center"
+                className="mx-auto rounded-2xl py-1.5 px-4 flex flex-row justify-center max-w-md"
               >
                 <div className="text-slate-500 flex gap-2">
                   <IoMdSearch className="flex m-auto" />
@@ -68,24 +68,19 @@ export default function MainUserPage() {
                 </div>
               </MagicCard>
 
-              {/* Personal Group Events */}
-              <div className="rounded-lg bg-white p-6">
-                <div className="rounded-xl bg-purple-100 px-4 py-2 text-sm shadow-inner">
-                  <IndividualEventCard
-                    title={"Personal Group"}
-                    events={(filteredEvents ?? []).map(
-                      ({ eid, eventName, startDatetime, highPriority }) => ({
-                        eid,
-                        eventName,
-                        group: "",
-                        date: startDatetime,
-                        highPriority,
-                      })
-                    )}
-                    getEventString={({ eventName: event }) => event}
-                  ></IndividualEventCard>
-                </div>
-              </div>
+              <IndividualEventCard
+                title={"Personal Group"}
+                events={(filteredEvents ?? []).map(
+                  ({ eid, eventName, startDatetime, highPriority }) => ({
+                    eid,
+                    eventName,
+                    group: "",
+                    date: startDatetime,
+                    highPriority,
+                  })
+                )}
+                getEventString={({ eventName: event }) => event}
+              ></IndividualEventCard>
             </div>
           </SidebarProvider>
         </div>
