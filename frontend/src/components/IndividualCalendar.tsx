@@ -11,9 +11,9 @@ import dayjs from "dayjs";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
-  start: "",
+  start: "prev,today,next",
   center: "title",
-  right: "today timeGridWeek,dayGridMonth prev,next",
+  right: "timeGridDay,timeGridWeek,dayGridMonth",
 };
 // const event2=  [{
 // 		"eid": "68f9d513-9d12-4f9d-9b95-acc799d6f103",
@@ -89,7 +89,9 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           events={events}
           eventDataTransform={dataTransformer}
           slotEventOverlap={false}
-          slotMinTime={"08:00:00"}
+          scrollTime="08:00:00"
+          slotMinTime="00:00:00"
+          slotMaxTime="24:00:00"
           displayEventEnd={true}
           eventTimeFormat={{
             hour: "numeric",
