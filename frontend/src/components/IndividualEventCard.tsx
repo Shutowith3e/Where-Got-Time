@@ -6,6 +6,7 @@ import UpdateEventModal from "./ui/event/UpdateEvent";
 import useGroup from "@/context/GroupContext";
 import DeleteEvent from "./ui/event/DeleteEvent";
 import { Dayjs } from "dayjs";
+import { cn } from "@/lib/utlis";
 
 type IndividualEvent = {
   eid: string;
@@ -37,7 +38,12 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   return (
-    <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
+    <div
+      className={cn(
+        "flex flex-row bg-violet-50 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45",
+        highPriority && "bg-orange-50"
+      )}
+    >
       <div className="flex flex-row gap-8">
         <div className="flex flex-row gap-4.5">
           <div className="text-sm font-light m-auto">
