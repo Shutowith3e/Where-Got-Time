@@ -134,8 +134,8 @@ const checkClash = async (this_event,gid)=>{
 		const event2_startTimeStr = normaliseDateTime(event2.start_datetime);
 		const event2_endTimeStr = normaliseDateTime(event2.end_datetime);
 
-		const rule1 = new RRule.fromString(event1.rrule);
-		const rule2 = new RRule.fromString(event2.rrule);
+		let rule1 = new RRule.fromString(event1.rrule);
+		let rule2 = new RRule.fromString(event2.rrule);
 		//1. weekly, weekly -> check if first and last occurences for both (range) overlaps, then check if fall on same days, then check time 
 		//check if they fall on same day 
 		if(rule1.options.freq==RRule.WEEKLY && rule2.options.freq==RRule.WEEKLY){
@@ -167,7 +167,7 @@ const checkClash = async (this_event,gid)=>{
 			}
 
 			//check if it falls within same range
-			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule1.options.until)){ //used weekly's until bc monthly until might be infinite 
+			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule2.options.until)){  
     			const monthlyDates = rule2.all(); //get array of datetimes of all monthly recurrences 
 
 				// comb thru all monthly dates
@@ -194,7 +194,7 @@ const checkClash = async (this_event,gid)=>{
 			}
 
 			//check if it falls within same range
-			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule1.options.until)){ //used weekly's until bc yearly until might be infinite 
+			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule2.options.until)){  
 				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
 				for(day of rule1.option.byweekday){
 					//checks if my event is on the same day
@@ -214,35 +214,79 @@ const checkClash = async (this_event,gid)=>{
 		if(rule1.options.freq==RRule.MONTHLY && rule2.options.freq==RRule.MONTHLY || ((rule1.options.freq==RRule.MONTHLY && rule2.options.freq==RRule.YEARLY) || (rule2.options.freq==RRule.MONTHLY && rule1.options.freq==RRule.YEARLY))){
 			//if its scenario 5, swap to ensure that event1 is always monthly and event2 is always yearly 
 			if (rule1.options.freq === RRule.YEARLY) {
-			[rule1, rule2] = [rule2, rule1]; 
-			[event1, event2] = [event2, event1]; //swap events to match
+				[rule1, rule2] = [rule2, rule1]; 
+				[event1, event2] = [event2, event1]; //swap events to match
 			}
 
-			//check if range overlaps 
-			const day1 = rule1.options.bymonthday?.[0]; //get monthday for event1 
-			const day2 = rule2.options.bymonthday?.[0]; //get monthday for event2 
-			//check if both fall on same monthdays 
-			if(day1 !== undefined && day2 !== undefined && day1 === day2){
-				if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
-					clashesArr.push({eid1,eid2,resolved});
-					return 
+			//check if range overlaps
+			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule2.options.until)){
+				// check if fall on same monthday (eg 3rd of every month/year)
+				const day1 = rule1.options.bymonthday?.[0]; //get monthday for event1 
+				const day2 = rule2.options.bymonthday?.[0]; //get monthday for event2 
+				//check if both fall on same monthdays 
+				if(day1 !== undefined && day2 !== undefined && day1 === day2){
+					if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+						clashesArr.push({eid1,eid2,resolved});
+						return 
+					}
 				}
 			}
 		}
 		
 		//6. yearly, yearly -> check if range got overlap, check if is same date + month, then check time 
 		if(rule1.options.freq==RRule.YEARLY && rule2.options.freq==RRule.YEARLY){
-			const month1 = rule1.options.bymonth?.[0]; // get month for event1 
-			const month2 = rule2.options.bymonth?.[0]; // get month for event2 
-			const monthDay1 = rule1.options.bymonthday?.[0]; //get monthday for event1 
-			const monthDay2 = rule2.options.bymonthday?.[0]; //get monthday for event2 
+			// check if range overlaps 
+			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule2.options.until)){
+				const month1 = rule1.options.bymonth?.[0]; // get month for event1 
+				const month2 = rule2.options.bymonth?.[0]; // get month for event2 
+				const monthDay1 = rule1.options.bymonthday?.[0]; //get monthday for event1 
+				const monthDay2 = rule2.options.bymonthday?.[0]; //get monthday for event2 
 
-			return (month1 === month2) && (monthDay1 === monthDay2); 
+				if((month1 === month2) && (monthDay1 === monthDay2)){
+					if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
+						clashesArr.push({eid1,eid2,resolved});
+						return 
+					}
+				}
+			}
 		}
 		
 	}
 		
 
+	const resolveClash = async(eid) => {
+		// if there is no clash happening 
+		if(clashesArr.length===0){
+			return; 
+		}
+
+		// outdated supabase arr with unresolved clashes 
+		const {data: dbClashArr, error} = await supabase.from('clash').select().or(`eid1.eq.${eid}, eid2.eq.${eid}`).eq('resolved', false);
+		
+		if(error){
+			// stops all checks for resolved clashes immediately 
+			return {error}; 
+		}
+
+		for(const dbClashPair of dbClashArr){ // this whole block can be turned into an rpc on supabase if there is time to increase efficiency 
+			// check if the clashpair in db exists in the clashes arr 
+			const exists = clashesArr.some(clashPair => JSON.stringify(dbClashPair) === JSON.stringify(clashPair)); 
+			
+			if (!exists){ // if it doesnt exist means its outdated and resolved 
+				let dbeid1 = dbClashPair.eid1; 
+				let dbeid2 = dbClashPair.eid2; 
+				//update the resolved clash to true in db 
+				let {error: updateResError} = await supabase.from('clash').update({resolved: true}).match({eid1:dbeid1, eid2:dbeid2}); 
+				
+				if(updateResError){
+					// stops all checks for resolved clashes immediately 
+					return {error:updateResError}; 
+				}
+			}
+		} 
+
+	return; 
+	} // returns nothing unless check was terminated halfway through (prev checks prior to error not affected tho), returns error 
 
 	const {data:high_prio_event_arr,error:eventRetrievalError} =  await getHighPriorityEvents(gid);
 	//console.log(high_prio_event_arr); 
@@ -288,8 +332,12 @@ const checkClash = async (this_event,gid)=>{
 			//git commit sewer slide gg
 			checkDoubleRecurClash(this_event, other_event);
 		}
-
 	}
+
+	
+	//updates resolved clashes 
+	resolveClash(this_event.eid);
+	
 	//this is insert+update, i.e. if there is a conflict, say a row alr exists, it will simply update the value
 	//useful for say if the clash has been resolved before but someone update the event again and it clashes again
 	return await supabase.from('clash').upsert(clashesArr,{onConflict:'eid1, eid2'});
@@ -297,7 +345,9 @@ const checkClash = async (this_event,gid)=>{
 }
 
 
-export{checkClash}; 
+
+export{checkClash,
+	}; 
 
 // const {a_start,a_end,b_start,b_end} = {
 // 	a_start:"2025-06-21T10:50:10",
@@ -337,4 +387,11 @@ export{checkClash};
 // const rruleMonthStr2 = "RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=08"; 
 // const rule2 = RRule.fromString(rruleMonthStr);
 
+// const eid = "09675693-d948-4734-833a-2af89c7e10b8"; 
+// console.log(await supabase.from('clash').select().or(`eid1.eq.${eid}, eid2.eq.${eid}`)); 
+
+// const clashesArr = [{eid1: 'eid1', eid2: 'eid2', resolved: false}];
+// const dbClashPair = {eid1: 'eid1', eid2: 'eid2', resolved: false};
+// const exists = clashesArr.some(clashPair => JSON.stringify(dbClashPair) === JSON.stringify(clashPair)); 
+// console.log(!exists); 
 

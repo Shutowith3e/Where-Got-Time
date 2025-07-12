@@ -113,6 +113,9 @@ const createEvent = async (req, res) => {
     if (!gid || !event_name || !start_datetime || !end_datetime || high_priority === null|| email_arr.length===0) {
         return res.status(400).json({ error: "Missing details" });
     }
+    if(rrule !== null && !rrule.includes("RRULE")){
+        return res.status(400).json({error: "Invalid RRULE Format"}); 
+    }
 
     const {error} = await service.createEvent(gid, event_name, start_datetime, end_datetime, rrule, high_priority,email_arr);
     if (error){
@@ -128,8 +131,11 @@ const updateEvent = async (req, res) => {
     const {eid, gid, event_name, start_datetime, end_datetime, rrule, high_priority, old_email_arr, new_email_arr} = req.body; 
 
     // check if everytg is entered correctly
-    if (!eid || !gid || !event_name || !start_datetime || !end_datetime || high_priority === null|| old_email_arr.length===0 || new_email_arr.length===0) {
+    if (!eid || !gid || !event_name || !start_datetime || !end_datetime || high_priority === null|| !old_email_arr || !new_email_arr) {
         return res.status(400).json({ error: "Missing details" });
+    }
+    if (rrule !== null && !rrule.includes("RRULE") ){
+        return res.status(400).json({error: "Invalid RRULE Format"}); 
     }
 
     const {error} = await service.updateEvent(eid, gid, event_name, start_datetime, end_datetime, rrule, high_priority, old_email_arr, new_email_arr); 
@@ -171,9 +177,6 @@ const updateGrpDetail = async (req,res)=>{
     return res.status(200).json({message:"Successfully updated group detail!"})
 }
 
-
-
-////////////// WIP /////////////////////
 const getHighPriorityEvents = async (req, res) => {
     const {gid} = req.body;
     if(!gid){

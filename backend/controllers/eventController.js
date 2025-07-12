@@ -22,6 +22,5 @@ const getEventParticipants = async (req, res) => {
 
 // export {fun1,fun2,etc}
 export{
-
     getEventParticipants
 }

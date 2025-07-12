@@ -44,7 +44,7 @@ const getGroupMembers = async (gid) => {
 
 
 const createGroup = async (group_name, group_description, creator_email, emails_to_invite) => {
-	return await supabase.rpc('create_group_and_invite',{group_name_inp:group_name, group_description_inp: group_description, creator_email,emails_to_invite});
+	return await supabase.rpc('create_group_and_invite',{group_name_inp:group_name, group_description_inp:group_description, creator_email, emails_to_invite});
 } // returns gid, group_name in data when success
 
 

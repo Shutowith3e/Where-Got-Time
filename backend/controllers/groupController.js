@@ -25,7 +25,7 @@ const checkAdmin = async (req, res) => {
 
 const createGroup = async (req, res) => {
     // get gid from req.body, email from req.email (from auth middleware)
-    const email = req.email;
+    const creator_email = req.email;
     const { group_name, group_description, emails_to_invite } = req.body;
 
     // check if all data is received 
@@ -34,9 +34,10 @@ const createGroup = async (req, res) => {
     }
 
     // create the grp 
-    const { data, error: groupCreationError } = await service.createGroup(group_name, group_description, email, emails_to_invite); // gid and grp name returned if successful
+    const { data, error: groupCreationError } = await service.createGroup(group_name, group_description, creator_email, emails_to_invite); // gid and grp name returned if successful
 
     if (groupCreationError) {
+        console.log(groupCreationError);
         return res.status(500).json({ message: "Unable to create group." });
     }
 
@@ -45,7 +46,7 @@ const createGroup = async (req, res) => {
     const created_gid = data.gid;
 
     //send response back to client. not sure if inclusion of GID is necessary
-    return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid });
+    return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid, group_name: created_grpname });
 } //tested, works
 
 const getGroupDetails = async (req, res) => {
