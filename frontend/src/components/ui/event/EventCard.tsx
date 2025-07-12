@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utlis";
+
 type Event = {
   highPriority: boolean;
   group: string;
@@ -19,7 +21,12 @@ export type EventCardProps = {
 function EventChip({ event: eventData, getEventString }: EventChipProps) {
   const { highPriority, date } = eventData;
   return (
-    <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
+    <div
+      className={cn(
+        "flex flex-row bg-violet-800/8 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45",
+        highPriority && "bg-orange-600/10"
+      )}
+    >
       <div className="text-sm font-light m-auto">{date}</div>
       {getEventString(eventData)}
       {highPriority && (
