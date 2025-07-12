@@ -113,6 +113,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
             const { title, start, end, extendedProps } = info.event;
 
             const groupName = extendedProps.group_name;
+            const hp = extendedProps.high_priority ? 'high priority': 'low priority';
             // bro this tippy expects it as a string
             // in the data transformation step i didnt take in grp name for indiv grp so it becomes null
             const tooltipContent = `
@@ -126,6 +127,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
                 <p>${dayjs(start).format("DD MMM YYYY, hh:mm A")} - ${dayjs(
               end
             ).format("hh:mm A")}</p>
+            <p>${hp}</p>
               </div>`;
             tippy(info.el, {
               content: tooltipContent,
