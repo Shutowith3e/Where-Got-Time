@@ -36,7 +36,7 @@ export default function EventCard({
     `${group.toUpperCase()} - ${eventName}`,
 }: EventCardProps) {
   return (
-    <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
+    <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8  max-h-[50dvh] overflow-y-scroll">
       <h3 className="text-xl mx-auto font-bold px-4 mb-4">{title}</h3>
       {events
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())

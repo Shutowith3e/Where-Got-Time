@@ -97,6 +97,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
             const { title, start, end, extendedProps } = info.event;
             const groupName = extendedProps.group_name;
             // bro this tippy expects it as a string
+            // in the data transformation step i didnt take in grp name for indiv grp so it becomes null
             const tooltipContent = `
               <div class = "text-sm p-2 bg-black rounded text-white flex text-center flex-col">
                 <strong>${title}</strong>
