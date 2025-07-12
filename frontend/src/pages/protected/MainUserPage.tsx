@@ -41,7 +41,7 @@ export default function MainUserPage() {
       <div className="flex min-h-dvh flex-col ">
         <NavBar />
 
-        <div className="flex flex-1 flex-row">
+        <div className="flex flex-col">
           <SidebarProvider defaultOpen={false}>
             <MainUserDrawer />
 
