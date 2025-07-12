@@ -6,6 +6,7 @@ import UpdateEventModal from "./ui/event/UpdateEvent";
 import useGroup from "@/context/GroupContext";
 import DeleteEvent from "./ui/event/DeleteEvent";
 import { Dayjs } from "dayjs";
+import { cn } from "@/lib/utlis";
 
 type IndividualEvent = {
   eid: string;
@@ -34,7 +35,12 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   return (
-    <div className="flex flex-row bg-slate-100 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45">
+    <div
+      className={cn(
+        "flex flex-row bg-violet-800/8 m-auto rounded-2xl text-base font-semibold px-8 py-1 gap-x-4 mt-2 min-w-45",
+        highPriority && "bg-orange-600/10"
+      )}
+    >
       <div className="flex flex-row gap-8">
         <div className="flex flex-row gap-4.5">
           <div className="text-sm font-light m-auto">
@@ -90,7 +96,7 @@ export default function IndividualEventCard({
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
-    <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-2xl drop-shadow-violet-900/20 z-10">
+    <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-2xl drop-shadow-violet-900/20 z-10 max-h-[50dvh] overflow-y-scroll">
       <div className="flex flex-row justify-center gap-5">
         <h3 className="text-xl font-bold px-4 mb-4 ml-15">{title}</h3>
         {isAdmin && (
