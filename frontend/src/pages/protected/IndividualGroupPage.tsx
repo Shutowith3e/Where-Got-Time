@@ -11,6 +11,8 @@ import { getIndividualGroupEvent } from "@/services/events/get-group-events-data
 import { useState } from "react";
 import { MagicCard } from "@/components/magicui/magic-card";
 import { IoMdSearch } from "react-icons/io";
+import AdminCalendar from "@/components/AdminCalendar";
+import { Button } from "@/components/ui/button";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -34,6 +36,14 @@ export default function IndividualGroupPage() {
   const filteredEvents = (groupEvent ?? []).filter((event) =>
     event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const [currentView, setCurrentView] = useState("freeTime");
+  const freeTime = () => {
+    setCurrentView("freeTime");
+  };
+  const groupCalendar = () => {
+    setCurrentView("groupCalendar");
+  };
 
   if (!id) {
     return <p>Invalid Group ID!</p>;
@@ -88,7 +98,27 @@ export default function IndividualGroupPage() {
           <p className="text-lg font-light mx-auto p-2">
             {group.groupDescription}
           </p>
-          <IndividualCalendar fetchEvents={() => getIndividualGroupEvent(id)} />
+          <div>
+            {group?.isAdmin && (
+              <>
+                <Button onClick={groupCalendar} variant="default">
+                  Group Calendar
+                </Button>
+                <Button onClick={freeTime} variant="default">
+                  Find Free Time
+                </Button>
+              </>
+            )}
+          </div>
+          {currentView === "groupCalendar" && (
+            <IndividualCalendar
+              fetchEvents={() => getIndividualGroupEvent(id)}
+            />
+          )}
+
+          {currentView === "freeTime" && (
+            <AdminCalendar fetchEvents={() => getIndividualGroupEvent(id)} />
+          )}
 
           <MagicCard
             gradientColor="262626"
