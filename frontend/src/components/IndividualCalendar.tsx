@@ -113,7 +113,9 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
             const { title, start, end, extendedProps } = info.event;
 
             const groupName = extendedProps.group_name;
-            const hp = extendedProps.high_priority ? 'high priority': 'low priority';
+            const hp = extendedProps.high_priority
+              ? "high priority"
+              : "low priority";
             // bro this tippy expects it as a string
             // in the data transformation step i didnt take in grp name for indiv grp so it becomes null
             const tooltipContent = `

@@ -51,7 +51,7 @@ export default function MainUserPage() {
         <NavBar />
 
         <div className="flex flex-col">
-          <SidebarProvider defaultOpen={false}>
+          <SidebarProvider defaultOpen={true}>
             <MainUserDrawer />
 
             <div className="mt-2 ml-1">
