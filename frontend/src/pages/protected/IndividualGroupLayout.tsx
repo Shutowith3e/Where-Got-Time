@@ -10,7 +10,7 @@ export default function IndividualGroupLayout({
   children: React.ReactNode;
 }) {
   return(
-  <SidebarProvider defaultOpen={false}>
+  <SidebarProvider defaultOpen={true}>
     <div className="flex flex-row w-full min-h-screen">
       <IndividualGroupDrawer />
       <div className="flex-1 p-4">
