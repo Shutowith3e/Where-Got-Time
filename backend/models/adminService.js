@@ -101,7 +101,8 @@ const updateEvent = async (eid, gid, event_name, start_datetime, end_datetime, r
 	const event_gid = event.gid;
 
 	//call checkClash func
-	return checkClash(event, event_gid); 
+	return checkClash(event,event_gid);
+	
 }
 
 const deleteEvent = async (eid) => {
@@ -112,8 +113,6 @@ const updateGrpDetail = async(gid,new_desc,new_name)=>{
 	return await supabase.from('group').update({group_description:new_desc,group_name:new_name}).eq('gid',gid)
 }
 
-
-/////////// DONE ////////////
 const getHighPriorityEvents = async(gid) => {
 	return await supabase.rpc('get_users_highprio_event_by_group',{target_group_id:gid});
 } 

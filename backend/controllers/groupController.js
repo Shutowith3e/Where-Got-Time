@@ -25,7 +25,7 @@ const checkAdmin = async (req, res) => {
 
 const createGroup = async (req, res) => {
     // get gid from req.body, email from req.email (from auth middleware)
-    const email = req.email;
+    const creator_email = req.email;
     const { group_name, group_description, emails_to_invite } = req.body;
 
     // check if all data is received 
@@ -34,9 +34,10 @@ const createGroup = async (req, res) => {
     }
 
     // create the grp 
-    const { data, error: groupCreationError } = await service.createGroup(group_name, group_description, email, emails_to_invite); // gid and grp name returned if successful
+    const { data, error: groupCreationError } = await service.createGroup(group_name, group_description, creator_email, emails_to_invite); // gid and grp name returned if successful
 
     if (groupCreationError) {
+        console.log(groupCreationError);
         return res.status(500).json({ message: "Unable to create group." });
     }
 
@@ -45,7 +46,7 @@ const createGroup = async (req, res) => {
     const created_gid = data.gid;
 
     //send response back to client. not sure if inclusion of GID is necessary
-    return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid });
+    return res.status(201).json({ message: `Group: "${created_grpname}" created successfully!`, gid: created_gid, group_name: created_grpname });
 } //tested, works
 
 const getGroupDetails = async (req, res) => {
@@ -139,6 +140,26 @@ const acceptGroupInvite = async (req, res) => {
 
 }
 
+const rejectGroupInvite = async (req, res) => {
+    // get email from auth middleware and gid from req body 
+    const email = req.email;
+    const { gid } = req.body;
+
+    // check if all data is received 
+    if (!gid || !email) {
+        return res.status(400).json({ message: "Missing gid or email." });
+    }
+
+    // update the db to del the user frm the grp
+    const { error } = await service.rejectGroupInvite(email, gid);
+
+    if (error) {
+        return res.status(500).json({ message: "Error rejecting invite" });
+    }
+
+    return res.status(200).json({ message: "Group invite rejected!" });
+}
+
 const leaveGroup = async (req, res) => {
     const email = req.email;
     const { gid, personal_gid } = req.body;
@@ -193,5 +214,6 @@ export {
     acceptGroupInvite,
     searchEmails,
     leaveGroup,
-    getPendingGroups
+    getPendingGroups,
+    rejectGroupInvite
 };

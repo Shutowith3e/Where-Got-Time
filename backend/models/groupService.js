@@ -23,6 +23,14 @@ const getGroupDetails = async (gid) => {
 	return {data:data[0]};
 }// tested, works
 
+const getGroupName = async (gid) => {
+	const {data,error} =  await supabase.from('group').select(`group_name`).eq('gid', gid);
+	if(error){
+		return {error};
+	}
+	return data[0].group_name;
+}
+
 const getGroupMembers = async (gid) => {
 	const { data, error } = await supabase.from('group_members').select('email').match({ 'gid': gid, 'invite_accepted': true });
 
@@ -44,14 +52,13 @@ const getGroupMembers = async (gid) => {
 
 
 const createGroup = async (group_name, group_description, creator_email, emails_to_invite) => {
-	return await supabase.rpc('create_group_and_invite',{group_name_inp:group_name, group_description_inp: group_description, creator_email,emails_to_invite});
+	return await supabase.rpc('create_group_and_invite',{group_name_inp:group_name, group_description_inp:group_description, creator_email, emails_to_invite});
 } // returns gid, group_name in data when success
 
 
 //tested, works 
 
 const getAdmins = async (gid) => {
-
 	const {data, error} =  await supabase.from('group_members').select('email').match({ gid: gid, is_admin: true });
 	if(error){
 		return {error};
@@ -72,6 +79,10 @@ const getGroupEvents = async (gid) => {
 const acceptGroupInvite = async (email, gid) => {
 	return await supabase.from('group_members').update({ invite_accepted: true }).match({ email: email, gid: gid });
 } // tested, works 
+
+const rejectGroupInvite = async (email, gid) => {
+	return await supabase.from('group_members').delete().match({email, gid}).is('invite_accepted', null);
+} // tested, works
 
 const leaveGroup = async (email,gid,personal_gid)=>{
 	return await supabase.from('group_members').delete().match({email:email,gid:gid}).neq('gid',personal_gid).select();
@@ -113,6 +124,7 @@ const testuid = '244b4c5a-6578-4af9-9a87-6f4aada352ea';
 //console.log(await getGroupMembers("74cf7e70-1c97-405e-9957-0858f3968176"));
 //console.log(await getGroupMembersEmails("74cf7e70-1c97-405e-9957-0858f3968176"));
 //console.log(await getPendingGroups("clarice.lim.2024@computing.smu.edu.sg"))
+//console.log(await getGroupName('0ad699cb-ee0d-48b1-b666-ca4fe47890ed'));
 
 export {
 	checkAdmin,
@@ -124,7 +136,9 @@ export {
 	acceptGroupInvite,
 	searchEmails,
 	leaveGroup,
-	getPendingGroups
+	getPendingGroups,
+	rejectGroupInvite,
+	getGroupName
 };
 
 // const { data, error } = await supabase.auth.signInWithPassword({
