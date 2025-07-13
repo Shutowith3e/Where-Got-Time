@@ -4,7 +4,8 @@ const router = express.Router();
 import {
 	getGroups,
 	getUserEvents,
-	getUserPersonalGroup
+	getUserPersonalGroup,
+	getUserClashes
 }from '../controllers/userController.js';
 
 //router.get
@@ -12,4 +13,6 @@ import {
 router.post('/getGroups',getGroups);
 router.post('/getUserEvents',getUserEvents);
 router.post('/getUserPersonalGroup', getUserPersonalGroup);
+router.post('/getUserClashes', getUserClashes);
+
 export default router;

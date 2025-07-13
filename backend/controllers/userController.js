@@ -28,10 +28,19 @@ const getUserEvents = async (req,res) => {
 	}
 	return res.status(200).json({data})
 }
-export{
 
+const getUserClashes = async (req,res) => {
+	const email = req.email;
+	const {data,error} = await service.getUserClashes(email);
+	if(error){
+		return res.status(500).json({message:"Error retrieving user clashes"})
+	}
+	return res.status(200).json({data})
+}
+export{
 	getGroups,
 	getUserEvents,
-	getUserPersonalGroup
+	getUserPersonalGroup,
+	getUserClashes
 }
 // export {fun1,fun2,etc}

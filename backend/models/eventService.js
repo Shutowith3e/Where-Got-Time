@@ -22,14 +22,23 @@ const getEventParticipants = async (eid) => {
 
 }//tested, works
 
+const getEventName = async (eid) => {
+	const {data, error} = await supabase.from('event').select('event_name').eq('eid',eid); 
 
+	if(error){
+		return {error};
+	}
+
+	return data[0].event_name; 
+}
 
 // TODO make a func to get eid by gid? 
 
 //testing script below before implementing routing&controllers
-const testeid = '0e1c9b0f-e008-4c2c-baa1-3c8145c76eb5';
-//console.log(await getEventParticipants(testeid));
+// const testeid = '0e1c9b0f-e008-4c2c-baa1-3c8145c76eb5';
+// console.log(await getEventName('039013a1-aa4d-4601-ae68-4d625a883ec8'));
 //export {func1,func2, etc}
 export{
 	getEventParticipants,
+	getEventName
 }

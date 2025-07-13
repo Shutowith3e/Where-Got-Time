@@ -140,6 +140,26 @@ const acceptGroupInvite = async (req, res) => {
 
 }
 
+const rejectGroupInvite = async (req, res) => {
+    // get email from auth middleware and gid from req body 
+    const email = req.email;
+    const { gid } = req.body;
+
+    // check if all data is received 
+    if (!gid || !email) {
+        return res.status(400).json({ message: "Missing gid or email." });
+    }
+
+    // update the db to del the user frm the grp
+    const { error } = await service.rejectGroupInvite(email, gid);
+
+    if (error) {
+        return res.status(500).json({ message: "Error rejecting invite" });
+    }
+
+    return res.status(200).json({ message: "Group invite rejected!" });
+}
+
 const leaveGroup = async (req, res) => {
     const email = req.email;
     const { gid, personal_gid } = req.body;
@@ -194,5 +214,6 @@ export {
     acceptGroupInvite,
     searchEmails,
     leaveGroup,
-    getPendingGroups
+    getPendingGroups,
+    rejectGroupInvite
 };
