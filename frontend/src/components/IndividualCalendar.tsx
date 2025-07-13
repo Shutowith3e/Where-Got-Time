@@ -68,6 +68,7 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
         group_name: eventData.groupName ?? null,
       },
       backgroundColor: colour,
+      borderColor: colour,
     };
   };
 
@@ -108,7 +109,6 @@ const IndividualCalendar = ({ fetchEvents = () => {} }: any) => {
           eventClassNames={
             "text-center border-none px-1 flex font-semibold font-stretch-expanded"
           }
-          eventBorderColor="white"
           eventDidMount={(info) => {
             const { title, start, end, extendedProps } = info.event;
 
