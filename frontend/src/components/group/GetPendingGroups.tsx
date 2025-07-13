@@ -1,8 +1,8 @@
-import { Check } from "lucide-react";
 import { Button } from "../ui/button";
 import { IoIosClose } from "react-icons/io";
 import axiosInstance from "@/lib/axios-instance";
 import { useQuery } from "@tanstack/react-query";
+import AcceptGroupInvite from "./AcceptPendingGroup";
 
 type AllPendingGroups = {
   PendingGroups: IndivPendingGroup[];
@@ -17,6 +17,7 @@ type IndivPendingGroup = {
 type PendingGroupChipProps = {
   groupName: string;
   groupDescription: string;
+  gid: string;
 };
 
 async function getPendingGroups(): Promise<AllPendingGroups> {
@@ -39,17 +40,22 @@ async function getPendingGroups(): Promise<AllPendingGroups> {
 function PendingGroupChip({
   groupName,
   groupDescription,
+  gid,
 }: PendingGroupChipProps) {
   return (
     <div className="flex flex-col items-center bg-blue-50 rounded-2xl text-sm mt-2 px-4 py-2 w-full max-w-full">
       <div className="text-center w-full">
         <p className="font-semibold text-black truncate">{groupName}</p>
-        <p className="text-black font-light truncate">{groupDescription ?? ""}</p>
+        <p className="text-black font-light truncate">
+          {groupDescription ?? ""}
+        </p>
       </div>
       <div className="flex justify-center gap-x-2 mt-2">
-        <Button variant="outline" className="rounded-full w-6 h-6 p-0">
-          <Check className="w-4 h-4" />
-        </Button>
+        <AcceptGroupInvite
+          gid={gid}
+          groupName={groupName}
+          groupDescription={groupDescription}
+        />
         <Button variant="outline" className="rounded-full w-6 h-6 p-0">
           <IoIosClose className="w-4 h-4" />
         </Button>
@@ -81,8 +87,7 @@ export default function GetPendingGroupsCard() {
         <PendingGroupChip
           key={group.gid}
           groupName={group.groupName}
-          groupDescription={group.groupDescription}
-        />
+          groupDescription={group.groupDescription} gid={group.gid}        />
       ))}
     </div>
   );
