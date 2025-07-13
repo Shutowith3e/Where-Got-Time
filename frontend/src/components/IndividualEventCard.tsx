@@ -14,6 +14,8 @@ type IndividualEvent = {
   group: string;
   eventName: string;
   date: Dayjs;
+  endDatetime?: Dayjs;
+  rrule?: string | null;
 };
 
 type EventChipProps = {
@@ -31,7 +33,8 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
   const {
     groupInfo: { gid, isAdmin, groupName },
   } = useGroup();
-  const { eid, highPriority, date, eventName } = eventData;
+
+  const { eid, highPriority, date, eventName, endDatetime, rrule } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   return (
@@ -48,7 +51,7 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
           </div>
           {getEventString(eventData)}
           {highPriority && (
-            <div className="text-sm font-light m-auto ">High Priority</div>
+            <div className="text-sm font-light m-auto">High Priority</div>
           )}
         </div>
 
@@ -57,16 +60,22 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
             <>
               <Button
                 variant="outline"
-                className=" rounded-full w-5 h-6"
+                className="rounded-full w-5 h-6"
                 onClick={() => setShowUpdateModal(true)}
               >
                 <IoMdCreate />
               </Button>
+
               {showUpdateModal && (
                 <UpdateEventModal
                   onClose={() => setShowUpdateModal(false)}
                   gid={gid}
                   eid={eid}
+                  eventName={eventName}
+                  startDatetime={date.toISOString()}
+                  endDatetime={endDatetime?.toISOString()}
+                  rrule={rrule}
+                  highPriority={highPriority}
                 />
               )}
 
@@ -93,6 +102,7 @@ export default function IndividualEventCard({
   const {
     groupInfo: { gid, isAdmin },
   } = useGroup();
+
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
@@ -107,6 +117,7 @@ export default function IndividualEventCard({
           />
         )}
       </div>
+
       {events
         .sort((a, b) => (a.date.isBefore(b.date) ? -1 : 1))
         .map((x, i) => (
