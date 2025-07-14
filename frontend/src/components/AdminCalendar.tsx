@@ -4,12 +4,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
 import { useEffect, useState } from "react";
+// import useGroup from "@/context/GroupContext";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
+// const {groupInfo}= useGroup();
 const headerToolbar = {
-  start: "",
+  start: "prev,today,next",
   center: "title",
-  right: "today timeGridWeek,dayGridMonth prev,next",
+  right: "timeGridDay,timeGridWeek,dayGridMonth",
 };
 // const event2=  [{
 // 		"eid": "68f9d513-9d12-4f9d-9b95-acc799d6f103",
@@ -30,64 +32,62 @@ const AdminCalendar = ({ fetchEvents = () => {} }: any) => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-	const loadEvents = async () => {
-	  try {
-		const data = await fetchEvents();
-		setEvents(data);
-		// console.log(data);
-	  } catch (error) {
-		console.error("Failed to fetch events:", error);
-	  }
-	};
+    const loadEvents = async () => {
+      try {
+        const data = await fetchEvents();
+        setEvents(data);
+        // console.log(data);
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      }
+    };
 
-	loadEvents();
+    loadEvents();
   }, [fetchEvents]);
 
   const dataTransformer = (eventData: any) => {
-	
-	
-	return {
-	  id: eventData.eid,
-	  title: eventData.eventName,
-	  start: eventData.startDatetime.toISOString(),
-	  end: eventData.endDatetime.toISOString(),
-	  rrule: eventData.rrule ? eventData.rrule : null,
-	  duration: {
-		seconds: eventData.duration,
-	  },
-	  extendedProps: {
-		high_priority: eventData.highPriority,
-		event_participants: eventData.eventParticipants,
-		group_name: eventData.groupName
-	  },
-	  backgroundColor: 'green'
-	};
+    return {
+      id: eventData.eid,
+      title: eventData.eventName,
+      start: eventData.startDatetime,
+      end: eventData.endDatetime,
+      rrule: eventData.rrule ? eventData.rrule : null,
+      duration: {
+        seconds: eventData.duration,
+      },
+      extendedProps: {
+        high_priority: eventData.highPriority,
+        event_participants: eventData.eventParticipants,
+        group_name: eventData.groupName,
+      },
+      backgroundColor: "blue",
+    };
   };
 
   return (
-	<div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
-	  <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
-		<FullCalendar
-		  plugins={[
-			timeGridPlugin,
-			dayGridPlugin,
-			interactionPlugin,
-			rrulePlugin,
-		  ]}
-		  initialView="timeGridWeek"
-		  height={"100%"}
-		  expandRows={true}
-		  allDaySlot={false}
-		  headerToolbar={headerToolbar}
-		  events={events}
-		  eventDataTransform={dataTransformer}
-		  slotEventOverlap={false}
-		  slotMinTime={"08:00:00"}
-		  displayEventEnd={true}
-		  eventDisplay="background"
-		/>
-	  </div>
-	</div>
+    <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
+      <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
+        <FullCalendar
+          plugins={[
+            timeGridPlugin,
+            dayGridPlugin,
+            interactionPlugin,
+            rrulePlugin,
+          ]}
+          initialView="timeGridWeek"
+          height={"100%"}
+          expandRows={true}
+          allDaySlot={false}
+          headerToolbar={headerToolbar}
+          events={events}
+          eventDataTransform={dataTransformer}
+          slotEventOverlap={false}
+          slotMinTime={"08:00:00"}
+          displayEventEnd={true}
+          eventDisplay="background"
+        />
+      </div>
+    </div>
   );
 };
 export default AdminCalendar;
