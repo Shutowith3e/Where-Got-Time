@@ -8,11 +8,12 @@ import { GroupContextProvider } from "@/context/GroupContext";
 import IndividualGroupLayout from "./IndividualGroupLayout";
 import EditGroup from "@/components/admin/EditGroup";
 import { getIndividualGroupEvent } from "@/services/events/get-group-events-data";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MagicCard } from "@/components/magicui/magic-card";
 import { IoMdSearch } from "react-icons/io";
 import AdminCalendar from "@/components/AdminCalendar";
 import { Button } from "@/components/ui/button";
+import type FullCalendar from "@fullcalendar/react";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -22,6 +23,8 @@ import { Button } from "@/components/ui/button";
 
 export default function IndividualGroupPage() {
   const { id } = useParams();
+  const calendarRef = useRef<FullCalendar>(null);
+
   const { data: group, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-group", id],
     queryFn: () => getGroupInfo(id!),
@@ -83,7 +86,7 @@ export default function IndividualGroupPage() {
   return (
     <GroupContextProvider groupInfo={group}>
       <NavBar />
-      <IndividualGroupLayout>
+      <IndividualGroupLayout calendarRef={calendarRef}>
         <div className="flex flex-col px-2">
           <div className="gap-y-2">
             <div className="flex flex-row justify-center">
@@ -113,6 +116,7 @@ export default function IndividualGroupPage() {
           {currentView === "groupCalendar" && (
             <IndividualCalendar
               fetchEvents={() => getIndividualGroupEvent(id)}
+              calendarRef={calendarRef}
             />
           )}
 
