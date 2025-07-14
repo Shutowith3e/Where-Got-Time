@@ -23,8 +23,8 @@ import type FullCalendar from "@fullcalendar/react";
 
 export default function IndividualGroupPage() {
   const { id } = useParams();
-  const calendarRef = useRef<FullCalendar>(null);
-
+    const calendarRef = useRef<FullCalendar>(null);
+  
   const { data: group, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-group", id],
     queryFn: () => getGroupInfo(id!),
@@ -40,7 +40,7 @@ export default function IndividualGroupPage() {
     event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const [currentView, setCurrentView] = useState("freeTime");
+  const [currentView, setCurrentView] = useState("groupCalendar");
   const freeTime = () => {
     setCurrentView("freeTime");
   };
@@ -86,7 +86,9 @@ export default function IndividualGroupPage() {
   return (
     <GroupContextProvider groupInfo={group}>
       <NavBar />
-      <IndividualGroupLayout calendarRef={calendarRef}>
+      <IndividualGroupLayout 
+              calendarRef={calendarRef}
+      >
         <div className="flex flex-col px-2">
           <div className="gap-y-2">
             <div className="flex flex-row justify-center">
