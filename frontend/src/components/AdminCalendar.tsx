@@ -4,10 +4,10 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
 import { useEffect, useState } from "react";
-// import useGroup from "@/context/GroupContext";
+import useGroup from "@/context/GroupContext";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
-// const {groupInfo}= useGroup();
+
 const headerToolbar = {
   start: "prev,today,next",
   center: "title",
@@ -30,7 +30,10 @@ const headerToolbar = {
 
 const AdminCalendar = ({ fetchEvents = () => {} }: any) => {
   const [events, setEvents] = useState([]);
-
+  const { groupInfo } = useGroup();
+  const totalMembers =
+    (groupInfo?.groupAdmins?.length ?? 0) +
+    (groupInfo?.groupMembers?.length ?? 0);
   useEffect(() => {
     const loadEvents = async () => {
       try {
@@ -46,9 +49,11 @@ const AdminCalendar = ({ fetchEvents = () => {} }: any) => {
   }, [fetchEvents]);
 
   const dataTransformer = (eventData: any) => {
+    const numParticipants = eventData.eventParticipants?.length ?? 0;
+    const opacity =
+      totalMembers > 0 ? Math.min(1, numParticipants / totalMembers) : 0.2;
     return {
       id: eventData.eid,
-      title: eventData.eventName,
       start: eventData.startDatetime,
       end: eventData.endDatetime,
       rrule: eventData.rrule ? eventData.rrule : null,
@@ -59,14 +64,16 @@ const AdminCalendar = ({ fetchEvents = () => {} }: any) => {
         high_priority: eventData.highPriority,
         event_participants: eventData.eventParticipants,
         group_name: eventData.groupName,
+        opacity,
       },
-      backgroundColor: "blue",
+      backgroundColor: `rgba(233, 30, 99, ${opacity})`,
+      borderColor: `rgba(233, 30, 99, ${opacity})`,
     };
   };
 
   return (
     <div className="mb-6 h-128 w-full rounded-lg bg-white shadow">
-      <div className="flex-grow h-full items-center justify-center font-bold text-gray-400">
+      <div className="flex-grow h-full items-center justify-center font-bold text-black">
         <FullCalendar
           plugins={[
             timeGridPlugin,
@@ -84,6 +91,7 @@ const AdminCalendar = ({ fetchEvents = () => {} }: any) => {
           slotEventOverlap={false}
           slotMinTime={"08:00:00"}
           displayEventEnd={true}
+          locale="en-gb"
           eventDisplay="background"
         />
       </div>
