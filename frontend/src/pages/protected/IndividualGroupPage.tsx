@@ -14,6 +14,7 @@ import { IoMdSearch } from "react-icons/io";
 import AdminCalendar from "@/components/AdminCalendar";
 import { Button } from "@/components/ui/button";
 import type FullCalendar from "@fullcalendar/react";
+import { GetHighPriorityEvents } from "@/services/admins/get-high-priority-data";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -23,8 +24,8 @@ import type FullCalendar from "@fullcalendar/react";
 
 export default function IndividualGroupPage() {
   const { id } = useParams();
-    const calendarRef = useRef<FullCalendar>(null);
-  
+  const calendarRef = useRef<FullCalendar>(null);
+
   const { data: group, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-group", id],
     queryFn: () => getGroupInfo(id!),
@@ -86,9 +87,7 @@ export default function IndividualGroupPage() {
   return (
     <GroupContextProvider groupInfo={group}>
       <NavBar />
-      <IndividualGroupLayout 
-              calendarRef={calendarRef}
-      >
+      <IndividualGroupLayout calendarRef={calendarRef}>
         <div className="flex flex-col px-2">
           <div className="gap-y-2">
             <div className="flex flex-row justify-center">
@@ -123,7 +122,7 @@ export default function IndividualGroupPage() {
           )}
 
           {currentView === "freeTime" && (
-            <AdminCalendar fetchEvents={() => getIndividualGroupEvent(id)} />
+            <AdminCalendar fetchEvents={() => GetHighPriorityEvents(id)} />
           )}
 
           <MagicCard
