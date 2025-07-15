@@ -30,7 +30,7 @@ router.post("/groupMembers", getGroupMembers);
 router.delete("/leaveGroup",leaveGroup)
 router.get("/searchEmails", searchEmails);
 router.post("/getPendingGroups", getPendingGroups);
-router.delete("/rejectGroupInvite",rejectGroupInvite)
+router.patch("/rejectGroupInvite",rejectGroupInvite)
 
 
 // export router
