@@ -30,7 +30,7 @@ const headerToolbar = {
 // const events = await GetUserEvents();
 // console.log(events);
 
-const AdminCalendar = ({ fetchEvents = () => {} }: any) => {
+const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
   const [events, setEvents] = useState([]);
   const { groupInfo } = useGroup();
   const totalMembers =
@@ -78,6 +78,7 @@ const AdminCalendar = ({ fetchEvents = () => {} }: any) => {
     <div className="mb-6 h-128 w-full rounded-lg bg-white shadow border border-white/30">
       <div className="flex-grow h-full items-center justify-center font-bold text-black">
         <FullCalendar
+        ref={calendarRef}
           plugins={[
             timeGridPlugin,
             dayGridPlugin,

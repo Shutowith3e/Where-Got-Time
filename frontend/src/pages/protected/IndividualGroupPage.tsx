@@ -104,14 +104,14 @@ export default function IndividualGroupPage() {
           </p>
           <div>
             {group?.isAdmin && (
-              <>
+              <div className="flex flex-row justify-center gap-x-1">
                 <Button onClick={groupCalendar} variant="default">
                   Group Calendar
                 </Button>
                 <Button onClick={freeTime} variant="default">
                   Find Free Time
                 </Button>
-              </>
+              </div>
             )}
           </div>
           {currentView === "groupCalendar" && (
@@ -122,7 +122,10 @@ export default function IndividualGroupPage() {
           )}
 
           {currentView === "freeTime" && (
-            <AdminCalendar fetchEvents={() => GetHighPriorityEvents(id)} />
+            <AdminCalendar
+              fetchEvents={() => GetHighPriorityEvents(id)}
+              calendarRef={calendarRef}
+            />
           )}
 
           <MagicCard
