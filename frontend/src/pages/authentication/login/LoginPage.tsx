@@ -29,7 +29,7 @@ export default function LoginPage() {
     <>
       <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-rose-900/60 ">
         <div className="flex flex-col gap-2">
-          <MagicCard gradientColor="262626" className="mx-auto rounded-2xl p-8">
+          <MagicCard gradientColor="262626" className="mx-auto rounded-2xl p-8 px-12">
             <div className="flex flex-col gap-4">
               <img src="/logo.png" className="h-8 mx-auto"></img>
               <h2 className="text-center text-lg font-semibold">Login</h2>
@@ -40,7 +40,7 @@ export default function LoginPage() {
                 <div className="grid grid-rows-2">
                   <label>Email </label>{" "}
                   <input
-                    className="border-1 rounded-lg px-3 text-sm"
+                    className="border-1 rounded-lg px-3 p-1 text-sm"
                     type="text"
                     placeholder="name@example.com"
                     {...register("email", {
@@ -52,7 +52,7 @@ export default function LoginPage() {
                 <div className="grid grid-rows-2">
                   <label>Password </label>
                   <input
-                    className="border-1 rounded-lg text-sm px-3"
+                    className="border-1 rounded-lg text-sm px-3 p-1"
                     type="password"
                     placeholder="Enter Your Password"
                     {...register("password", {
