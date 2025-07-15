@@ -40,7 +40,7 @@ export default function AcceptGroupInvite({
       queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });
-      queryClient.invalidateQueries({ queryKey: ["pending-group-invites"] });
+      queryClient.invalidateQueries({ queryKey: ["pending-group"] });
     },
   });
 
