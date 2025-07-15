@@ -24,9 +24,14 @@ export default function SignupPage() {
   /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
   const onSubmit = async (data: any) => {
     const { email, password } = data;
-    const { data:signUpData, error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        // CLARICE LIM OR LIM JIA LE PLEASE COMMENT THIS OUT AND JUST REPLACE THE SUPABASE SITE URL
+        emailRedirectTo:
+          import.meta.env.VITE_SUPABASE_REDIRECT_URL ?? "http://localhost:3000",
+      },
     });
     setMessage("");
     if (error) {
@@ -34,10 +39,12 @@ export default function SignupPage() {
       return;
     }
     // have to put the !== null or it throws error, but it would never return null unless error
-    else if(signUpData.user !== null && JSON.stringify(signUpData.user.user_metadata) === '{}'){
-      setMessage("Error: account already exists!")
-    }
-    else {
+    else if (
+      signUpData.user !== null &&
+      JSON.stringify(signUpData.user.user_metadata) === "{}"
+    ) {
+      setMessage("Error: account already exists!");
+    } else {
       setMessage("Sign up Successful! Please Check Your Email!");
     }
   };

@@ -1,4 +1,4 @@
-// functions/api.js
+// CLARICE LIM OR LIM JIA LE PLEASE DO NOT ZIP THIS FILE OR NETLIFY.TOML IN FOR HUAWEI DEPLOYMENT
 
 import cors from "cors";
 import env from "dotenv";
