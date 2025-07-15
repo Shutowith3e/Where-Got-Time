@@ -81,7 +81,7 @@ const acceptGroupInvite = async (email, gid) => {
 } // tested, works 
 
 const rejectGroupInvite = async (email, gid) => {
-	return await supabase.from('group_members').delete().match({email, gid}).is('invite_accepted', null);
+	return await supabase.from('group_members').update({invite_accepted: false}).match({email, gid}).is('invite_accepted', null);
 } // tested, works
 
 const leaveGroup = async (email,gid,personal_gid)=>{
