@@ -1,3 +1,4 @@
+import GetUserClashesCard from "./GetUserClashesCard";
 import GetPendingGroupsCard from "./group/GetPendingGroups";
 import {
   Sidebar,
@@ -14,18 +15,12 @@ export default function MainUserDrawer() {
       <SidebarHeader />
       <SidebarContent className="p-4 flex flex-col gap-4">
 
-        {/* Box 1: Clash Notifications */}
-        <div className="rounded-xl bg-white p-4 shadow">
-          <h3 className="text-md font-semibold">Notifications</h3>
-          <p className="mt-2 text-sm text-red-500">You have X schedule clashes</p>
-          <div className="mt-4 rounded-md bg-gray-100 p-2 text-sm">
-            <p><strong>Clash:</strong> A event - Group 1</p>
-            <p>B event - Group 2</p>
-          </div>
-        </div>
+        <h1 className="text-2xl font-bold text-center">Notifications</h1>
 
-        {/* Card for Pending Group Invites */}
-       <GetPendingGroupsCard/>
+        <GetUserClashesCard />
+
+        <GetPendingGroupsCard />
+        
       </SidebarContent>
     </Sidebar>
   );
