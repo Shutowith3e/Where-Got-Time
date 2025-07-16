@@ -8,11 +8,14 @@ import { GroupContextProvider } from "@/context/GroupContext";
 import IndividualGroupLayout from "./IndividualGroupLayout";
 import EditGroup from "@/components/admin/EditGroup";
 import { getIndividualGroupEvent } from "@/services/events/get-group-events-data";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MagicCard } from "@/components/magicui/magic-card";
 import { IoMdSearch } from "react-icons/io";
 import AdminCalendar from "@/components/AdminCalendar";
-import { Button } from "@/components/ui/button";
+import type FullCalendar from "@fullcalendar/react";
+import { GetHighPriorityEvents } from "@/services/admins/get-high-priority-data";
+import { TabsList } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 
 //pls only tap group 1 from main user page, data is hard coded
 //will throw into react hook form for the edit group button
@@ -22,6 +25,8 @@ import { Button } from "@/components/ui/button";
 
 export default function IndividualGroupPage() {
   const { id } = useParams();
+  const calendarRef = useRef<FullCalendar>(null);
+
   const { data: group, isPending: isGroupsPending } = useQuery({
     queryKey: ["user-group", id],
     queryFn: () => getGroupInfo(id!),
@@ -36,14 +41,6 @@ export default function IndividualGroupPage() {
   const filteredEvents = (groupEvent ?? []).filter((event) =>
     event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const [currentView, setCurrentView] = useState("freeTime");
-  const freeTime = () => {
-    setCurrentView("freeTime");
-  };
-  const groupCalendar = () => {
-    setCurrentView("groupCalendar");
-  };
 
   if (!id) {
     return <p>Invalid Group ID!</p>;
@@ -83,7 +80,7 @@ export default function IndividualGroupPage() {
   return (
     <GroupContextProvider groupInfo={group}>
       <NavBar />
-      <IndividualGroupLayout>
+      <IndividualGroupLayout calendarRef={calendarRef}>
         <div className="flex flex-col px-2">
           <div className="gap-y-2">
             <div className="flex flex-row justify-center">
@@ -99,26 +96,27 @@ export default function IndividualGroupPage() {
             {group.groupDescription}
           </p>
           <div>
-            {group?.isAdmin && (
-              <>
-                <Button onClick={groupCalendar} variant="default">
-                  Group Calendar
-                </Button>
-                <Button onClick={freeTime} variant="default">
-                  Find Free Time
-                </Button>
-              </>
-            )}
+            <Tabs defaultValue="groupCalendar">
+              <TabsList className="bg-slate-100 flex flex-row rounded-lg flex-wrap mt-2">
+                <TabsTrigger value="groupCalendar">Group Calendar</TabsTrigger>
+                {group?.isAdmin && (
+                  <TabsTrigger value="freeTime">Find Free Time</TabsTrigger>
+                )}
+              </TabsList>
+              <TabsContent value="groupCalendar">
+                <IndividualCalendar
+                  fetchEvents={() => getIndividualGroupEvent(id)}
+                  calendarRef={calendarRef}
+                />
+              </TabsContent>
+              <TabsContent value="freeTime">
+                <AdminCalendar
+                  fetchEvents={() => GetHighPriorityEvents(id)}
+                  calendarRef={calendarRef}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
-          {currentView === "groupCalendar" && (
-            <IndividualCalendar
-              fetchEvents={() => getIndividualGroupEvent(id)}
-            />
-          )}
-
-          {currentView === "freeTime" && (
-            <AdminCalendar fetchEvents={() => getIndividualGroupEvent(id)} />
-          )}
 
           <MagicCard
             gradientColor="262626"

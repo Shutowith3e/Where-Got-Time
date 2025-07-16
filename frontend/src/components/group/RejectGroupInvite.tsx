@@ -12,35 +12,35 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
-import { Check } from "lucide-react";
+import { IoIosClose } from "react-icons/io";
 
-export type acceptGroupInviteProps = {
+export type rejectGroupInviteProps = {
   gid: string;
   groupName: string;
   groupDescription: string;
 };
 
-async function acceptGroup({ gid }: { gid: string }) {
+async function rejectGroup({ gid }: { gid: string }) {
   const {
     data: { data },
-  } = await axiosInstance.patch("/groups/acceptGroupInvite", { gid });
+  } = await axiosInstance.patch("/groups/rejectGroupInvite", { gid });
   return data;
 }
 
-export default function AcceptGroupInvite({
+export default function RejectGroupInvite({
   gid,
   groupName,
   groupDescription,
-}: acceptGroupInviteProps) {
+}: rejectGroupInviteProps) {
   const queryClient = useQueryClient();
-  const acceptInviteMutation = useMutation({
-    mutationFn: acceptGroup,
+  const rejectInviteMutation = useMutation({
+    mutationFn: rejectGroup,
     onSuccess: () => {
-      console.log("Successfully accepted");
+      console.log("Successfully rejected");
       queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });
-      queryClient.invalidateQueries({ queryKey: ["pending-group"] });
+      queryClient.invalidateQueries({ queryKey: ["pending-groups"] });
     },
   });
 
@@ -48,18 +48,18 @@ export default function AcceptGroupInvite({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline" className="rounded-full w-6 h-6 p-0">
-          <Check className="w-4 h-4" />
+          <IoIosClose className="w-4 h-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Accept group invite for {groupName}
+            Reject group invite for {groupName}
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div>
           <p>
-            Are you sure you want to accept{" "}
+            Are you sure you want to reject{" "}
             <span className="font-bold">{groupName}</span> ?
           </p>
           <p className="font-light">{groupDescription}</p>
@@ -69,10 +69,10 @@ export default function AcceptGroupInvite({
           <AlertDialogAction
             variant="default"
             onClick={async () => {
-              await acceptInviteMutation.mutateAsync({ gid });
+              await rejectInviteMutation.mutateAsync({ gid });
             }}
           >
-            Accept
+            Reject
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

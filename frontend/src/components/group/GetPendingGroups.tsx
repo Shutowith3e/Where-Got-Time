@@ -1,8 +1,7 @@
-import { Button } from "../ui/button";
-import { IoIosClose } from "react-icons/io";
 import axiosInstance from "@/lib/axios-instance";
 import { useQuery } from "@tanstack/react-query";
 import AcceptGroupInvite from "./AcceptPendingGroup";
+import RejectGroupInvite from "./RejectGroupInvite";
 
 type AllPendingGroups = {
   PendingGroups: IndivPendingGroup[];
@@ -56,9 +55,11 @@ function PendingGroupChip({
           groupName={groupName}
           groupDescription={groupDescription}
         />
-        <Button variant="outline" className="rounded-full w-6 h-6 p-0">
-          <IoIosClose className="w-4 h-4" />
-        </Button>
+        <RejectGroupInvite
+          gid={gid}
+          groupName={groupName}
+          groupDescription={groupDescription}
+        />
       </div>
     </div>
   );
@@ -79,7 +80,11 @@ export default function GetPendingGroupsCard() {
     <div className="rounded-xl bg-white p-4 shadow w-full">
       <h3 className="text-md font-semibold text-center">Group Invites</h3>
       <p className="mt-2 text-sm text-gray-600 text-center">
-        You have {allPendingGroups?.PendingGroups.length} group invite
+        You have{" "}
+        <span className="font-semibold text-medium text-black">
+          {allPendingGroups?.PendingGroups.length}
+        </span>{" "}
+        group invite
         {allPendingGroups?.PendingGroups.length !== 1 && "s"}
       </p>
 
@@ -87,7 +92,9 @@ export default function GetPendingGroupsCard() {
         <PendingGroupChip
           key={group.gid}
           groupName={group.groupName}
-          groupDescription={group.groupDescription} gid={group.gid}        />
+          groupDescription={group.groupDescription}
+          gid={group.gid}
+        />
       ))}
     </div>
   );
