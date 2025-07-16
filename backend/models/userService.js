@@ -6,8 +6,6 @@ import { getEventName } from "./eventService.js";
 //eg const get users = async () => {return await supabase.from("user").select("*")}
 
 
-
-
 const getUserPersonalGroup = async (email) => {
 	const { data, error } = await supabase.from('user').select('personal_grp').eq('email', email);
 	if (!error) {
@@ -212,21 +210,10 @@ const getUserClashes = async (email) => {
 // const {data,error} = await getUserEvents('7d118413-0d8d-43ba-822a-79187099a4c4');
 //console.log(data[0].event)//this is how to get one event, may need a for loop or smth
 // console.log(data);
+
 export {
 	getGroups,
 	getUserEvents,
 	getUserPersonalGroup,
 	getUserClashes
 }
-//console.log(await supabase.from('user').select('uid').eq('email', "yongsoon.ng.2024@computing.smu.edu.sg"));
-//console.log(await emailUidConverter(["05f8005d-d301-4657-8d8a-a28c7df1a582", "666bb957-0320-4f8a-9d16-cf78535bad40"]));
-//console.log(await getUserPersonalGroup("666bb957-0320-4f8a-9d16-cf78535bad40"));
-// console.log(await supabase.from("group_members").select("gid").eq("uid","666bb957-0320-4f8a-9d16-cf78535bad40").neq("gid", "6faf04ff-4978-43d4-8559-59fac7a4c333"));
-// console.log(await supabase.from("group_members").select("gid").eq("uid","666bb957-0320-4f8a-9d16-cf78535bad40"));
-//console.log(await getGroups("244b4c5a-6578-4af9-9a87-6f4aada352ea"));
-//console.log(await supabase.from('group').select().eq('gid', "1a418fb8-d234-4ef7-9a11-91f464057636"));
-
-// console.log(await getAdmins("2c8506e4-6adb-427b-be08-2efa6ecd0153"));
-// console.log(await supabase.rpc('get_members_in_both_events', {eid1: '583d87b0-e8fa-475b-85cf-2399c1730e9d', eid2: '5ee7fecd-b034-4b51-b327-227ff537066a', target_gid: '2c8506e4-6adb-427b-be08-2efa6ecd0153'}));
-
-//console.log(await getUserClashes('jiale.lim.2024@computing.smu.edu.sg'));

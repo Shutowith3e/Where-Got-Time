@@ -1,6 +1,5 @@
 import supabase from "./connection.js";
 
-
 // make functions to query db here
 //also add functions to handle other business rules here
 //eg const get users = async () => {return await supabase.from("user").select("*")}
@@ -104,28 +103,6 @@ const getPendingGroups = async (email_inp)=>{
 
 
 
-//console.log(await acceptGroupInvite("244b4c5a-6578-4af9-9a87-6f4aada352ea", "74cf7e70-1c97-405e-9957-0858f3968176"));
-
-//below is testing script before routes
-
-const testgid = '5c6cb264-5134-41a6-8549-46d3df1029d3';
-
-const testuid = '244b4c5a-6578-4af9-9a87-6f4aada352ea';
-//console.log(await createGroup("dessert you", [""]));
-//console.log(await getGroupName("1734e999-dfb5-4ff3-a6b3-b350b750f76b"));
-// const {isAdmin,error} = await checkAdmin(testuid,testgid);
-// console.log(isAdmin,error);
-
-//console.log(await supabase.from('group').insert({group_name:"testtestest"}).select());// let supabase generate the uuid)
-//console.log(await getGroupMembers(testgid));
-
-//console.log(await getAdmins("1a418fb8-d234-4ef7-9a11-91f464057636"));
-//export model funcs
-//console.log(await getGroupMembers("74cf7e70-1c97-405e-9957-0858f3968176"));
-//console.log(await getGroupMembersEmails("74cf7e70-1c97-405e-9957-0858f3968176"));
-//console.log(await getPendingGroups("clarice.lim.2024@computing.smu.edu.sg"))
-//console.log(await getGroupName('0ad699cb-ee0d-48b1-b666-ca4fe47890ed'));
-
 export {
 	checkAdmin,
 	getGroupDetails,
@@ -141,9 +118,4 @@ export {
 	getGroupName
 };
 
-// const { data, error } = await supabase.auth.signInWithPassword({
-// 	email: 'clarice.lim.2024@computing.smu.edu.sg',
-// 	password: 'Password123#',
-// });
-// console.log(data); 
 

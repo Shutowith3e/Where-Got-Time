@@ -1,6 +1,6 @@
 import * as service from "../models/eventService.js";
 
-//TODO implement functionalities for routes here
+// implement functionalities for routes here
 
 const getEventParticipants = async (req, res) => {
     const {eid} = req.body; // either get frm fe or call anth func in be to get 

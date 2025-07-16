@@ -3,14 +3,14 @@ import env from "dotenv";
 env.config();
 const authJWT = async (req,res,next) =>{
 	const authHeader = req.header('Authorization');
-	if (!authHeader) {// no auth header == gtfo
+	if (!authHeader) {// no auth header == no access
         return res.status(401).json({ message: 'No token, authorization denied' });
     }
 
     // Split the header to get just the token part
     const token = authHeader.split(' ')[1]; // Expects 'Bearer TOKEN_STRING'
 
-    if (!token) {// no token == gtfo
+    if (!token) {// no token == no access
         return res.status(401).json({ message: 'No token, authorization denied' });
     }
 	try{
@@ -21,7 +21,7 @@ const authJWT = async (req,res,next) =>{
 		next(); // go to next route so for eg ur routes will look like router.get('')
 	}
 	catch(err){
-		// mf is using some fake jwt or altered smth inside
+		// user is using some fake jwt or altered smth inside
 		if (err.name === 'JsonWebTokenError') {
             return res.status(401).json({ message: 'Token is not valid', code:"INVALID_TOKEN" });
         }
