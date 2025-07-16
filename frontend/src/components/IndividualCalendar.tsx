@@ -94,6 +94,7 @@ const IndividualCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
           scrollTime="08:00:00"
           slotMinTime="00:00:00"
           slotMaxTime="24:00:00"
+          handleWindowResize={true}
           displayEventEnd={true}
           eventTimeFormat={{
             hour: "numeric",
