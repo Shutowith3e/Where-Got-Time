@@ -1,5 +1,5 @@
 import * as service from "../models/userService.js";
-//TODO implement functionalities for routes here
+// implement functionalities for routes here
 
 
 const getUserPersonalGroup = async (req, res) => {

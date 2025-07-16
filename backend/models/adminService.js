@@ -132,20 +132,3 @@ export {
 
 }
 
-//console.log(await createEvent("5c6cb264-5134-41a6-8549-46d3df1029d3", "idw attend how", "2023-01-01T00:00:00Z","2023-01-01T00:00:00Z", null, true));
-//console.log(await deleteGroupMember('244b4c5a-6578-4af9-9a87-6f4aada352ea','e0884a99-4d9a-4fa6-8fa5-eb5426804650'));
-//console.log(await inviteGroupMember("244b4c5a-6578-4af9-9a87-6f4aada352ea", "62af6a4a-e77c-4124-8c13-93c08644e49a"));
-//console.log(await inviteGroupMembers(["05f8005d-d301-4657-8d8a-a28c7df1a582", "244b4c5a-6578-4af9-9a87-6f4aada352ea"], "c5a45461-b148-4d04-941a-c382669b93e2"));
-
-// console.log(await supabase.rpc('update_event_and_participants', {p_eid: "09675693-d948-4734-833a-2af89c7e10b8", 
-// 		p_gid: "0ad699cb-ee0d-48b1-b666-ca4fe47890ed", 
-// 		p_event_name: "event name has been changed before", 
-// 		p_startdt: "2025-07-09T10:00:00Z", 
-// 		p_enddt: "2025-07-09T17:00:00Z", 
-// 		p_high_priority: true, 
-// 		p_rrule: null,
-// 		p_old_emails: [],
-// 		p_new_emails: ["joey.chik.2024@computing.smu.edu.sg"]
-// 	}))
-
-//console.log(await supabase.from('event').insert({'gid': "0ad699cb-ee0d-48b1-b666-ca4fe47890ed", 'event_name':"istg one more event and i'll actl", 'start_datetime':"2025-07-09T10:00:00Z", 'end_datetime':"2025-07-09T16:10:00Z", 'rrule':null, high_priority:false}).select())

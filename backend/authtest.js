@@ -18,9 +18,3 @@ const getAllUsers = async (req, res) => {
 router.get('/getAllUsers',getAllUsers);
 export default router;
 
-//console.log(await service.inviteGroupMember("244b4c5a-6578-4af9-9a87-6f4aada352ea", "1a418fb8-d234-4ef7-9a11-91f464057636"));
-// const { data, error } = await supabase.auth.signInWithPassword({
-// 	email: 'clarice.lim.2024@computing.smu.edu.sg',
-// 	password: 'Password123#',
-// });
-// console.log(data); 
