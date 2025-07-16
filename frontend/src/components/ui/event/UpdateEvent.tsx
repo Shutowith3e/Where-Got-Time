@@ -146,6 +146,7 @@ export default function UpdateEventModal({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
       queryClient.invalidateQueries({ queryKey: ["user-events"] });
+      queryClient.invalidateQueries({ queryKey: ["user-clashes"]});
       console.log("Updated event");
       onClose();
     },
