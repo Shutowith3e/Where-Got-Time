@@ -16,7 +16,7 @@ export default function NavBar() {
     <nav className="grid grid-cols-2 items-center p-1.5 md:px-8 md:py-4 bg-white sticky top-0 z-20">
       <div className="flex items-center gap-3">
         <Link to={authenticated ? "/mainUser" : "/"}>
-          <img src="/logo.png" className="md:max-h-10 max-h-5"></img>
+          <img src="/logo.png" className="md:max-h-10 max-h-4"></img>
         </Link>
       </div>
 

@@ -5,9 +5,12 @@ export type ReasonCardProps = {
 
 export default function ReasonCard({ title, reason }: ReasonCardProps) {
   return (
-    <div className="flex flex-col flex-wrap bg-gradient-to-b from-rose-950/66 to-rose-900/70 gap-4 text-center rounded-3xl justify-center items-center p-6">
-      <h3 className="text-xl font-semibold text-rose-50 mx-auto ">{title}</h3>
-      <p className="text-lg text-rose-100 mx-auto">{reason}</p>
+    <div
+      className="flex flex-col flex-wrap bg-rose-900/20 rounded-2xl p-6 sm:p-8 text-center shadow-lg text-slate-800
+ gap-4 justify-center items-center "
+    >
+      <h3 className="text-xl font-semibold text-rose-900 mx-auto ">{title}</h3>
+      <p className="text-lg text-rose-900/70 mx-auto">{reason}</p>
     </div>
   );
 }

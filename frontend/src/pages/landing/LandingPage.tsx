@@ -4,86 +4,66 @@ import NavBar from "../../components/NavBar";
 import ReasonCard from "./ReasonCard";
 import { AnimatedTestimonials } from "../../components/ui/landing/animated-testimonials";
 import useAuth from "@/context/AuthContext";
-import { BackgroundGradientAnimation } from "@/components/ui/landing/background-gradient-animation";
 
 export default function LandingPage() {
   const { authenticated } = useAuth();
 
   return (
     <>
-      <div className="min-h-screen flex flex-col relative">
+      <div className="min-h-screen flex flex-col relative w-full overflow-x-hidden">
         <NavBar />
 
         <main className="flex-grow overflow-x-hidden">
-          <BackgroundGradientAnimation
-            gradientBackgroundStart={"rgb(0,0,0)"}
-            firstColor={"64, 31, 113"}
-            secondColor={"130, 77, 116"}
-            thirdColor={"190, 123, 114"}
-            fourthColor={"253, 175, 123"}
-            fifthColor={"255, 255, 255"}
-            interactive={false}
-          >
-            <img
-              src="/meettext.png"
-              className="relative top-15 left-25 w-100 opacity-70"
-            ></img>
-            <img
-              src="/update.png"
-              className="relative top-110 left-235 w-60 opacity-60"
-            ></img>
+          <section className="relative w-full bg-gradient-to-b from-[#C6C4E7] to-indigo-900/60 min-h-screen flex items-center justify-center overflow-hidden px-6 ">
+            <div className="absolute top-10 left-10 w-80 h-80 bg-rose-500/30  blur-3xl rounded-full z-0 animate-pulse" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-600/25  blur-2xl rounded-full z-0 animate-pulse" />
 
-            <div className="-mt-15 flex flex-col space-y-12 items-center justify-center text-center min-h-[calc(100vh-10rem)]">
-              <h1 className="text-4xl font-extrabold mt-6 text-orange-100">
-                Effortless Group Scheduling For Everyone
+            <div className="backdrop-blur-xl bg-white/10 border border-violet-200/30 rounded-3xl sm:p-12 text-center max-w-2xl w-full z-10">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-orange-50 leading-tight">
+                Effortless Group <br className="hidden sm:inline" /> Scheduling
+                For Everyone
               </h1>
-              <h2 className="mt-6 font-stretch-75% text-2xl text-rose-100 font-semibold">
+              <p className="mt-6 text-base sm:text-lg text-white leading-relaxed">
                 Say goodbye to scheduling chaos. Combine calendars, detect
-                clashes, and <br />
-                stay synced with your groups — whether for lessons, CCAs, or
-                project meetings.
-              </h2>
-              <div className="flex flex-row space-x-10 z-10">
+                clashes, and stay synced with your groups — whether for lessons,
+                CCAs, or project meetings.
+              </p>
+
+              <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
                 <Link
                   to={authenticated ? "/mainUser" : "/signup"}
-                  className="text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 hover:underline font-semibold"
+                  className="bg-white text-indigo-800 rounded-full px-6 py-3 font-semibold shadow hover:bg-indigo-100 transition"
                 >
                   Get Started!
                 </Link>
-
                 <Link
                   to="/contribute"
-                  className="text-indigo-100 bg-indigo-800 rounded-3xl px-4 py-2 hover:underline font-semibold"
+                  className="bg-indigo-800 text-white rounded-full px-6 py-3 font-semibold shadow hover:bg-indigo-700 transition"
                 >
                   Contribute
                 </Link>
               </div>
             </div>
-          </BackgroundGradientAnimation>
-          <h2 className="mt-12 font-stretch-75% text-3xl text-slate-800 font-semibold text-center">
+          </section>
+
+          <h2 className="mt-24 text-3xl text-slate-800 font-semibold text-center z-10">
             Why Where Got Time?
           </h2>
-          <div className="mt-12 mb-20 ml-8 mr-8 grid grid-cols-3 space-x-8 ">
+          <div className="mt-12 mb-20 px-4 sm:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 z-10">
             <ReasonCard
-              title={"Smart Scheduling"}
-              reason={
-                "Automatically detect group clashes and suggest optimal meeting times — no more endless back-and-forths"
-              }
-            ></ReasonCard>
+              title="Smart Scheduling"
+              reason="Automatically detect group clashes and suggest optimal meeting times — no more endless back-and-forths"
+            />
             <ReasonCard
-              title={"Priority Events"}
-              reason={
-                "Highlights and detects clashes only for what matters most, so high-priority meetings always get scheduled first"
-              }
-            ></ReasonCard>
+              title="Priority Events"
+              reason="Highlights and detects clashes only for what matters most, so high-priority meetings always get scheduled first"
+            />
             <ReasonCard
-              title={"Always in Sync"}
-              reason={
-                "Get real-time updates for events so everyone stays on the same page, with zero missed changes or confusion"
-              }
-            ></ReasonCard>
+              title="Always in Sync"
+              reason="Get real-time updates for events so everyone stays on the same page, with zero missed changes or confusion"
+            />
           </div>
-          <div className="bg-gradient-to-b from-rose-900/60 to-orange-800/50">
+          <div className="w-full bg-orange-800/15 px-4 py-20 rounded-2xl">
             <AnimatedTestimonials
               testimonials={[
                 {
@@ -91,24 +71,24 @@ export default function LandingPage() {
                     "Where Got Time brings together every group’s schedules into one seamless board. View, compare, and coordinate everyone’s availability at a glance—no more endless chats or double-bookings",
                   name: "All-In-One Group Scheduler",
                   designation: "User Friendly",
-                  src: "./calender.png",
+                  src: "./schedule.png",
                 },
                 {
                   quote:
                     "Where Got Time supports groups of up to 50 members, making it perfect for everything from class projects to entire CCAs or teams. No need to split into multiple chats—organize your entire crew in one place!",
                   name: "Large Groups, No Problem",
                   designation: "Supports Large Groups",
-                  src: "./groups.png",
+                  src: "./group.png",
                 },
                 {
                   quote:
-                    "Where Got Time sends automatic email notifications to all affected members the moment a clash is detected. Get alerted instantly—so you can resolve conflicts early and keep your plans running smoothly",
-                  name: "Instant Clash And Schedule Alerts",
-                  designation: "Never miss a scheduling conflict again!",
-                  src: "./email.png",
+                    "Where Got Time detects high-priority events across all members and dynamically adjusts the schedule gradient based on how many people are affected. The more impacted, the darker the visual — helping you prioritize at a glance.",
+                  name: "Dynamic Priority Detection",
+                  designation: "Adaptive Gradient Based On Group Impact",
+                  src: "./highPriority.png",
                 },
               ]}
-            ></AnimatedTestimonials>
+            />
           </div>
         </main>
       </div>
