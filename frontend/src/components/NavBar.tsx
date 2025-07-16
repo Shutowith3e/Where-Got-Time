@@ -13,14 +13,14 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="grid grid-cols-2 items-center px-8 py-4 bg-white sticky top-0 z-20">
+    <nav className="grid grid-cols-2 items-center p-1.5 md:px-8 md:py-4 bg-white sticky top-0 z-20">
       <div className="flex items-center gap-3">
         <Link to={authenticated ? "/mainUser" : "/"}>
-          <img src="/logo.png" className="max-h-10"></img>
+          <img src="/logo.png" className="md:max-h-10 max-h-5"></img>
         </Link>
       </div>
 
-      <div className="flex justify-end items-center gap-8 flex-row">
+      <div className="flex justify-end items-center gap-2 md:gap-6 flex-row whitespace-nowrap md:text-base text-[8px]">
         {authenticated ? (
           <>
             <Link to="/mainUser" className="text-indigo-800 hover:underline">
