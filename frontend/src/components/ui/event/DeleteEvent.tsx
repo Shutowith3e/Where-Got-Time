@@ -42,7 +42,6 @@ export default function DeleteEvent({
   const deleteMutation = useMutation({
     mutationFn: deleteEvent,
     onSuccess: () => {
-      console.log("Successfully deleted");
       queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

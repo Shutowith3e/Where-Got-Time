@@ -140,13 +140,12 @@ export default function CreateEventModal({
       return res.data;
     },
     onSuccess: () => {
-      console.log("Event created");
       queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
       queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
     },
     onError: (error) => {
-      console.error(error);
+      return error;
     },
   });
 
@@ -276,7 +275,6 @@ export default function CreateEventModal({
               validate: (value, formValues) => {
                 // make sure start time < end time
 
-                console.log(value, formValues.startTime);
                 if (value <= formValues.startTime) {
                   return "*End date/time must be after start date/time";
                 }

@@ -25,7 +25,6 @@ type ClashCardProps = {
 
 async function fetchClashes(): Promise<ClashCardProps> {
   const response = await axiosInstance.post("/users/getUserClashes");
-  console.log("backed raw clash data", response.data);
   const { adminClashes, memberClashes } = response.data.data;
   return { adminClashes, memberClashes };
 }

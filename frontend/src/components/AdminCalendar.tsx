@@ -15,20 +15,7 @@ const headerToolbar = {
   center: "title",
   right: "timeGridDay,timeGridWeek,dayGridMonth",
 };
-// const event2=  [{
-// 		"eid": "68f9d513-9d12-4f9d-9b95-acc799d6f103",
-// 		"gid": "21924b54-03cd-40bb-92b6-fac4a0d68e6f",
-// 		"group": {
-//       "group_name":'lol'
-//     },
-// 		"rrule": 'DTSTART:20250627T144700\nRRULE:FREQ=WEEKLY;BYDAY=FR;UNTIL=20260627',
-// 		"eventName": "simi event bro",
-// 		"startDatetime": "2025-06-27T14:47:00",
-// 		"endDatetime": "2025-06-27T15:47:00",
-// 		"highPriority": true
-// 		}]
-// const events = await GetUserEvents();
-// console.log(events);
+
 
 const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
   const [events, setEvents] = useState([]);
@@ -41,9 +28,8 @@ const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
       try {
         const data = await fetchEvents();
         setEvents(data);
-        // console.log(data);
       } catch (error) {
-        console.error("Failed to fetch events:", error);
+        return error;
       }
     };
 

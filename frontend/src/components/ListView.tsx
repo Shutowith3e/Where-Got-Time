@@ -18,9 +18,8 @@ const ListView = ({ fetchEvents = () => {} }: any) => {
       try {
         const data = await fetchEvents();
         setEvents(data);
-        // console.log(data);
       } catch (error) {
-        console.error("Failed to fetch events:", error);
+        return error;
       }
     };
 

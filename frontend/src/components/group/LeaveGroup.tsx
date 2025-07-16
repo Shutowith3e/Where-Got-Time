@@ -45,7 +45,6 @@ export default function LeaveGroup() {
   const leaveGroupMutation = useMutation({
     mutationFn: leaveGroup,
     onSuccess: () => {
-      console.log("Successfully left group");
       navigate("/mainGroup");
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],

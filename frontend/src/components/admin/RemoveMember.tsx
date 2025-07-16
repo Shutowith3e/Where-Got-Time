@@ -44,7 +44,6 @@ export default function RemoveMember({ memberToDelete }: deleteMemberProps) {
   const removeMemberMutation = useMutation({
     mutationFn: removeMember,
     onSuccess: () => {
-      console.log("Successfully deleted");
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

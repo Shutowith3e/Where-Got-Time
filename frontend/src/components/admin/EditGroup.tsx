@@ -43,7 +43,6 @@ export default function EditGroup() {
       return res.data;
     },
     onSuccess: () => {
-      console.log("Group Edited Successfully");
       setIsOpen(false);
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],

@@ -36,7 +36,6 @@ export default function AcceptGroupInvite({
   const acceptInviteMutation = useMutation({
     mutationFn: acceptGroup,
     onSuccess: () => {
-      console.log("Successfully rejected");
       queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });
