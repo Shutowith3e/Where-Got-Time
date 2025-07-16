@@ -36,7 +36,6 @@ export default function DeleteGroup() {
   const deleteGroupMutation = useMutation({
     mutationFn: deleteGroup,
     onSuccess: () => {
-      console.log("Successfully deleted");
       navigate("/mainGroup");
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],

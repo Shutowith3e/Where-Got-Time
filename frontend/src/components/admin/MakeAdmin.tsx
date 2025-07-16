@@ -42,7 +42,6 @@ export default function MakeAdmin({ makememberAdmin }: makeAdminProps) {
   const makeAdminMutation = useMutation({
     mutationFn: makeAdmin,
     onSuccess: () => {
-      console.log("Successfully deleted");
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

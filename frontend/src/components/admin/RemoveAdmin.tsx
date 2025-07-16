@@ -42,7 +42,6 @@ export default function RemoveAdmin({ adminToRemove }: RemoveAdminProps) {
   const removeAdminMutation = useMutation({
     mutationFn: removeAdmin,
     onSuccess: () => {
-      console.log("Successfully deleted");
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

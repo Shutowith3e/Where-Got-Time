@@ -73,7 +73,6 @@ export default function GetPendingGroupsCard() {
   if (isGroupsPending) {
     return <p>Loading...</p>;
   }
-  // console.log(allPendingGroups);
 
   // if length >1 u got "s" at the back for no. of invites
   return (

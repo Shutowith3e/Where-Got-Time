@@ -31,11 +31,10 @@ export default function CreateGroupPage() {
       return res.data;
     },
     onSuccess: () => {
-      console.log("Group created");
       navigate("/mainGroup");
     },
     onError: (error) => {
-      console.error(error);
+      return error;
     },
   });
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);

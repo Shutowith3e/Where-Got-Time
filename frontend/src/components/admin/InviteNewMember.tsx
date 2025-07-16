@@ -42,7 +42,6 @@ export default function InviteNewMember() {
       return res.data;
     },
     onSuccess: () => {
-      console.log("Members Invited");
       setIsOpen(false);
     },
     onError: (error) => {

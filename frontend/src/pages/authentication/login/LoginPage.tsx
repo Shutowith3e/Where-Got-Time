@@ -15,8 +15,6 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
-    //console.log(errors);
-    //console.log(data);
     const { email, password } = data;
     const isSuccess = await login(email, password);
 

@@ -64,31 +64,12 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      console.log(session?.access_token);
       setUserEmail(session?.user?.email ?? "");
       if (session) {
         const personalGid = await getPersonalGroup();
         setPersonalGroupId(personalGid);
       }
 
-      // test
-      // const personalgroupid = await personalGroup();
-      // console.log(personalgroupid);
-      // const jwt = session?.access_token;
-      // if (jwt) {
-      //   const response = await fetch("http://localhost:8000/users/getGroups", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${jwt}`,
-      //     },
-      //   });
-
-      //   const result = await response.json();
-      //   console.log(result);
-      // } else {
-      //   console.error("No session found, user not authenticated.");
-      // }
       setAuthenticated(!!session);
       setIsLoading(false);
     };
