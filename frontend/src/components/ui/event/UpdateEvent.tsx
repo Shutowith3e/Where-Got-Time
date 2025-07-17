@@ -177,6 +177,7 @@ if(!eventParticipants){
           {gid !== personalGroupId && (
             <>
               <SelectedMembers
+              allEmails={[...groupAdmins, ...groupMembers]}
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
               />
