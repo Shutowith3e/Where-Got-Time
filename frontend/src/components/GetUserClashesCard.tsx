@@ -41,10 +41,10 @@ function AdminClashCardChip({
     <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-2 shadow-sm w-full text-sm text-center">
       <p className="font-bold text-rose-900 mb-1">Admin</p>
       <div className="flex flex-col space-y-1 text-center">
-        <p className="truncate font-semibold">{eventName1}</p>
-        <p className="truncate font-light ">{groupName1}</p>
-        <p className="truncate font-semibold">{eventName2}</p>
-        <p className="truncate font-light">{groupName2}</p>
+        <p className="truncate font-semibold">Event: {eventName1}</p>
+        <p className="truncate font-light ">Group: {groupName1}</p>
+        <p className="truncate font-semibold">Event: {eventName2}</p>
+        <p className="truncate font-light">Group: {groupName2}</p>
       </div>
 
       {affectedMembers && affectedMembers.length > 0 && (
@@ -98,16 +98,16 @@ function MemberClashCardChip({
       <p className="font-bold text-amber-900/75 mb-1">Member</p>
       <div className="flex flex-col space-y-1 text-center">
         <p className="truncate overflow-hidden whitespace-nowrap font-semibold">
-          {eventName1}
+          Event: {eventName1}
         </p>
         <p className="truncate overflow-hidden whitespace-nowrap font-light ">
-          {groupName1}
+          Group: {groupName1}
         </p>
         <p className="truncate overflow-hidden whitespace-nowrap font-semibold">
-          {eventName2}
+          Event: {eventName2}
         </p>
         <p className="truncate overflow-hidden whitespace-nowrap font-light">
-          {groupName2}
+          Group: {groupName2}
         </p>
       </div>
     </div>
