@@ -9,7 +9,7 @@ function SelectedMember({
   removeMember: () => void;
 }) {
   return (
-    <div className="flex flex-row items-center gap-1 max-w-full">
+    <div className="flex flex-row items-center gap-1 max-w-full border border-black">
       <IoIosCloseCircle
         className="mt-1 cursor-pointer hover:bg-slate-200"
         onClick={removeMember}
@@ -29,8 +29,8 @@ function NonSelectedMember({
   addMember:() => void;
 }) {
   return (
-    <div className="flex flex-row items-center gap-1 max-w-full" onClick={addMember}>
-      <span className="overflow-ellipsis overflow-hidden truncate max-w-[12rem] whitespace-nowrap">
+    <div className="flex flex-row items-center gap-1 max-w-full cursor-pointer border border-black" onClick={addMember}>
+      <span className="overflow-ellipsis overflow-hidden truncate max-w-[12rem] whitespace-nowrap ml-1">
         {email}
         
       </span>
