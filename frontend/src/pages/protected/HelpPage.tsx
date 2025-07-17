@@ -87,7 +87,7 @@ export default function HelpPage() {
                 <p>
                   Q: What happens if there’s a clash?
                   <br />
-                  A: You’ll be warned before confirming. The system checks for
+                  A: You’ll be notified on Clash on your main page! The system checks for
                   conflicts among invitees.
                 </p>
               </AccordionContent>
@@ -98,9 +98,9 @@ export default function HelpPage() {
               </AccordionTrigger>
               <AccordionContent className="flex flex-col gap-4 text-balance p-2 text-slate-700">
                 <p>
-                  Q: I invited someone but they didn’t receive the email.
+                  Q: I invited someone but they didn’t receive the invite
                   <br />
-                  A: Ask them to check their spam folder. If it's not there,
+                  A: Ask them to check their main user drawer. If it's not there,
                   resend the invite or contact support.
                 </p>
                 <p>
