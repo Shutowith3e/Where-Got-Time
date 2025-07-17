@@ -20,6 +20,7 @@ export default function SignupPage() {
   const [message, setMessage] = useState("");
 
   const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("password");
+  const { isValidating } = getFieldState("submit");
 
   /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
   const onSubmit = async (data: any) => {
@@ -45,7 +46,7 @@ export default function SignupPage() {
     ) {
       setMessage("Error: account already exists!");
     } else {
-      setMessage("Sign up Successful! Please Check Your Email!");
+      setMessage("Please Check Your Email To Active Your Account!");
     }
   };
 
@@ -118,12 +119,13 @@ export default function SignupPage() {
                   />
                 </div>
                 <input
-                  disabled={!isValid}
+                  disabled={!isValid || isValidating}
                   type="submit"
                   value="Sign Up"
                   className={cn(
                     "text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 font-semibold hover:underline",
-                    !isValid && "bg-gray-200"
+                    (!isValid || isValidating) &&
+                      "bg-gray-200 cursor-not-allowed"
                   )}
                 />
                 {message && (
