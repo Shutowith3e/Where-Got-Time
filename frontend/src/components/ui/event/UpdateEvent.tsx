@@ -94,7 +94,9 @@ export default function UpdateEventModal({
   function createRrule(values: FormData) {
     if (!values.recurring || !values.freq) return null;
     const dtstart = new Date(`${values.startDate}T${values.startTime}Z`);
-    const until = values.recurrsUntil ? new Date(values.recurrsUntil) : undefined;
+    const until = values.recurrsUntil
+      ? new Date(values.recurrsUntil)
+      : undefined;
 
     switch (values.freq) {
       case "WEEKLY":
@@ -146,7 +148,7 @@ export default function UpdateEventModal({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
       queryClient.invalidateQueries({ queryKey: ["user-events"] });
-      queryClient.invalidateQueries({ queryKey: ["user-clashes"]});
+      queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
       onClose();
     },
     onError: (err) => {
@@ -160,9 +162,11 @@ export default function UpdateEventModal({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-center font-bold">Update Event</DialogTitle>
+          <DialogTitle className="text-center font-bold">
+            Update Event
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
@@ -174,7 +178,9 @@ export default function UpdateEventModal({
               />
               <div
                 className="bg-slate-100 rounded-2xl inline-flex hover:bg-slate-200 p-1 px-4 cursor-pointer ml-80 justify-center"
-                onClick={() => setSelectedEmails([...groupAdmins, ...groupMembers])}
+                onClick={() =>
+                  setSelectedEmails([...groupAdmins, ...groupMembers])
+                }
               >
                 Reset
               </div>
@@ -237,32 +243,42 @@ export default function UpdateEventModal({
                     <input
                       type="radio"
                       value={freq}
-                      {...register("freq", { required: "Please select a frequency" })}
+                      {...register("freq", {
+                        required: "Please select a frequency",
+                      })}
                     />{" "}
                     {freq}
                   </label>
                 ))}
               </div>
               {errors.freq && (
-                <p className="text-red-600 text-sm">{errors.freq.message?.toString()}</p>
+                <p className="text-red-600 text-sm">
+                  {errors.freq.message?.toString()}
+                </p>
               )}
 
               {values.freq === "WEEKLY" && (
                 <div className="flex flex-wrap gap-3">
-                  {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(
-                    (day, idx) => (
-                      <label key={idx}>
-                        <input
-                          type="checkbox"
-                          value={idx.toString()}
-                          {...register("byweekday", {
-                            required: "Pick at least 1 day",
-                          })}
-                        />{" "}
-                        {day}
-                      </label>
-                    )
-                  )}
+                  {[
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday",
+                  ].map((day, idx) => (
+                    <label key={idx}>
+                      <input
+                        type="checkbox"
+                        value={idx.toString()}
+                        {...register("byweekday", {
+                          required: "Pick at least 1 day",
+                        })}
+                      />{" "}
+                      {day}
+                    </label>
+                  ))}
                   {errors.byweekday && (
                     <p className="text-red-600 text-sm">
                       {errors.byweekday.message?.toString()}
@@ -279,7 +295,10 @@ export default function UpdateEventModal({
                     if (!val) return true;
                     const until = new Date(val);
                     const endFirst = new Date(`${startDate}T${endTime}`);
-                    return until > endFirst || "*Repeat until must be after first end time";
+                    return (
+                      until > endFirst ||
+                      "*Repeat until must be after first end time"
+                    );
                   },
                 })}
                 className="w-full rounded-2xl border px-2 py-1"

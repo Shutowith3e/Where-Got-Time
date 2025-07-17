@@ -159,13 +159,19 @@ export default function CreateEventModal({
   }, [selectedEmails, clearErrors]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (!open) reset();
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-full ">
           Create Event
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center font-bold">
             Create Event
