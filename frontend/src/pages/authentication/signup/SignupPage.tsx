@@ -56,7 +56,7 @@ export default function SignupPage() {
         <div className="flex flex-col gap-2">
           <MagicCard
             gradientColor="262626"
-            className="mx-auto rounded-2xl p-8 px-12"
+            className="mx-auto rounded-2xl px-6 sm:px-10 py-8 w-full max-w-sm sm:max-w-sm md:max-w-lg min-h-[30rem]"
           >
             <div className="flex flex-col gap-4">
               <img src="/logo.png" className="h-8 mx-auto"></img>
