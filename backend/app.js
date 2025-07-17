@@ -36,9 +36,6 @@ app.use('/groups', groupRoutes);
 app.use('/events', eventRoutes);
 app.use('/users',userRoutes);
 
-//auth test route, delete later
-import authrouter from './authtest.js';
-app.use('/test',authrouter);
 
 //import middleware for admin verification
 import mCheckAdmin from './middleware/checkAdminMiddleware.js';
