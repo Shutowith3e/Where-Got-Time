@@ -117,9 +117,7 @@ export default function CreateEventModal({
     };
 
     await createEventMutation.mutateAsync(fullForm);
-    setIsOpen(false);
     queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
-    reset();
   };
   const {
     groupInfo: { groupMembers, groupAdmins },
@@ -141,8 +139,13 @@ export default function CreateEventModal({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
+      queryClient.invalidateQueries({ queryKey: ["user-group-events", gid] });
       queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+
+      queryClient.refetchQueries({ queryKey: ["user-group-events", gid] });
+      setIsOpen(false);
+      reset();
     },
     onError: (error) => {
       return error;
@@ -156,13 +159,19 @@ export default function CreateEventModal({
   }, [selectedEmails, clearErrors]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (!open) reset();
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-full ">
           Create Event
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center font-bold">
             Create Event
@@ -216,7 +225,7 @@ export default function CreateEventModal({
           <input
             className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             placeholder="Learning Journey to SMU"
-            {...register("eventName", { required: true, maxLength: 20 })}
+            {...register("eventName", { required: true, maxLength: 25 })}
             aria-invalid={errors.eventName ? "true" : "false"}
           />
           {errors.eventName?.type === "required" && (
@@ -243,7 +252,7 @@ export default function CreateEventModal({
           />
           {errors.startDate?.type === "required" && (
             <p role="alert" className="font-light text-sm text-red-600">
-              *Start Date & Time is required
+              *Start Date is required
             </p>
           )}
 
@@ -260,7 +269,7 @@ export default function CreateEventModal({
           />
           {errors.startTime?.type === "required" && (
             <p role="alert" className="font-light text-sm text-red-600">
-              *Start Date & Time is required
+              *Start Time is required
             </p>
           )}
 
@@ -271,13 +280,12 @@ export default function CreateEventModal({
             className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             type="time"
             {...register("endTime", {
-              required: true,
+              required: "*End time is required",
               validate: (value, formValues) => {
-                // make sure start time < end time
-
                 if (value <= formValues.startTime) {
-                  return "*End date/time must be after start date/time";
+                  return "*End time must be after start time";
                 }
+                return true;
               },
             })}
             aria-invalid={errors.endTime ? "true" : "false"}

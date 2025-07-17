@@ -168,3 +168,7 @@ html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+.no-highlight{
+  --fc-today-bg-color:transparent;
+}
