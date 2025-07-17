@@ -190,7 +190,7 @@ export default function UpdateEventModal({
           <label className="font-semibold block">*Event Name:</label>
           <input
             className="w-full rounded-2xl border px-2 py-1"
-            {...register("eventName", { required: true, maxLength: 20 })}
+            {...register("eventName", { required: true, maxLength: 25 })}
           />
           {errors.eventName && (
             <p className="text-red-600 text-sm">*Event name is required</p>
