@@ -53,7 +53,10 @@ export default function SignupPage() {
     <>
       <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-violet-900/60">
         <div className="flex flex-col gap-2">
-          <MagicCard gradientColor="262626" className="mx-auto rounded-2xl p-8 px-12">
+          <MagicCard
+            gradientColor="262626"
+            className="mx-auto rounded-2xl p-8 px-12"
+          >
             <div className="flex flex-col gap-4">
               <img src="/logo.png" className="h-8 mx-auto"></img>
               <h2 className="text-center text-lg font-semibold">
@@ -91,7 +94,8 @@ export default function SignupPage() {
                   />
                   {(pwInvalid || !pwDirty) && (
                     <p className="text-[10px] text-red-500">
-                      Min 6 Characters, 1 Upper, 1 Lower, 1 Number
+                      Min 6 Characters, 1 Upper, 1 Lower, 1 Number, 1 special
+                      Character
                     </p>
                   )}
                 </div>
