@@ -16,7 +16,6 @@ const headerToolbar = {
   right: "timeGridDay,timeGridWeek,dayGridMonth",
 };
 
-
 const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
   const [events, setEvents] = useState([]);
   const { groupInfo } = useGroup();
@@ -64,7 +63,7 @@ const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
     <div className="mb-6 h-128 w-full rounded-lg bg-white shadow border border-white/30">
       <div className="flex-grow h-full items-center justify-center font-bold text-black">
         <FullCalendar
-        ref={calendarRef}
+          ref={calendarRef}
           plugins={[
             timeGridPlugin,
             dayGridPlugin,
@@ -79,7 +78,9 @@ const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
           headerToolbar={headerToolbar}
           events={events}
           eventDataTransform={dataTransformer}
-          slotEventOverlap={false}
+          slotEventOverlap={true}
+          eventOverlap={true}
+          progressiveEventRendering={true}
           scrollTime="08:00:00"
           slotMinTime="00:00:00"
           slotMaxTime="24:00:00"
