@@ -14,7 +14,7 @@ type IndividualEvent = {
   group: string;
   eventName: string;
   date: Dayjs;
-  endDatetime?: Dayjs;
+  endDatetime: Dayjs;
   rrule?: string | null;
   eventParticipants?: string[] | null; // adding the null to be safe
 };
@@ -73,7 +73,7 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
                   eid={eid}
                   eventName={eventName}
                   startDatetime={date.toISOString()}
-                  endDatetime={endDatetime?.toISOString()}
+                  endDatetime={endDatetime.toISOString()}
                   rrule={rrule}
                   highPriority={highPriority}
                   eventParticipants={eventParticipants}
