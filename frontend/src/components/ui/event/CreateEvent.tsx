@@ -117,22 +117,20 @@ export default function CreateEventModal({
     };
 
     await createEventMutation.mutateAsync(fullForm);
-    setIsOpen(false);
     queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
-    reset();
   };
   const {
     groupInfo: { groupMembers, groupAdmins },
   } = useGroup();
-
+  
   const [selectedEmails, setSelectedEmails] = useState<string[]>([
     ...groupMembers,
     ...groupAdmins,
   ]);
-
+  
   const values = watch();
   const { personalGroupId } = useAuth();
-
+  
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
     mutationFn: async (formData: any) => {
@@ -143,6 +141,8 @@ export default function CreateEventModal({
       queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
       queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+      setIsOpen(false);
+      reset();
     },
     onError: (error) => {
       return error;
