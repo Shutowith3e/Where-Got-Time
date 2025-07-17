@@ -16,6 +16,7 @@ type IndividualEvent = {
   date: Dayjs;
   endDatetime?: Dayjs;
   rrule?: string | null;
+  eventParticipants?: string[] | null; // adding the null to be safe
 };
 
 type EventChipProps = {
@@ -33,8 +34,7 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
   const {
     groupInfo: { gid, isAdmin, groupName },
   } = useGroup();
-
-  const { eid, highPriority, date, eventName, endDatetime, rrule } = eventData;
+  const { eid, highPriority, date, eventName, endDatetime, rrule, eventParticipants } = eventData;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   return (
@@ -76,6 +76,7 @@ function EventChip({ event: eventData, getEventString }: EventChipProps) {
                   endDatetime={endDatetime?.toISOString()}
                   rrule={rrule}
                   highPriority={highPriority}
+                  eventParticipants={eventParticipants}
                 />
               )}
 

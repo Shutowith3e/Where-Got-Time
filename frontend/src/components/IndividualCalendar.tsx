@@ -51,6 +51,7 @@ const IndividualCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
       extendedProps: {
         high_priority: eventData.highPriority,
         group_name: eventData.groupName ?? null,
+        event_participants: eventData.eventParticipants ?? null
       },
       backgroundColor: colour,
       borderColor: colour,

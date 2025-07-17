@@ -25,6 +25,7 @@ type UpdateEventModalProps = {
   endDatetime?: string;
   rrule?: string | null;
   highPriority: boolean;
+  eventParticipants? :string[] | null
   onClose: () => void;
 };
 
@@ -49,6 +50,7 @@ export default function UpdateEventModal({
   endDatetime,
   rrule,
   highPriority,
+  eventParticipants,
   onClose,
 }: UpdateEventModalProps) {
   const queryClient = useQueryClient();
@@ -56,8 +58,10 @@ export default function UpdateEventModal({
   const {
     groupInfo: { groupMembers, groupAdmins },
   } = useGroup();
-
-  const [initialEmails] = useState([...groupMembers, ...groupAdmins]);
+if(!eventParticipants){
+  eventParticipants = [] //temp solution for when u go to user
+}
+  const [initialEmails] = useState(eventParticipants);
   const [selectedEmails, setSelectedEmails] = useState([...initialEmails]);
 
   const rule = rrule ? RRule.fromString(rrule) : null;

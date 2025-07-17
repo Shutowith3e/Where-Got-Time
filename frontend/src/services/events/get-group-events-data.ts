@@ -11,7 +11,8 @@ export type IndividualGroupEvent = {
   endDatetime: Dayjs;
   highPriority: boolean;
   rrule: null | string;
-  duration: BigInt
+  duration: BigInt;
+  eventParticipants:string[];
 };
 
 export async function getIndividualGroupEvent(

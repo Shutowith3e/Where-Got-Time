@@ -35,8 +35,8 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/admins/makeAdmin](#put-adminsmakeadmin)
 	- [/admins/removeAdmin](#put-adminsremoveadmin)
 	- [/admins/updateGrpDesc](#patch-adminsupdategrpdesc)
-	- [/admins/updateGrpName](#patch-adminsupdategrpname)
-
+	- [/admins/updateEvent](#patch-adminsupdateevent)
+- [/clashes](#clashes)
 
 ---
 
@@ -461,7 +461,7 @@ Returns the events of the group.
 |--------------------------|----------|-----------------------|
 | `eid`              | string | ID of the event |
 | `gid`              | string | ID of the group that the event belongs to |
-| `rrule`              | string | Recurrence rule. Defines the recurrence for this event, **can be null**|
+| `rrule`              | null or string | Recurrence rule. Defines the recurrence for this event, **can be null**|
 | `event_name`              | string | Name of the event |
 | `start_datetime`              | string | string representing the start datetime of the event |
 | `end_datetime`              | string  | string representing the end datetime of the event |
@@ -691,7 +691,7 @@ Creates an event for the group.
 | Attribute                | Type     | Description           |
 |--------------------------|----------|-----------------------|
 | `gid`              | string | ID of the group that the event belongs to |
-| `rrule`              | string | Recurrence rule. Defines the recurrence for this event, **can be null**|
+| `rrule`              | null or string | Recurrence rule. Defines the recurrence for this event, **can be null**|
 | `event_name`              | string | Name of the event |
 | `start_datetime`              | string | string representing the start datetime of the event |
 | `end_datetime`              | string  | string representing the end datetime of the event |
@@ -932,7 +932,7 @@ note: no data is being returned, just a message
 
 ---
 
-### PATCH /admins/updateGrpDetail
+### PATCH /admins/updateGrpDesc
 
 **Description**   
 Updates the group description
@@ -959,4 +959,41 @@ note: no data is being returned, just a message
 <br>
 
 ---
+
+eid, gid, event_name, start_datetime, end_datetime, rrule, high_priority, old_email_arr, new_email_arr
+
+### PATCH /admins/updateEvent
+
+**Description**   
+Update an event. 
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `eid`              | string | ID of the event |
+| `gid`              | string | ID of the group that the event belongs to |
+| `rrule`              | null or string | Recurrence rule. Defines the recurrence for this event, **can be null**|
+| `event_name`              | string | Name of the event |
+| `start_datetime`              | string | string representing the start datetime of the event |
+| `end_datetime`              | string  | string representing the end datetime of the event |
+| `high_priority`              | boolean | boolean value representing the priority of the event. `true` for high, `false` for low |
+| `old_email_arr`              | array of strings | Array of emails of previous event participants |
+| `new_email_arr`              | array of strings | Array of emails of updated event participants |
+
+
+**If successful, returns status code `201` and a json response in the following format:**
+
+```json
+{
+	"message": "Event successfully updated" 
+}
+```
+note: no data is being returned, just a message
+
+<br>
+
+---
+
+
 
