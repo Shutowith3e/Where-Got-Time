@@ -48,7 +48,7 @@ export default function CreateGroupPage() {
     <>
       <NavBar />
       <div className="flex justify-center items-center bg-gradient-to-b from-rose-900/30 p-8 flex-col gap-4">
-        <h1 className="text-center text-3xl font-semibold ">
+        <h1 className="text-center text-3xl font-semibold text-slate-800">
           Create New Group
         </h1>
         <MagicCard gradientColor="262626" className="rounded-2xl p-8 gap-y-8">
