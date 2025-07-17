@@ -55,7 +55,7 @@ export default function MainUserPage() {
           <SidebarProvider defaultOpen={true}>
             <MainUserDrawer />
 
-            <div className="mt-2 ml-1">
+            <div className="mt-2 ml-1 mr-13">
               <SidebarTrigger
                 onClick={async () => {
                   // Wait for drawer slide animation to
@@ -75,13 +75,16 @@ export default function MainUserPage() {
               {/* Personal Group Events */}
               <div className="rounded-lg bg-white p-6">
                 <div className="rounded-xl bg-slate-50 px-4 pt-2 text-sm">
+                  
                   <Tabs defaultValue="yourEvents">
+                      <div className = "flex justify-center">
                     <TabsList>
                       <TabsTrigger value="yourEvents">Your Events</TabsTrigger>
                       <TabsTrigger value="allUpcoming">
                         All Upcoming Events
                       </TabsTrigger>
                     </TabsList>
+                    </div>
                     <TabsContent value="yourEvents">
                       <>
                         <MagicCard
