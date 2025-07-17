@@ -122,15 +122,15 @@ export default function CreateEventModal({
   const {
     groupInfo: { groupMembers, groupAdmins },
   } = useGroup();
-  
+
   const [selectedEmails, setSelectedEmails] = useState<string[]>([
     ...groupMembers,
     ...groupAdmins,
   ]);
-  
+
   const values = watch();
   const { personalGroupId } = useAuth();
-  
+
   const queryClient = useQueryClient();
   const createEventMutation = useMutation({
     mutationFn: async (formData: any) => {
@@ -243,7 +243,7 @@ export default function CreateEventModal({
           />
           {errors.startDate?.type === "required" && (
             <p role="alert" className="font-light text-sm text-red-600">
-              *Start Date & Time is required
+              *Start Date is required
             </p>
           )}
 
@@ -260,7 +260,7 @@ export default function CreateEventModal({
           />
           {errors.startTime?.type === "required" && (
             <p role="alert" className="font-light text-sm text-red-600">
-              *Start Date & Time is required
+              *Start Time is required
             </p>
           )}
 
@@ -271,13 +271,12 @@ export default function CreateEventModal({
             className="w-full rounded-2xl border border-purple-200 px-2 py-1"
             type="time"
             {...register("endTime", {
-              required: true,
+              required: "*End time is required",
               validate: (value, formValues) => {
-                // make sure start time < end time
-
                 if (value <= formValues.startTime) {
-                  return "*End date/time must be after start date/time";
+                  return "*End time must be after start time";
                 }
+                return true;
               },
             })}
             aria-invalid={errors.endTime ? "true" : "false"}
