@@ -54,14 +54,14 @@ const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
         group_name: eventData.groupName,
         opacity,
       },
-      backgroundColor: `rgba(233, 149, 194, ${opacity})`,
+      backgroundColor: `rgba(0,78,255, ${opacity})`,
       borderColor: `rgba(233, 149, 194, ${opacity})`,
     };
   };
 
   return (
     <div className="mb-6 h-128 w-full rounded-lg bg-white shadow border border-white/30">
-      <div className="flex-grow h-full items-center justify-center font-bold text-black">
+      <div className=" no-highlight flex-grow h-full items-center justify-center font-bold text-black">
         <FullCalendar
           ref={calendarRef}
           plugins={[
