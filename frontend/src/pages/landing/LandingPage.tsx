@@ -20,13 +20,16 @@ export default function LandingPage() {
 
             <div className="backdrop-blur-xl bg-white/10 border border-violet-200/30 rounded-3xl sm:p-12 text-center max-w-2xl w-full z-10">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-orange-50 leading-tight">
-                Effortless Group <br className="hidden sm:inline" /> Scheduling
-                For Everyone
+                Effortless Group <br className="hidden sm:inline" />
+                Scheduling For <br /> Everyone
               </h1>
               <p className="mt-6 text-base sm:text-lg text-white leading-relaxed">
                 Say goodbye to scheduling chaos. Combine calendars, detect
                 clashes, and stay synced with your groups — whether for lessons,
                 CCAs, or project meetings.
+              </p>
+              <p className="mt-4 italic text-white text-sm sm:text-base">
+                Our name says it all. Find us? Find where got time.
               </p>
 
               <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
