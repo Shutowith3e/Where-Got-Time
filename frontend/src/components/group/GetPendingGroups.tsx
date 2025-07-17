@@ -75,7 +75,10 @@ export default function GetPendingGroupsCard() {
   if (isGroupsPending) {
     return <p>Loading...</p>;
   }
-  if (allPendingGroups?.PendingGroups.length === 0) {
+  if (
+    allPendingGroups?.PendingGroups.length === 0 ||
+    allPendingGroups === null
+  ) {
     return (
       <div className="rounded-xl bg-white p-4 shadow w-full">
         <h3 className="text-md font-semibold text-center">Group Invites</h3>
