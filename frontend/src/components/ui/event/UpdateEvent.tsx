@@ -65,6 +65,11 @@ if(!eventParticipants){
   const [selectedEmails, setSelectedEmails] = useState([...initialEmails]);
 
   const rule = rrule ? RRule.fromString(rrule) : null;
+  let recurring = false;
+  if(rule){
+    recurring = true;
+  }
+
 
   const {
     register,
@@ -77,7 +82,7 @@ if(!eventParticipants){
       startDate: dayjs(startDatetime).format("YYYY-MM-DD"),
       startTime: dayjs(startDatetime).format("HH:mm"),
       endTime: dayjs(endDatetime).format("HH:mm"),
-      recurring: !!rrule,
+      recurring: recurring,
       freq: rule ? RRule.FREQUENCIES[rule.options.freq] : undefined,
       byweekday: rule?.options.byweekday
         ? (Array.isArray(rule.options.byweekday)
@@ -86,7 +91,7 @@ if(!eventParticipants){
           ).map((d) => d.toString())
         : [],
       recurrsUntil: rule?.options.until
-        ? dayjs(rule.options.until).format("YYYY-MM-DDTHH:mm")
+        ? dayjs(rule.options.until+"-08:00").format("YYYY-MM-DDTHH:mm")
         : "",
       highPriority,
       emailArr: [],
@@ -99,7 +104,7 @@ if(!eventParticipants){
     if (!values.recurring || !values.freq) return null;
     const dtstart = new Date(`${values.startDate}T${values.startTime}Z`);
     const until = values.recurrsUntil
-      ? new Date(values.recurrsUntil)
+      ? new Date(values.recurrsUntil + "Z")
       : undefined;
 
     switch (values.freq) {
@@ -313,6 +318,7 @@ if(!eventParticipants){
                   {errors.recurrsUntil.message?.toString()}
                 </p>
               )}
+              
             </div>
           )}
 

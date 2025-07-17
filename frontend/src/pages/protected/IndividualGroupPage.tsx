@@ -134,7 +134,7 @@ export default function IndividualGroupPage() {
           <IndividualEventCard
             title={"All Group Events"}
             events={filteredEvents.map(
-              ({ eid, eventName, startDatetime, highPriority,eventParticipants,endDatetime }) => ({
+              ({ eid, eventName, startDatetime, highPriority,eventParticipants,endDatetime,rrule }) => ({
                 eid,
                 eventName,
                 group: "",
@@ -142,7 +142,8 @@ export default function IndividualGroupPage() {
                 // date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
                 highPriority,
                 eventParticipants,
-                endDatetime
+                endDatetime,
+                rrule
               })
             )}
             getEventString={({ eventName: event }) => event}

@@ -107,14 +107,16 @@ export default function MainUserPage() {
                               eventName,
                               startDatetime,
                               highPriority,
-                              endDatetime
+                              endDatetime,
+                              rrule
                             }) => ({
                               eid,
                               eventName,
                               group: "",
                               date: startDatetime,
                               highPriority,
-                              endDatetime
+                              endDatetime,
+                              rrule
                             })
                           )}
                           getEventString={({ eventName: event }) => event}
