@@ -139,8 +139,11 @@ export default function CreateEventModal({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
+      queryClient.invalidateQueries({ queryKey: ["user-group-events", gid] });
       queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+
+      queryClient.refetchQueries({ queryKey: ["user-group-events", gid] });
       setIsOpen(false);
       reset();
     },
