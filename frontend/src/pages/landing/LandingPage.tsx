@@ -18,18 +18,18 @@ export default function LandingPage() {
             <div className="absolute top-10 left-10 w-80 h-80 bg-rose-500/30  blur-3xl rounded-full z-0 animate-pulse" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-600/25  blur-2xl rounded-full z-0 animate-pulse" />
 
-            <div className="backdrop-blur-xl bg-white/10 border border-violet-200/30 rounded-3xl sm:p-12 text-center max-w-2xl w-full z-10">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-orange-50 leading-tight">
+            <div className="backdrop-blur-xl bg-white/10 border border-violet-200/30 rounded-3xl sm:p-12 sm:py-10 text-center max-w-2xl w-full z-10">
+              <h1 className="text-3xl sm:text-4xl md:text-[46px] font-extrabold text-orange-50 leading-tight">
                 Effortless Group <br className="hidden sm:inline" />
-                Scheduling For <br /> Everyone
+                Scheduling For Everyone
               </h1>
+              <p className="mt-4 italic text-white text-sm sm:text-base">
+                Our name says it all. Find us? Find where got time.
+              </p>
               <p className="mt-6 text-base sm:text-lg text-white leading-relaxed">
                 Say goodbye to scheduling chaos. Combine calendars, detect
                 clashes, and stay synced with your groups — whether for lessons,
                 CCAs, or project meetings.
-              </p>
-              <p className="mt-4 italic text-white text-sm sm:text-base">
-                Our name says it all. Find us? Find where got time.
               </p>
 
               <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
