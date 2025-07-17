@@ -22,7 +22,7 @@ type UpdateEventModalProps = {
   eid: string;
   eventName: string;
   startDatetime: string;
-  endDatetime?: string;
+  endDatetime: string;
   rrule?: string | null;
   highPriority: boolean;
   eventParticipants? :string[] | null
@@ -76,7 +76,7 @@ if(!eventParticipants){
       eventName,
       startDate: dayjs(startDatetime).format("YYYY-MM-DD"),
       startTime: dayjs(startDatetime).format("HH:mm"),
-      endTime: dayjs(endDatetime ?? "").format("HH:mm"),
+      endTime: dayjs(endDatetime).format("HH:mm"),
       recurring: !!rrule,
       freq: rule ? RRule.FREQUENCIES[rule.options.freq] : undefined,
       byweekday: rule?.options.byweekday
