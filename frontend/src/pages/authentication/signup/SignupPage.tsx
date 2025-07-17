@@ -46,7 +46,7 @@ export default function SignupPage() {
     ) {
       setMessage("Error: account already exists!");
     } else {
-      setMessage("Please Check Your Email To Active Your Account!");
+      setMessage("Please Check Your Email To Activate Your Account!");
     }
   };
 
