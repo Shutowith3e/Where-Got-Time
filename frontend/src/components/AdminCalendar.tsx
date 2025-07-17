@@ -55,7 +55,7 @@ const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
         opacity,
       },
       backgroundColor: `rgba(0,0,255, ${opacity})`,
-      borderColor: `rgba(233, 149, 194, ${opacity})`,
+      borderColor: `rgba(0, 0, 255, ${opacity})`,
     };
   };
 
