@@ -58,17 +58,15 @@ export default function IndividualGroupPage() {
       </div>
     );
   }
-  if (isEventPending) {
-    return <p>Loading...</p>;
-  }
 
-  // if (isEventPending) {
-  //   return (
-  //     <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
-  //       <h3 className="text-xl mx-auto font-bold px-4 mb-4"></h3>
-  //     </div>
-  //   );
-  // }
+
+  if (isEventPending) {
+    return (
+      <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
+        <h3 className="text-xl mx-auto font-bold px-4 mb-4"></h3>
+      </div>
+    );
+  }
 
   if (!group) {
     return <p>No Such Group!</p>;

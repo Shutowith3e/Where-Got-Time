@@ -20,6 +20,7 @@ export default function SignupPage() {
   const [message, setMessage] = useState("");
 
   const { invalid: pwInvalid, isDirty: pwDirty } = getFieldState("password");
+  const { isValidating } = getFieldState("submit");
 
   /*errors is what we get back from react hook form (useForm) and error is what we get back from supabase */
   const onSubmit = async (data: any) => {
@@ -45,7 +46,7 @@ export default function SignupPage() {
     ) {
       setMessage("Error: account already exists!");
     } else {
-      setMessage("Sign up Successful! Please Check Your Email!");
+      setMessage("Please Check Your Email To Active Your Account!");
     }
   };
 
@@ -53,7 +54,10 @@ export default function SignupPage() {
     <>
       <div className="w-full shadow-none border-none flex justify-center items-center min-h-dvh flex-col bg-gradient-to-b from-violet-900/60">
         <div className="flex flex-col gap-2">
-          <MagicCard gradientColor="262626" className="mx-auto rounded-2xl p-8 px-12">
+          <MagicCard
+            gradientColor="262626"
+            className="mx-auto rounded-2xl p-8 px-12"
+          >
             <div className="flex flex-col gap-4">
               <img src="/logo.png" className="h-8 mx-auto"></img>
               <h2 className="text-center text-lg font-semibold">
@@ -91,7 +95,8 @@ export default function SignupPage() {
                   />
                   {(pwInvalid || !pwDirty) && (
                     <p className="text-[10px] text-red-500">
-                      Min 6 Characters, 1 Upper, 1 Lower, 1 Number
+                      Min 6 Characters, 1 Upper, 1 Lower, 1 Number, 1 special
+                      Character
                     </p>
                   )}
                 </div>
@@ -114,12 +119,13 @@ export default function SignupPage() {
                   />
                 </div>
                 <input
-                  disabled={!isValid}
+                  disabled={!isValid || isValidating}
                   type="submit"
                   value="Sign Up"
                   className={cn(
                     "text-indigo-800 bg-indigo-100 rounded-3xl px-4 py-2 font-semibold hover:underline",
-                    !isValid && "bg-gray-200"
+                    (!isValid || isValidating) &&
+                      "bg-gray-200 cursor-not-allowed"
                   )}
                 />
                 {message && (

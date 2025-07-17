@@ -73,6 +73,18 @@ export default function GetPendingGroupsCard() {
   if (isGroupsPending) {
     return <p>Loading...</p>;
   }
+  if (allPendingGroups?.PendingGroups.length === 0) {
+    return (
+      <div className="rounded-xl bg-white p-4 shadow w-full">
+        <h3 className="text-md font-semibold text-center">Group Invites</h3>
+        <p className="mt-2 text-sm text-gray-600 text-center">
+          You have{" "}
+          <span className="font-semibold text-medium text-black">0</span> group
+          invite
+        </p>
+      </div>
+    );
+  }
 
   // if length >1 u got "s" at the back for no. of invites
   return (
