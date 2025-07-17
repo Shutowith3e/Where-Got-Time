@@ -79,7 +79,7 @@ const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
           events={events}
           eventDataTransform={dataTransformer}
           slotEventOverlap={true}
-          eventOverlap={true}
+          eventDisplay="background"
           progressiveEventRendering={true}
           scrollTime="08:00:00"
           slotMinTime="00:00:00"
