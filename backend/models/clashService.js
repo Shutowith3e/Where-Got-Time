@@ -172,7 +172,7 @@ const checkClash = async (this_event,gid)=>{
 
 				// comb thru all monthly dates
 				for (const date of monthlyDates) {
-					for(day of rule1.option.byweekday){
+					for( const day of rule1.options.byweekday){
 						//checks if monthly event is on the same day as any of the weekly reccurences 
 						if(weekDayCheckMap[day](date)){
 							if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
@@ -196,7 +196,7 @@ const checkClash = async (this_event,gid)=>{
 			//check if it falls within same range
 			if(isClashDateTime(rule1.options.dtstart, rule1.options.until, rule2.options.dtstart, rule2.options.until)){  
 				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
-				for(day of rule1.option.byweekday){
+				for(const day of rule1.options.byweekday){
 					//checks if my event is on the same day
 					if(weekDayCheckMap[day](event2)){
 						if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){

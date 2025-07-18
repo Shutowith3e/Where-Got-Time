@@ -121,7 +121,7 @@ export default function UpdateEventModal({
           freq: RRule.MONTHLY,
           dtstart,
           until,
-          bymonthday: dtstart.getUTCDate(),
+          bymonthday: dtstart.getDate(),
           tzid: "Asia/Singapore",
         });
       case "YEARLY":
@@ -129,8 +129,8 @@ export default function UpdateEventModal({
           freq: RRule.YEARLY,
           dtstart,
           until,
-          bymonth: dtstart.getUTCMonth() + 1,
-          bymonthday: dtstart.getUTCDate(),
+          bymonth: dtstart.getMonth() + 1,
+          bymonthday: dtstart.getDate(),
           tzid: "Asia/Singapore",
         });
       default:
