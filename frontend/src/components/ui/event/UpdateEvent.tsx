@@ -25,7 +25,7 @@ type UpdateEventModalProps = {
   endDatetime: string;
   rrule?: string | null;
   highPriority: boolean;
-  eventParticipants? :string[] | null
+  eventParticipants?: string[] | null;
   onClose: () => void;
 };
 
@@ -58,18 +58,17 @@ export default function UpdateEventModal({
   const {
     groupInfo: { groupMembers, groupAdmins },
   } = useGroup();
-if(!eventParticipants){
-  eventParticipants = [] //temp solution for when u go to user
-}
+  if (!eventParticipants) {
+    eventParticipants = []; //temp solution for when u go to user
+  }
   const [initialEmails] = useState(eventParticipants);
   const [selectedEmails, setSelectedEmails] = useState([...initialEmails]);
 
   const rule = rrule ? RRule.fromString(rrule) : null;
   let recurring = false;
-  if(rule){
+  if (rule) {
     recurring = true;
   }
-
 
   const {
     register,
@@ -91,7 +90,7 @@ if(!eventParticipants){
           ).map((d) => d.toString())
         : [],
       recurrsUntil: rule?.options.until
-        ? dayjs(rule.options.until+"-08:00").format("YYYY-MM-DDTHH:mm")
+        ? dayjs(rule.options.until + "-08:00").format("YYYY-MM-DDTHH:mm")
         : "",
       highPriority,
       emailArr: [],
@@ -182,7 +181,7 @@ if(!eventParticipants){
           {gid !== personalGroupId && (
             <>
               <SelectedMembers
-              allEmails={[...groupAdmins, ...groupMembers]}
+                allEmails={[...groupAdmins, ...groupMembers]}
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
               />
@@ -318,7 +317,6 @@ if(!eventParticipants){
                   {errors.recurrsUntil.message?.toString()}
                 </p>
               )}
-              
             </div>
           )}
 

@@ -165,6 +165,7 @@ export default function CreateEventModal({
       onOpenChange={(open) => {
         setIsOpen(open);
         if (!open) reset();
+        setSelectedEmails([...(groupAdmins ?? []), ...(groupMembers ?? [])]);
       }}
     >
       <DialogTrigger asChild>
@@ -187,6 +188,7 @@ export default function CreateEventModal({
                   <SelectedMembers
                     selectedEmails={selectedEmails}
                     setSelectedEmails={setSelectedEmails}
+                    allEmails={[...groupAdmins, ...groupMembers]}
                     {...register("emailArr", {
                       validate: () =>
                         selectedEmails.length > 0
