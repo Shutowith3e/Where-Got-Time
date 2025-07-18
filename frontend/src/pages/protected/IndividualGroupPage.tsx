@@ -58,7 +58,6 @@ export default function IndividualGroupPage() {
     );
   }
 
-
   if (isEventPending) {
     return (
       <div className="flex flex-col bg-white p-4 rounded-xl m-4 gap-y-0.5 drop-shadow-xl drop-shadow-rose-800/8 ">
@@ -130,11 +129,19 @@ export default function IndividualGroupPage() {
               />
             </div>
           </MagicCard>
-                
+
           <IndividualEventCard
             title={"All Group Events"}
             events={filteredEvents.map(
-              ({ eid, eventName, startDatetime, highPriority,eventParticipants,endDatetime,rrule }) => ({
+              ({
+                eid,
+                eventName,
+                startDatetime,
+                highPriority,
+                eventParticipants,
+                endDatetime,
+                rrule,
+              }) => ({
                 eid,
                 eventName,
                 group: "",
@@ -143,7 +150,7 @@ export default function IndividualGroupPage() {
                 highPriority,
                 eventParticipants,
                 endDatetime,
-                rrule
+                rrule,
               })
             )}
             getEventString={({ eventName: event }) => event}

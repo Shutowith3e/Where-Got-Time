@@ -24,67 +24,65 @@ export default function IndividualGroupDrawer() {
   } = useGroup();
   const { userEmail } = useAuth();
   return (
-    <>
-      <Sidebar side="left" variant="sidebar" className="mt-20 h-[87vh]">
-        <SidebarHeader />
-        <SidebarContent>
-          {isAdmin && (
-            <SidebarGroup>
-              <InviteNewMember />
-            </SidebarGroup>
-          )}
+    <Sidebar side="left" variant="sidebar">
+      <SidebarHeader className="pt-20" />
+      <SidebarContent>
+        {isAdmin && (
           <SidebarGroup>
-            <SidebarGroupLabel>Group Admins </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {groupAdmins.map((adminEmail) => (
-                  <SidebarMenuItem key={adminEmail}>
-                    <div className="w-[235px] flex flex-row gap-1">
-                      <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
-                        {adminEmail}
-                      </span>
-                      {isAdmin && adminEmail !== userEmail && (
-                        <>
-                          <RemoveAdmin adminToRemove={adminEmail} />
-                          <RemoveMember memberToDelete={adminEmail} />
-                        </>
-                      )}
-                    </div>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
+            <InviteNewMember />
           </SidebarGroup>
-          <SidebarGroup>
-            <SidebarGroupLabel>Group Members </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {groupMembers.map((memberEmail) => (
-                  <SidebarMenuItem key={memberEmail}>
-                    <div className="w-[235px] flex flex-row gap-1">
-                      <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
-                        {memberEmail}
-                      </span>
-                      {isAdmin && (
-                        <>
-                          <MakeAdmin makememberAdmin={memberEmail} />
-                          <RemoveMember memberToDelete={memberEmail} />
-                        </>
-                      )}
-                    </div>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter>
-          <>
-            <LeaveGroup />
-            {isAdmin && <DeleteGroup />}
-          </>
-        </SidebarFooter>
-      </Sidebar>
-    </>
+        )}
+        <SidebarGroup>
+          <SidebarGroupLabel>Group Admins </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {groupAdmins.map((adminEmail) => (
+                <SidebarMenuItem key={adminEmail}>
+                  <div className="w-[235px] flex flex-row gap-1">
+                    <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                      {adminEmail}
+                    </span>
+                    {isAdmin && adminEmail !== userEmail && (
+                      <>
+                        <RemoveAdmin adminToRemove={adminEmail} />
+                        <RemoveMember memberToDelete={adminEmail} />
+                      </>
+                    )}
+                  </div>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Group Members </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {groupMembers.map((memberEmail) => (
+                <SidebarMenuItem key={memberEmail}>
+                  <div className="w-[235px] flex flex-row gap-1">
+                    <span className="block whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                      {memberEmail}
+                    </span>
+                    {isAdmin && (
+                      <>
+                        <MakeAdmin makememberAdmin={memberEmail} />
+                        <RemoveMember memberToDelete={memberEmail} />
+                      </>
+                    )}
+                  </div>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter className="pb-10">
+        <>
+          <LeaveGroup />
+          {isAdmin && <DeleteGroup />}
+        </>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

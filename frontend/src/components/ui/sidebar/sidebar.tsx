@@ -259,21 +259,20 @@ function SidebarTrigger({
   const { toggleSidebar } = useSidebar();
 
   return (
-    <Button
+    <button
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
-      size="icon"
-      className={cn("size-12","fixed", className)}
+      className={cn("fixed flex justify-center items-center", className)}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}
       {...props}
     >
-      <PanelLeftIcon className="w-10 h-10 min-w-[1.4rem] min-h-[1.4rem]" />
+      <PanelLeftIcon size={30} />
       <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    </button>
   );
 }
 
