@@ -13,6 +13,7 @@ import {
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import { IoIosClose } from "react-icons/io";
+import { toast } from "sonner";
 
 export type rejectGroupInviteProps = {
   gid: string;
@@ -36,6 +37,10 @@ export default function RejectGroupInvite({
   const rejectInviteMutation = useMutation({
     mutationFn: rejectGroup,
     onSuccess: () => {
+        toast.success(`Declined Invite!`, {
+        richColors: true,
+        position: "bottom-center",
+      });
       queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

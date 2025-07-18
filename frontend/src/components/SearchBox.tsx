@@ -32,8 +32,8 @@ export default function SearchBox({
 }: EmailResultProps) {
   return (
     <div className="relative w-full">
-      <div className="flex absolute bg-slate-50 w-full overflow-auto border border-slate-200 rounded-b-lg z-index-20">
-        <div className="p-1 flex flex-col items-center w-full">
+      <div className="flex absolute bg-slate-50 w-full border border-slate-200 rounded-b-lg z-index-20">
+        <div className="p-1 items-center w-full h-25 overflow-y-scroll overflow-hidden">
           {(emails ?? []).map((email) => (
             <MemberSearch
               key={email}

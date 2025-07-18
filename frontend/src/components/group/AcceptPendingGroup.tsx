@@ -13,6 +13,7 @@ import {
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import { Check } from "lucide-react";
+import { toast } from "sonner";
 
 export type acceptGroupInviteProps = {
   gid: string;
@@ -36,6 +37,10 @@ export default function AcceptGroupInvite({
   const acceptInviteMutation = useMutation({
     mutationFn: acceptGroup,
     onSuccess: () => {
+        toast.success(`Joined ${groupName}`, {
+        richColors: true,
+        position: "bottom-center",
+      });
       queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

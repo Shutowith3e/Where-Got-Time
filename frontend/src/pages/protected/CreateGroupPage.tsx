@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function CreateGroupPage() {
   const {
@@ -32,9 +33,16 @@ export default function CreateGroupPage() {
     },
     onSuccess: () => {
       navigate("/mainGroup");
+      toast.success("Group Created!", {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
-    onError: (error) => {
-      return error;
+    onError: () => {
+      toast.error("Error Creating Group", {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
   });
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);

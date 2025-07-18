@@ -55,7 +55,7 @@ export default function MainUserPage() {
           <SidebarProvider defaultOpen={true}>
             <MainUserDrawer />
 
-            <div className="mt-2 ml-1 mr-13">
+            <div className=" p-4 mt-2 ml-1 mr-13">
               <SidebarTrigger
                 onClick={async () => {
                   // Wait for drawer slide animation to

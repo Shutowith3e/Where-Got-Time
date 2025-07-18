@@ -13,6 +13,7 @@ import useGroup from "@/context/GroupContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
 import { IoIosClose } from "react-icons/io";
+import { toast } from "sonner";
 
 type deleteMemberProps = {
   memberToDelete: string;
@@ -44,6 +45,10 @@ export default function RemoveMember({ memberToDelete }: deleteMemberProps) {
   const removeMemberMutation = useMutation({
     mutationFn: removeMember,
     onSuccess: () => {
+        toast.success(`Removed ${memberToDelete} from Group!`, {
+              richColors: true,
+              position: "bottom-center",
+            });
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

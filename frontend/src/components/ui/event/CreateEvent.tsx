@@ -16,6 +16,7 @@ import {
 } from "../dialog";
 import { RRule } from "rrule";
 import useAuth from "@/context/AuthContext";
+import { toast } from "sonner";
 
 type CreateEventModalProps = {
   gid: string;
@@ -137,19 +138,26 @@ export default function CreateEventModal({
       const res = await axiosInstance.post("/admins/createEvent", formData);
       return res.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
-      queryClient.invalidateQueries({ queryKey: ["user-group-events", gid] });
-      queryClient.invalidateQueries({ queryKey: ["user-events"] });
-      queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
+      await queryClient.invalidateQueries({
+        queryKey: ["user-group-events", gid],
+      });
+      await queryClient.invalidateQueries({ queryKey: ["user-events"] });
+      await queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+        toast.success(`Event Created!`, {
+        richColors: true,
+        position: "bottom-center",
+      });
 
-      queryClient.refetchQueries({ queryKey: ["user-group-events", gid] });
-      queryClient.refetchQueries({ queryKey: ["user-events"] });
       setIsOpen(false);
       reset();
     },
-    onError: (error) => {
-      return error;
+    onError: () => {
+      toast.error("Error Creating Event", {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
   });
 
@@ -165,6 +173,7 @@ export default function CreateEventModal({
       onOpenChange={(open) => {
         setIsOpen(open);
         if (!open) reset();
+        setSelectedEmails([...(groupAdmins ?? []), ...(groupMembers ?? [])]);
       }}
     >
       <DialogTrigger asChild>
@@ -187,6 +196,7 @@ export default function CreateEventModal({
                   <SelectedMembers
                     selectedEmails={selectedEmails}
                     setSelectedEmails={setSelectedEmails}
+                    allEmails={[...groupAdmins, ...groupMembers]}
                     {...register("emailArr", {
                       validate: () =>
                         selectedEmails.length > 0

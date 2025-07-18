@@ -8,6 +8,7 @@ import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
 import dayjs from "dayjs";
+import { toast } from "sonner";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
@@ -25,7 +26,10 @@ const IndividualCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
         const data = await fetchEvents();
         setEvents(data);
       } catch (error) {
-        return error;
+        toast.error("Error Loading Calendar", {
+              richColors: true,
+              position: "bottom-center",
+            });
       }
     };
 

@@ -38,7 +38,7 @@ export default function NavBar() {
             <div className="flex flex-col">
               <button
                 onClick={onSignOut}
-                className="text-indigo-800 bg-indigo-300 rounded-3xl px-4 py-2 hover:underline font-semibold"
+                className="text-indigo-800 bg-indigo-300 rounded-3xl px-4 py-2 hover:underline font-semibold cursor-pointer"
               >
                 Log Out
               </button>
@@ -54,7 +54,7 @@ export default function NavBar() {
             </Link>
             <Link
               to="/login"
-              className="text-indigo-800 bg-indigo-300 rounded-3xl px-4 py-2 hover:underline font-semibold"
+              className="text-indigo-800 bg-indigo-300 rounded-3xl px-4 py-2 hover:underline font-semibold cursor-pointer"
             >
               Log In
             </Link>

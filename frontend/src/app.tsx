@@ -4,6 +4,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import AppRouter from "./routes/router";
 // react-query setup
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "./components/ui/sonner";
 const queryClient = new QueryClient();
 
 dayjs.extend(isBetween);
@@ -21,7 +22,7 @@ function Footer() {
   return (
     <>
       <hr className="text-violet-100" />
-      <footer className="bg-white px-6 py-8 ">
+      <footer className="bg-white px-6 py-8">
         <div className="flex flex-col sm:flex-row sm:justify-between items-center sm:items-start gap-y-6">
           <div className="flex flex-col items-center sm:items-start space-y-3">
             <img
@@ -35,9 +36,7 @@ function Footer() {
           </div>
 
           <div className="flex flex-col space-y-3 text-center">
-            <h3 className="font-extrabold text-slate-800">
-              Contact Us
-            </h3>
+            <h3 className="font-extrabold text-slate-800">Contact Us</h3>
             <div className="text-slate-600 text-sm space-y-1 text-center ">
               {contacts.map((email) => (
                 <p key={email}>{email}</p>
@@ -56,6 +55,7 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <AppRouter />
+          <Toaster />
           <Footer />
         </AuthContextProvider>
       </QueryClientProvider>

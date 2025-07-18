@@ -15,6 +15,7 @@ import axiosInstance from "@/lib/axios-instance";
 import { IoMdExit } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/context/AuthContext";
+import { toast } from "sonner";
 
 async function leaveGroup({
   gid,
@@ -46,6 +47,10 @@ export default function LeaveGroup() {
     mutationFn: leaveGroup,
     onSuccess: () => {
       navigate("/mainGroup");
+      toast.success(`Left ${groupName}`, {
+        richColors: true,
+        position: "bottom-center",
+      });
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

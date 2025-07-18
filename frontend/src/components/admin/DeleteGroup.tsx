@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
 import { IoMdRemove } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 async function deleteGroup({ gid }: { gid: string }) {
   const {
@@ -37,6 +38,10 @@ export default function DeleteGroup() {
     mutationFn: deleteGroup,
     onSuccess: () => {
       navigate("/mainGroup");
+      toast.success("Deleted Group!", {
+        richColors: true,
+        position: "bottom-center",
+      });
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

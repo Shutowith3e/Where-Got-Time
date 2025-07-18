@@ -32,7 +32,7 @@ export default function IndividualGroupLayout({
               calendarRef.current?.doResize();
             }}
           />
-          {children}
+          <div className="ml-13">{children}</div>
         </div>
       </div>
     </SidebarProvider>

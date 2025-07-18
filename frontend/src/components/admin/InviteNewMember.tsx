@@ -10,11 +10,12 @@ import {
 } from "../ui/dialog";
 import { IoMdAdd } from "react-icons/io";
 import { Button } from "../ui/button";
-import {useState } from "react";
+import { useState } from "react";
 import SearchEmails from "../SearchEmails";
 import SelectedMembers from "../SelectedMembers";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
+import { toast } from "sonner";
 
 export default function InviteNewMember() {
   const {
@@ -30,7 +31,6 @@ export default function InviteNewMember() {
   };
 
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>();
   const [isOpen, setIsOpen] = useState(false);
 
   const inviteMembersMutation = useMutation({
@@ -43,10 +43,16 @@ export default function InviteNewMember() {
     },
     onSuccess: () => {
       setIsOpen(false);
+      toast.success("Invited!",{
+        richColors:true,
+        position:"bottom-center"
+      })
     },
-    onError: (error) => {
-      setErrorMessage(error?.message || "Something went wrong");
-      setTimeout(() => setErrorMessage(""), 2500);
+    onError: () => {
+      toast.error("Member has already been invited", {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
   });
 
@@ -63,9 +69,6 @@ export default function InviteNewMember() {
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          {errorMessage && (
-            <p className="text-red-500 text-sm">{errorMessage}</p>
-          )}
           <DialogHeader>
             <DialogTitle>Invite New Members to {groupName}</DialogTitle>
 
