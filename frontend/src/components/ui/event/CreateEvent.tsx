@@ -16,6 +16,7 @@ import {
 } from "../dialog";
 import { RRule } from "rrule";
 import useAuth from "@/context/AuthContext";
+import { toast } from "sonner";
 
 type CreateEventModalProps = {
   gid: string;
@@ -148,8 +149,11 @@ export default function CreateEventModal({
       setIsOpen(false);
       reset();
     },
-    onError: (error) => {
-      return error;
+    onError: () => {
+      toast.error("Error Creating Event", {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
   });
 

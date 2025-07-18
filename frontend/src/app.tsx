@@ -4,6 +4,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import AppRouter from "./routes/router";
 // react-query setup
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "./components/ui/sonner";
 const queryClient = new QueryClient();
 
 dayjs.extend(isBetween);
@@ -54,6 +55,7 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <AppRouter />
+          <Toaster />
           <Footer />
         </AuthContextProvider>
       </QueryClientProvider>

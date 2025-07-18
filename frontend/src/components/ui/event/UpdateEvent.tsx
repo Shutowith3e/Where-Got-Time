@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import useGroup from "@/context/GroupContext";
 import useAuth from "@/context/AuthContext";
+import { toast } from "sonner";
 
 type UpdateEventModalProps = {
   gid: string;
@@ -159,8 +160,11 @@ export default function UpdateEventModal({
       queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
       onClose();
     },
-    onError: (err) => {
-      return err;
+    onError: () => {
+      toast.error("Error Updating Event", {
+              richColors: true,
+              position: "bottom-center",
+            });
     },
   });
 

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import useGroup from "@/context/GroupContext";
 import dayjs from "dayjs";
 import tippy from "tippy.js";
+import { toast } from "sonner";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 
@@ -28,7 +29,10 @@ const AdminCalendar = ({ fetchEvents = () => {}, calendarRef }: any) => {
         const data = await fetchEvents();
         setEvents(data);
       } catch (error) {
-        return error;
+       toast.error("Error Loading Calendar", {
+              richColors: true,
+              position: "bottom-center",
+            });
       }
     };
 

@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function EditGroup() {
   const {
@@ -34,7 +35,6 @@ export default function EditGroup() {
   };
 
   const [isOpen, setIsOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const queryClient = useQueryClient();
 
   const editGroupMutation = useMutation({
@@ -48,9 +48,11 @@ export default function EditGroup() {
         queryKey: ["user-group", gid],
       });
     },
-    onError: (error) => {
-      setErrorMessage(error?.message || "Something went wrong");
-      setTimeout(() => setErrorMessage(""), 2500);
+    onError: () => {
+      toast.error("Error Occured", {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
   });
 
@@ -66,9 +68,6 @@ export default function EditGroup() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit(onSubmit)}>
-          {errorMessage && (
-            <p className="text-red-500 text-sm">{errorMessage}</p>
-          )}
           <DialogHeader>
             <DialogTitle className="mx-auto">Edit Group Details</DialogTitle>
 

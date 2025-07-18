@@ -2,6 +2,7 @@ import FullCalendar from "@fullcalendar/react";
 import listPlugin from "@fullcalendar/list";
 import rrulePlugin from "@fullcalendar/rrule";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 // import { GetUserEvents } from '@/services/events/get-user-events-data2';
 const headerToolbar = {
@@ -19,7 +20,10 @@ const ListView = ({ fetchEvents = () => {} }: any) => {
         const data = await fetchEvents();
         setEvents(data);
       } catch (error) {
-        return error;
+        toast.error("Error Occured", {
+          richColors: true,
+          position: "bottom-center",
+        });
       }
     };
 
