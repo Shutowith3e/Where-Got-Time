@@ -145,6 +145,10 @@ export default function CreateEventModal({
       });
       await queryClient.invalidateQueries({ queryKey: ["user-events"] });
       await queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+        toast.success(`Event Created!`, {
+        richColors: true,
+        position: "bottom-center",
+      });
 
       setIsOpen(false);
       reset();

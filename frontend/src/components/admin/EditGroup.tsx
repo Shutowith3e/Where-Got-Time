@@ -44,6 +44,10 @@ export default function EditGroup() {
     },
     onSuccess: () => {
       setIsOpen(false);
+      toast.success("Group Edited!", {
+        richColors: true,
+        position: "bottom-center",
+      });
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });

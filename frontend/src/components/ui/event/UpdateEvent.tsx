@@ -158,13 +158,17 @@ export default function UpdateEventModal({
       queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
       queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+      toast.success(`Event updated successfully!`, {
+        richColors: true,
+        position: "bottom-center",
+      });
       onClose();
     },
     onError: () => {
       toast.error("Error Updating Event", {
-              richColors: true,
-              position: "bottom-center",
-            });
+        richColors: true,
+        position: "bottom-center",
+      });
     },
   });
 

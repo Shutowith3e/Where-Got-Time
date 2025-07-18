@@ -66,7 +66,7 @@ export default function IndividualGroupDrawer() {
                     </span>
                     {isAdmin && (
                       <>
-                        <MakeAdmin makememberAdmin={memberEmail} />
+                        <MakeAdmin makeMemberAdmin={memberEmail} />
                         <RemoveMember memberToDelete={memberEmail} />
                       </>
                     )}

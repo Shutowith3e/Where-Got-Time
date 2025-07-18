@@ -33,6 +33,10 @@ export default function CreateGroupPage() {
     },
     onSuccess: () => {
       navigate("/mainGroup");
+      toast.success("Group Created!", {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
     onError: () => {
       toast.error("Error Creating Group", {

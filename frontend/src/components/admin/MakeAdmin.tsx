@@ -13,28 +13,29 @@ import useGroup from "@/context/GroupContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
 import { IoMdCreate } from "react-icons/io";
+import { toast } from "sonner";
 
-type makeAdminProps = {
-  makememberAdmin: string;
+type MakeAdminProps = {
+  makeMemberAdmin: string;
 };
 
 async function makeAdmin({
-  makememberAdmin,
+  makeMemberAdmin,
   gid,
 }: {
-  makememberAdmin: string;
+  makeMemberAdmin: string;
   gid: string;
 }) {
   const {
     data: { data },
   } = await axiosInstance.put("/admins/makeAdmin", {
     gid,
-    email: makememberAdmin,
+    email: makeMemberAdmin,
   });
   return data;
 }
 
-export default function MakeAdmin({ makememberAdmin }: makeAdminProps) {
+export default function MakeAdmin({ makeMemberAdmin }: MakeAdminProps) {
   const {
     groupInfo: { gid },
   } = useGroup();
@@ -42,6 +43,10 @@ export default function MakeAdmin({ makememberAdmin }: makeAdminProps) {
   const makeAdminMutation = useMutation({
     mutationFn: makeAdmin,
     onSuccess: () => {
+      toast.success(`Made ${makeMemberAdmin} an admin!`, {
+        richColors: true,
+        position: "bottom-center",
+      });
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });
@@ -62,7 +67,7 @@ export default function MakeAdmin({ makememberAdmin }: makeAdminProps) {
         <div>
           <p>
             Are you sure you want to make{" "}
-            <span className="font-bold">{makememberAdmin}</span> admin?
+            <span className="font-bold">{makeMemberAdmin}</span> admin?
           </p>
         </div>
         <AlertDialogFooter>
@@ -70,7 +75,7 @@ export default function MakeAdmin({ makememberAdmin }: makeAdminProps) {
           <AlertDialogAction
             className="bg-black text-white"
             onClick={async () => {
-              await makeAdminMutation.mutateAsync({ makememberAdmin, gid });
+              await makeAdminMutation.mutateAsync({ makeMemberAdmin, gid });
             }}
             disabled={makeAdminMutation.isPending}
           >

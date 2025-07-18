@@ -12,6 +12,7 @@ import {
 import { IoIosClose } from "react-icons/io";
 import { Button } from "../button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export type DeleteEventProps = {
   eid: string;
@@ -43,11 +44,15 @@ export default function DeleteEvent({
     mutationFn: deleteEvent,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
-      await queryClient.invalidateQueries({ queryKey: ["user-group-events", gid] });
+      await queryClient.invalidateQueries({
+        queryKey: ["user-group-events", gid],
+      });
       await queryClient.invalidateQueries({ queryKey: ["user-events"] });
       await queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
-
-      
+      toast.success(`Event Deleted`, {
+        richColors: true,
+        position: "bottom-center",
+      });
     },
   });
 

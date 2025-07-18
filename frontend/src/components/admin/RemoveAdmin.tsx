@@ -13,6 +13,7 @@ import useGroup from "@/context/GroupContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios-instance";
 import { IoMdCreate } from "react-icons/io";
+import { toast } from "sonner";
 
 type RemoveAdminProps = {
   adminToRemove: string;
@@ -42,6 +43,10 @@ export default function RemoveAdmin({ adminToRemove }: RemoveAdminProps) {
   const removeAdminMutation = useMutation({
     mutationFn: removeAdmin,
     onSuccess: () => {
+      toast.success(`Removed Admin! ${adminToRemove}`, {
+        richColors: true,
+        position: "bottom-center",
+      });
       return queryClient.invalidateQueries({
         queryKey: ["user-group", gid],
       });
