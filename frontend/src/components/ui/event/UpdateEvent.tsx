@@ -22,9 +22,10 @@ type UpdateEventModalProps = {
   eid: string;
   eventName: string;
   startDatetime: string;
-  endDatetime?: string;
+  endDatetime: string;
   rrule?: string | null;
   highPriority: boolean;
+  eventParticipants? :string[] | null
   onClose: () => void;
 };
 
@@ -49,6 +50,7 @@ export default function UpdateEventModal({
   endDatetime,
   rrule,
   highPriority,
+  eventParticipants,
   onClose,
 }: UpdateEventModalProps) {
   const queryClient = useQueryClient();
@@ -56,11 +58,18 @@ export default function UpdateEventModal({
   const {
     groupInfo: { groupMembers, groupAdmins },
   } = useGroup();
-
-  const [initialEmails] = useState([...groupMembers, ...groupAdmins]);
+if(!eventParticipants){
+  eventParticipants = [] //temp solution for when u go to user
+}
+  const [initialEmails] = useState(eventParticipants);
   const [selectedEmails, setSelectedEmails] = useState([...initialEmails]);
 
   const rule = rrule ? RRule.fromString(rrule) : null;
+  let recurring = false;
+  if(rule){
+    recurring = true;
+  }
+
 
   const {
     register,
@@ -72,8 +81,8 @@ export default function UpdateEventModal({
       eventName,
       startDate: dayjs(startDatetime).format("YYYY-MM-DD"),
       startTime: dayjs(startDatetime).format("HH:mm"),
-      endTime: dayjs(endDatetime ?? "").format("HH:mm"),
-      recurring: !!rrule,
+      endTime: dayjs(endDatetime).format("HH:mm"),
+      recurring: recurring,
       freq: rule ? RRule.FREQUENCIES[rule.options.freq] : undefined,
       byweekday: rule?.options.byweekday
         ? (Array.isArray(rule.options.byweekday)
@@ -82,7 +91,7 @@ export default function UpdateEventModal({
           ).map((d) => d.toString())
         : [],
       recurrsUntil: rule?.options.until
-        ? dayjs(rule.options.until).format("YYYY-MM-DDTHH:mm")
+        ? dayjs(rule.options.until+"-08:00").format("YYYY-MM-DDTHH:mm")
         : "",
       highPriority,
       emailArr: [],
@@ -95,7 +104,7 @@ export default function UpdateEventModal({
     if (!values.recurring || !values.freq) return null;
     const dtstart = new Date(`${values.startDate}T${values.startTime}Z`);
     const until = values.recurrsUntil
-      ? new Date(values.recurrsUntil)
+      ? new Date(values.recurrsUntil + "Z")
       : undefined;
 
     switch (values.freq) {
@@ -173,6 +182,7 @@ export default function UpdateEventModal({
           {gid !== personalGroupId && (
             <>
               <SelectedMembers
+              allEmails={[...groupAdmins, ...groupMembers]}
                 selectedEmails={selectedEmails}
                 setSelectedEmails={setSelectedEmails}
               />
@@ -308,6 +318,7 @@ export default function UpdateEventModal({
                   {errors.recurrsUntil.message?.toString()}
                 </p>
               )}
+              
             </div>
           )}
 

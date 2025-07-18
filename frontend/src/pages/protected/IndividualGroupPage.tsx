@@ -41,7 +41,6 @@ export default function IndividualGroupPage() {
   const filteredEvents = (groupEvent ?? []).filter((event) =>
     event.eventName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
   if (!id) {
     return <p>Invalid Group ID!</p>;
   }
@@ -131,17 +130,20 @@ export default function IndividualGroupPage() {
               />
             </div>
           </MagicCard>
-
+                
           <IndividualEventCard
             title={"All Group Events"}
             events={filteredEvents.map(
-              ({ eid, eventName, startDatetime, highPriority }) => ({
+              ({ eid, eventName, startDatetime, highPriority,eventParticipants,endDatetime,rrule }) => ({
                 eid,
                 eventName,
                 group: "",
                 date: startDatetime,
                 // date: dayjs(startDatetime).format("DD MMM (hh:mm A)"),
                 highPriority,
+                eventParticipants,
+                endDatetime,
+                rrule
               })
             )}
             getEventString={({ eventName: event }) => event}

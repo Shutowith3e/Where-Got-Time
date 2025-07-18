@@ -72,7 +72,15 @@ const getAdmins = async (gid) => {
 }//tested, works
 
 const getGroupEvents = async (gid) => {
-	return await supabase.from('event').select("*").eq('gid', gid);
+	const {data,error} =  await supabase.from('event').select("*,event_participants(email)").eq('gid', gid);
+	if(error){
+		return {error};
+	}
+	function loader(value){
+		value.event_participants = value.event_participants.map(obj => obj.email);
+	}
+	data.forEach(loader);
+	return {data}
 }//tested, works
 
 const acceptGroupInvite = async (email, gid) => {

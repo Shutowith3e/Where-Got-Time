@@ -11,6 +11,7 @@ Required attributes are to be passed in through req.body, except for GET request
     - [/users/getGroups](#post-usersgetgroups)
     - [/users/getUserEvents](#post-usersgetuserevents)
 	- [/users/getUserPersonalGroup](#post-usersgetuserpersonalgroup)
+	- [/users/getUserClashes](#post-usersgetuserclashes)
 - [/groups](#groups)
 	- [/groups/acceptGroupInvite](#patch-groupsacceptgroupinvite)
 	- [/groups/checkAdmin](#post-groupscheckadmin)
@@ -21,6 +22,7 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/groups/groupMembers](#post-groupsgroupmembers)
 	- [/groups/leaveGroup](#delete-groupsleavegroup)
 	- [/groups/searchEmails](#get-groupssearchemails)
+	- [/groups/getPendingGroups](#post-groupsgetpendinggroups)
 - [/events](#events)
 	- [/events/getEventParticipants](#post-eventsgeteventparticipants)
 - [/admins](#admins)
@@ -33,8 +35,8 @@ Required attributes are to be passed in through req.body, except for GET request
 	- [/admins/makeAdmin](#put-adminsmakeadmin)
 	- [/admins/removeAdmin](#put-adminsremoveadmin)
 	- [/admins/updateGrpDesc](#patch-adminsupdategrpdesc)
-	- [/admins/updateGrpName](#patch-adminsupdategrpname)
-
+	- [/admins/updateEvent](#patch-adminsupdateevent)
+- [/clashes](#clashes)
 
 ---
 
@@ -82,6 +84,7 @@ Email will be retrieved directly from jwt.
 | `admin_arr`              | Array | An array containing the `gid` of all groups the user is an of. |
 <br>
 ---
+
 ### POST /users/getUserEvents
 
 **Description**   
@@ -99,8 +102,12 @@ Email will be retrieved directly from jwt.
 	"data": [
 		{
 		"eid": "68f9d513-9d12-4f9d-9b95-acc799d6f103",
-		"gid": "21924b54-03cd-40bb-92b6-fac4a0d68e6f",
-		"group": [Object],
+		"gid": "732dc2d9-2d6b-4506-9ccb-1590bbc05111",
+		"group": {
+			"gid": "732dc2d9-2d6b-4506-9ccb-1590bbc05111",
+			"group_name": "Frd Grp B",
+			"group_description": "For outings"
+		},
 		"rrule": null,
 		"event_name": "simi event bro",
 		"start_datetime": "2025-06-20T10:50:08",
@@ -124,13 +131,20 @@ Email will be retrieved directly from jwt.
 | `eid`              | string | ID of the event |
 | `gid`              | string | ID of the group that the event belongs to |
 | `group`              | JSON Object | Contains information about the group |
-| `rrule`              | string | Recurrence rule. Defines the recurrence for this event, **can be null**|
+| `rrule`              | null or string | Recurrence rule. Defines the recurrence for this event, **can be null**|
 | `event_name`              | string | Name of the event |
 | `start_datetime`              | string | string representing the start datetime of the event |
 | `end_datetime`              | string  | string representing the end datetime of the event |
 | `high_priority`              | boolean | boolean value representing the priority of the event. `true` for high, `false` for low |
 
+<br>
 
+**`group` object** 
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group |
+| `group_name`              | string | name of the group |
+| `group_description`              | string | group's description |
 ---
 <br>
 
@@ -160,7 +174,66 @@ Email will be retrieved directly from jwt.
 ---
 <br>
 
+### POST /users/getUserClashes
 
+**Description**   
+Returns the clashes of the user, separated into `member_clashes` and `admin_clashes` depending on if they are a member or admin of the group that the event belongs to. 
+
+**Supported attributes:**  
+None.  
+Email will be retrieved directly from jwt.
+
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+  "data": {
+
+    "member_clashes": [
+      {
+		"event_name1":"smth",
+		"event_name2":"smthelse",
+		"group_name1":"A",
+		"group_name2":"B",
+	  },
+	  {
+		"imagine theres another object here"
+	  }
+
+    ],
+
+    "admin_arr": [
+      {
+		"event_name1":"smth2",
+		"event_name2":"smthelse2",
+		"group_name1":"A",
+		"group_name2":"B",
+		"affected_members":["member1email","m2@email.com"],
+		"other_grp_admins":["email1","email2"]
+	  },
+
+	  {
+		"im putting this here just to remind that its an array of objects"
+	  }
+    ]
+  }
+}
+```
+**Response body**  
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `data`              | JSON Object | An object containing `member_clashes` and `admin_clashes` 
+--- 
+<br>
+
+**`data` object** 
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `member_arr`              | Array | An array of objects containing information about event clashes for members |
+| `admin_arr`              | Array | An array of objects containing information about event clashes for admins |
+<br>
+---
 
 
 
@@ -360,8 +433,13 @@ Returns the events of the group.
 		"rrule": null,
 		"event_name": "simi event bro",
 		"start_datetime": "2025-06-20T10:50:08",
-		"end_datetime": "2025-06-21T10:50:10",
-		"high_priority": true
+		"end_datetime": "2025-06-20T10:50:10",
+		"high_priority": true,
+		"duration":2,
+		"event_participants": [
+			"joey.chik.2024@computing.smu.edu.sg",
+			"jiale.lim.2024@computing.smu.edu.sg"
+			]
 		},
 		
 		{
@@ -383,13 +461,13 @@ Returns the events of the group.
 |--------------------------|----------|-----------------------|
 | `eid`              | string | ID of the event |
 | `gid`              | string | ID of the group that the event belongs to |
-| `rrule`              | string | Recurrence rule. Defines the recurrence for this event, **can be null**|
+| `rrule`              | null or string | Recurrence rule. Defines the recurrence for this event, **can be null**|
 | `event_name`              | string | Name of the event |
 | `start_datetime`              | string | string representing the start datetime of the event |
 | `end_datetime`              | string  | string representing the end datetime of the event |
 | `high_priority`              | boolean | boolean value representing the priority of the event. `true` for high, `false` for low |
-
-
+| `duration`              | BigInt  | BigInt representing the duration of the event in seconds |
+| `event_participants`              | array  | array of emails of event participants |
 <br>
 
 ---
@@ -488,7 +566,7 @@ Literally js an array
 
 ---
 
-### GET /groups/getPendingGroups
+### POST /groups/getPendingGroups
 
 **Description**   
 Returns an array containing all groups which the user has yet to accept invites for
@@ -514,6 +592,7 @@ Email will be retrieved directly from jwt.
 		"group_name": "grp_name2",
 		"group_description": "grp_desc2"
 	}, 
+  ]
 }
 ```
 **Response body**  
@@ -532,6 +611,31 @@ Email will be retrieved directly from jwt.
 <br>
 ---
 
+### PATCH /groups/rejectGroupInvite
+
+**Description**   
+Updates the `invite_accepted` attribute of the group_member table of the given user and group to `false`.
+
+**Supported attributes:**  
+
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `gid`              | string | ID of the group |
+
+User's email is taken from jwt
+
+**If successful, returns status code `200` and a json response in the following format:**
+
+```json
+{
+	"message": "Group invite rejected!"
+}
+```
+*note: no data is returned, just a status code and message
+<br>
+
+---
 
 
 ## /events
@@ -587,7 +691,7 @@ Creates an event for the group.
 | Attribute                | Type     | Description           |
 |--------------------------|----------|-----------------------|
 | `gid`              | string | ID of the group that the event belongs to |
-| `rrule`              | string | Recurrence rule. Defines the recurrence for this event, **can be null**|
+| `rrule`              | null or string | Recurrence rule. Defines the recurrence for this event, **can be null**|
 | `event_name`              | string | Name of the event |
 | `start_datetime`              | string | string representing the start datetime of the event |
 | `end_datetime`              | string  | string representing the end datetime of the event |
@@ -828,7 +932,7 @@ note: no data is being returned, just a message
 
 ---
 
-### PATCH /admins/updateGrpDetail
+### PATCH /admins/updateGrpDesc
 
 **Description**   
 Updates the group description
@@ -855,4 +959,41 @@ note: no data is being returned, just a message
 <br>
 
 ---
+
+eid, gid, event_name, start_datetime, end_datetime, rrule, high_priority, old_email_arr, new_email_arr
+
+### PATCH /admins/updateEvent
+
+**Description**   
+Update an event. 
+
+**Supported attributes:**  
+
+| Attribute                | Type     | Description           |
+|--------------------------|----------|-----------------------|
+| `eid`              | string | ID of the event |
+| `gid`              | string | ID of the group that the event belongs to |
+| `rrule`              | null or string | Recurrence rule. Defines the recurrence for this event, **can be null**|
+| `event_name`              | string | Name of the event |
+| `start_datetime`              | string | string representing the start datetime of the event |
+| `end_datetime`              | string  | string representing the end datetime of the event |
+| `high_priority`              | boolean | boolean value representing the priority of the event. `true` for high, `false` for low |
+| `old_email_arr`              | array of strings | Array of emails of previous event participants |
+| `new_email_arr`              | array of strings | Array of emails of updated event participants |
+
+
+**If successful, returns status code `201` and a json response in the following format:**
+
+```json
+{
+	"message": "Event successfully updated" 
+}
+```
+note: no data is being returned, just a message
+
+<br>
+
+---
+
+
 

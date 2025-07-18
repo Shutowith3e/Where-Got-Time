@@ -255,19 +255,16 @@ const checkClash = async (this_event,gid)=>{
 		
 
 	const resolveClash = async(eid) => {
-		// if there is no clash happening 
-		if(clashesArr.length===0){
-			return; 
-		}
-
+		
 		// outdated supabase arr with unresolved clashes 
 		const {data: dbClashArr, error} = await supabase.from('clash').select().or(`eid1.eq.${eid}, eid2.eq.${eid}`).eq('resolved', false);
-		
 		if(error){
 			// stops all checks for resolved clashes immediately 
 			return {error}; 
 		}
-
+		if(dbClashArr.length === 0){
+			return;
+		}
 		for(const dbClashPair of dbClashArr){ // this whole block can be turned into an rpc on supabase if there is time to increase efficiency 
 			// check if the clashpair in db exists in the clashes arr 
 			const exists = clashesArr.some(clashPair => JSON.stringify(dbClashPair) === JSON.stringify(clashPair)); 
@@ -289,7 +286,7 @@ const checkClash = async (this_event,gid)=>{
 	} // returns nothing unless check was terminated halfway through (prev checks prior to error not affected tho), returns error 
 
 	const {data:high_prio_event_arr,error:eventRetrievalError} =  await getHighPriorityEvents(gid);
-	//console.log(high_prio_event_arr); 
+	// console.log(high_prio_event_arr); 
 	if(eventRetrievalError){
 		console.warn(`Clash check failed, recheck for clash and update database, gid: ${this_event.gid} name: ${this_event.event_name}`);
 		return {eventRetrievalError};
@@ -333,8 +330,6 @@ const checkClash = async (this_event,gid)=>{
 			checkDoubleRecurClash(this_event, other_event);
 		}
 	}
-
-	
 	//updates resolved clashes 
 	resolveClash(this_event.eid);
 	
