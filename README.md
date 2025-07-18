@@ -2,6 +2,7 @@
 
 A collaborative web-based scheduling platform designed for SMU users (students and staff alike) to efficiently manage group calendars, detect time clashes, and streamline scheduling with a tiered priority system — without the need for roles like "professor" or "TA". Users can either be **Admins** (who manage group calendars) or **Members**.
 
+
 ---
 
 ## 👥 Team Members
@@ -183,3 +184,6 @@ cd backend
 npm i
 npm node app.js
 ```
+
+## Checkout our deployed version here
+https://where-got-time.netlify.app/
