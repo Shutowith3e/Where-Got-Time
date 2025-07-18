@@ -330,7 +330,7 @@ export default function UpdateEventModal({
 
           <DialogFooter className="mt-4">
             <DialogClose>Cancel</DialogClose>
-            <Button type="submit">Update</Button>
+            <Button type="submit" disabled={updateEventMutation.isPending}>Update</Button>
           </DialogFooter>
         </form>
       </DialogContent>

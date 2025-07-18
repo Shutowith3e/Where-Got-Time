@@ -502,7 +502,7 @@ export default function CreateEventModal({
 
           <DialogFooter>
             <DialogClose>Cancel</DialogClose>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading || createEventMutation.isPending}>
               Create Event
             </Button>
           </DialogFooter>
