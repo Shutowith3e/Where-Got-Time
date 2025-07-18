@@ -111,11 +111,11 @@ const checkClash = async (this_event,gid)=>{
 		//annually
 		else if (rule.options.freq==RRule.YEARLY){
 			//if event ends before first occurance, cannot be clash, skip
-			if(isBefore(event2.end_datetime,rule.options.dtstart)){
+			if(isBefore(event2.end_datetime,event1.start_datetime)){
 				return
 			}
 			//if an until exists and event2 happens after the last occurance of event1, skip
-			if(rule.options.until && isAfter(rule.options.until,event2.start_datetime)){
+			if(rule.options.until && isAfter(event2.start_datetime,rule.options.until)){
 				return
 			}
 			//if same month, and same day

@@ -91,7 +91,7 @@ export default function UpdateEventModal({
           ).map((d) => d.toString())
         : [],
       recurrsUntil: rule?.options.until
-        ? dayjs(rule.options.until + "-08:00").format("YYYY-MM-DDTHH:mm")
+        ? dayjs(rule.options.until + "+16:00").format("YYYY-MM-DDTHH:mm")
         : "",
       highPriority,
       emailArr: [],
@@ -121,7 +121,7 @@ export default function UpdateEventModal({
           freq: RRule.MONTHLY,
           dtstart,
           until,
-          bymonthday: dtstart.getDate(),
+          bymonthday: dtstart.getUTCDate(),
           tzid: "Asia/Singapore",
         });
       case "YEARLY":
@@ -130,7 +130,7 @@ export default function UpdateEventModal({
           dtstart,
           until,
           bymonth: dtstart.getMonth() + 1,
-          bymonthday: dtstart.getDate(),
+          bymonthday: dtstart.getUTCDate(),
           tzid: "Asia/Singapore",
         });
       default:
