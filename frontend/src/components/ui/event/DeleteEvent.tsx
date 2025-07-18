@@ -79,6 +79,7 @@ export default function DeleteEvent({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
+            disabled={deleteMutation.isPending}
             variant="destructive"
             onClick={async () => {
               await deleteMutation.mutateAsync({ eid, gid });
