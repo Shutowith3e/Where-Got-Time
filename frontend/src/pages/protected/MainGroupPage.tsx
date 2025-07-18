@@ -3,16 +3,13 @@ import NavBar from "@/components/NavBar";
 import { IoMdSearch } from "react-icons/io";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import EventCard from "@/components/ui/event/EventCard";
+
 import {
   getAllUserGroupsData,
   type GroupItem,
 } from "@/services/groups/get-user-group-data";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getUserEventsInRange,
-} from "@/services/events/get-user-events-data";
-import dayjs from "dayjs";
+
 
 function FilteredGroup({
   item: { gid, groupName, groupDescription, isAdmin },
@@ -76,11 +73,6 @@ function GroupList({ filterSearch }: { filterSearch: string }) {
 export default function MainGroupPage() {
   const [inputValue, setInputValue] = useState("");
 
-  //to get user events
-  const { data: groupEventList, isPending: isUserEventsPending } = useQuery({
-    queryKey: ["user-events"],
-    queryFn: () => getUserEventsInRange(2, "weeks"),
-  });
 
   //changes when u type into search bar
   const inputChange = (event: any) => {
@@ -88,9 +80,6 @@ export default function MainGroupPage() {
     setInputValue(value);
   };
 
-  if (isUserEventsPending) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <>
@@ -112,17 +101,6 @@ export default function MainGroupPage() {
           </div>
         </MagicCard>
         <GroupList filterSearch={inputValue} />
-        <EventCard
-          title={"Group Events (In The Next 2 Weeks)"}
-          events={(groupEventList ?? []).map(
-            ({ groupName, eventName, startDatetime, highPriority }) => ({
-              group: groupName,
-              eventName: eventName,
-              date: dayjs(startDatetime).format("DD MMM (hh:m A)"),
-              highPriority,
-            })
-          )}
-        ></EventCard>
       </div>
     </>
   );
