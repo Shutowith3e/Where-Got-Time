@@ -2,7 +2,6 @@
 
 A collaborative web-based scheduling platform designed for SMU users (students and staff alike) to efficiently manage group calendars, detect time clashes, and streamline scheduling with a tiered priority system — without the need for roles like "professor" or "TA". Users can either be **Admins** (who manage group calendars) or **Members**.
 
-
 ---
 
 ## 👥 Team Members
@@ -35,13 +34,12 @@ Coordinating schedules between different individuals at SMU is challenging due t
 
 ## 🔧 Tech Stack
 
-| Category      | Technology                          |
-| ------------- | ----------------------------------- |
-| Frontend      | React.js, Tailwind CSS              |
-| Backend       | Node.js, Express.js                 |
-| Auth & DB     | Supabase (PostgreSQL + Auth)        |
-| Notifications | Nodemailer, Telegram Bot (optional) |
-| DevOps        | Docker, Docker Compose              |
+| Category      | Technology                   |
+| ------------- | ---------------------------- |
+| Frontend      | React.js, Tailwind CSS       |
+| Backend       | Node.js, Express.js          |
+| Auth & DB     | Supabase (PostgreSQL + Auth) |
+| Notifications | In App                       |
 
 ---
 
@@ -63,9 +61,9 @@ Coordinating schedules between different individuals at SMU is challenging due t
 - ✅ Weekly default view
 - ✅ Create **recurring events** (weekly, monthly, yearly)
 - ✅ Event attributes:
-  - Title, description 
+  - Title, description
   - Start & end datetime
-  - Recurrence (Yes/No + pattern)
+  - Recurrence (Yes/No + pattern, rrule)
   - Priority: High or Low
   - Privacy (private low-priority events visible only to creator)
 
@@ -182,8 +180,27 @@ npm run dev
 ```bash
 cd backend
 npm i
-npm node app.js
+nodemon app.js
+```
+
+### Deployment Steps (Onto Netlify)
+
+1. Fork the repository
+2. Sign up on netlify
+3. Click "Add a new Project"
+4. Link netlify to your github
+5. Select "Where-Got-Time" to deploy
+6. Configure the project settings, ensure that the branch deployed is main (main is the default, unless you have switched it)
+7. Configure the environment variables of the project
+
+```bash
+SUPABASE_JWT_SECRET
+SUPABASE_KEY
+SUPABASE_URL
+VITE_BACKEND_URL
+VITE_SUPABASE_REDIRECT_URL
 ```
 
 ## Checkout our deployed version here
+
 https://where-got-time.netlify.app/
