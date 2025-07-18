@@ -49,7 +49,7 @@ export default function EditGroup() {
       });
     },
     onError: () => {
-      toast.error("Error Occured", {
+      toast.error("Error Editing Group", {
         richColors: true,
         position: "bottom-center",
       });

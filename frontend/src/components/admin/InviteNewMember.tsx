@@ -43,6 +43,10 @@ export default function InviteNewMember() {
     },
     onSuccess: () => {
       setIsOpen(false);
+      toast.success("Invited!",{
+        richColors:true,
+        position:"bottom-center"
+      })
     },
     onError: () => {
       toast.error("Member has already been invited", {

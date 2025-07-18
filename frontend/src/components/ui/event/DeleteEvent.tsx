@@ -41,13 +41,13 @@ export default function DeleteEvent({
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: deleteEvent,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
-      queryClient.invalidateQueries({ queryKey: ["user-group-events", gid] });
-      queryClient.invalidateQueries({ queryKey: ["user-events"] });
-      queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user-group", gid] });
+      await queryClient.invalidateQueries({ queryKey: ["user-group-events", gid] });
+      await queryClient.invalidateQueries({ queryKey: ["user-events"] });
+      await queryClient.invalidateQueries({ queryKey: ["user-clashes"] });
 
-      queryClient.refetchQueries({ queryKey: ["user-group-events", gid] });
+      
     },
   });
 
