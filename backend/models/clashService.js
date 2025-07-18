@@ -6,7 +6,7 @@ import {isBefore,isAfter,isMonday,isTuesday,isWednesday,isThursday,isFriday,isSa
 
 // helper to check if 2 events are clashing
 const isClashDateTime = (a_start, a_end,b_start,b_end) => {
-	return isAfter(a_end,b_start) && isBefore(a_start,b_end);
+	return (isAfter(a_end,b_start) && isBefore(a_start,b_end)) || (isAfter(b_end,a_start) && isBefore(b_start,a_end));
 }
 
 // flow:
@@ -64,7 +64,7 @@ const checkClash = async (this_event,gid)=>{
 	
 	
 	//declaring this function inside to access local scope constants
-	const checkSingleRecurClash = (event1,event2)=>{ // let event1 be the recurring one
+	const checkSingleRecurClash = (event1,event2,eid1,eid2)=>{ // let event1 be the recurring one
 		//get just the time part without the date
 		const event1_startTimeStr = normaliseDateTime(event1.start_datetime);
 		const event1_endTimeStr = normaliseDateTime(event1.end_datetime);
@@ -80,10 +80,11 @@ const checkClash = async (this_event,gid)=>{
 				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
 				for(const day of rule.options.byweekday){
 					//checks if my event is on the same day
-					if(weekDayCheckMap[day](event2)){
+					if(weekDayCheckMap[day](event2.start_datetime)){
+						
 						if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
 							clashesArr.push({eid1,eid2,resolved});
-							return //first occurance of clash, exit; only push once
+							return//first occurance of clash, exit; only push once
 						}
 					}
 				}
@@ -127,7 +128,7 @@ const checkClash = async (this_event,gid)=>{
 	}
 	///////////
 
-	const checkDoubleRecurClash = (event1, event2)=>{
+	const checkDoubleRecurClash = (event1, event2,eid1,eid2)=>{
 		// SCENARIOS: 
 		const event1_startTimeStr = normaliseDateTime(event1.start_datetime);
 		const event1_endTimeStr = normaliseDateTime(event1.end_datetime);
@@ -198,7 +199,7 @@ const checkClash = async (this_event,gid)=>{
 				//check each day, rule.option.byweekday is an array of int, 0=monday, 1=tuesday...
 				for(const day of rule1.options.byweekday){
 					//checks if my event is on the same day
-					if(weekDayCheckMap[day](event2)){
+					if(weekDayCheckMap[day](event2.start_datetime)){
 						if(isClashDateTime(event1_startTimeStr,event1_endTimeStr,event2_startTimeStr,event2_endTimeStr)){
 							clashesArr.push({eid1,eid2,resolved});
 							return //first occurance of clash, exit; only push once
@@ -316,18 +317,19 @@ const checkClash = async (this_event,gid)=>{
 		}
 		//case 2 this_event is recurring, other is single
 		else if(this_event.rrule && !other_event.rrule){
-			checkSingleRecurClash(this_event,other_event);//has no return value, simply pushes to clashesArr if there is any
-
+			checkSingleRecurClash(this_event,other_event,eid1,eid2);//has no return value, simply pushes to clashesArr if there is any
+			
 		}
 		//case 3 case 2 but flipped
 		else if(!this_event.rrule && other_event.rrule){
-			checkSingleRecurClash(other_event,this_event);
+			checkSingleRecurClash(other_event,this_event,eid1,eid2);
+			
 		}
 
 		//case 4 both recurring 
 		else{
 			//git commit sewer slide gg
-			checkDoubleRecurClash(this_event, other_event);
+			checkDoubleRecurClash(this_event, other_event,eid1,eid2);
 		}
 	}
 	//updates resolved clashes 
