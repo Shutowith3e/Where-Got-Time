@@ -19,7 +19,7 @@ Coordinating schedules between different individuals at SMU is challenging due t
 
 - Allowing users to create and manage **calendar groups**
 - Providing **priority-based clash detection**
-- Sending **email notifications** for critical overlaps
+- Sending **in-app notifications** for critical overlaps
 - Supporting **recurring events** with custom frequency
 
 ---
